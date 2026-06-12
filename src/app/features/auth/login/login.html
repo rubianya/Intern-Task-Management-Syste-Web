@@ -14,14 +14,14 @@
 
         <h2 class="login-title">Login</h2>
         
-        <form (ngSubmit)="onLogin()">
+        <form (ngSubmit)="login()">
 
           <div class="form-group">
-            <input type="email" name="email" [(ngModel)]="loginData.email" placeholder="Your Email" required>
+            <input type="email" name="email" [(ngModel)]="email" placeholder="Your Email" required>
           </div>
 
           <div class="form-group">
-            <input type="password" name="password" [(ngModel)]="loginData.password" placeholder="Your Password" required>
+            <input type="password" name="password" [(ngModel)]="password" placeholder="Your Password" required>
           </div>
 
           <div class="form-options">

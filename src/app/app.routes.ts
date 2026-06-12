@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-//import { Login } from './features/auth/login/login';
+import { Login } from './features/auth/login/login';
 import { Dashboard } from './features/dashboard/dashboard';
 import { AdminDash } from './features/dashboard/components/admin-dash/admin-dash';
 import { MentorDash } from './features/dashboard/components/mentor-dash/mentor-dash';
 import { InternDash } from './features/dashboard/components/intern-dash/intern-dash';
-import { LoginComponent } from './features/auth/login/login.component';
+//import { LoginComponent } from './features/auth/login/login.component';
 
 export const routes: Routes = [
     {
@@ -14,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        component: LoginComponent
+        component: Login
     },
     {
         path: 'dashboard',
@@ -32,5 +32,4 @@ export const routes: Routes = [
         path: 'intern',
         component: InternDash
     }
-
 ];
