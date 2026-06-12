@@ -1,0 +1,31 @@
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <app-sidebar [role]="role"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <header class="top-bar">
+      <div class="system-status-info">
+        <span class="pulse-indicator"></span> Online
+      </div>
+      <div class="user-profile-nav">
+        <div class="user-avatar">👤</div>
+        <span class="user-display-name">{{ UserName }}</span>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      @if (role === 'ADMIN') {
+        <app-admin-dash></app-admin-dash>
+      } @else if (role === 'MENTOR') {
+        <app-mentor-dash></app-mentor-dash>
+      } @else if (role === 'INTERN') {
+        <app-intern-dash></app-intern-dash>
+      }
+    </div>
+
+  </div>
+
+</div>

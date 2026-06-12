@@ -1,0 +1,41 @@
+<aside class="sidebar">
+
+  <h2>Intern Task Management System</h2>
+
+  <!-- ADMIN -->
+  @if(role === 'ADMIN') {
+    <ul>
+      <li>Dashboard</li>
+      <li>Users Management</li>
+      <li>Account Status</li>
+      <li>Role Management</li>
+    </ul>
+  }
+
+  <!-- MENTOR -->
+  @if(role === 'MENTOR') {
+    <ul>
+      <li>Dashboard</li>
+      <li>Create Task</li>
+      <li>Assign Task</li>
+      <li>Review Tasks</li>
+      <li>Comments</li>
+    </ul>
+  }
+
+  <!-- INTERN -->
+  @if(role === 'INTERN') {
+    <ul>
+      <li>Dashboard</li>
+      <li>My Tasks</li>
+      <li>Update Status</li>
+      <li>Submit Work</li>
+      <li>Feedback</li>
+    </ul>
+  }
+
+  <ul>
+    <li>Logout</li>
+  </ul>
+
+</aside>

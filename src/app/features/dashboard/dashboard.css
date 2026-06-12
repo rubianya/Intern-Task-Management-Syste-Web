@@ -1,0 +1,77 @@
+/* จัดโครงสร้างสัดส่วน Layout ระหว่าง Sidebar และพื้นที่ทำงานหลังบ้าน */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f1f5f9; /* สีพื้นหลังสว่างนุ่มนวลสไตล์โมเดิร์นตามภาพ */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* บังคับให้หน้าจอการทำงานหลักฝั่งขวากางเต็มพื้นที่ที่เหลือ */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* แถบหัวขอด้านบนสุด (Top Navigation Bar) */
+.top-bar {
+  background-color: #ffffff;
+  height: 70px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.system-status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* จุดไฟกระพริบจำลองสถานะระบบ */
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.user-profile-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.user-display-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* กล่องรับหน้าจอย่อย ให้มีระยะขอบเว้นพิกัดสวยงามตาม Layout ตัวอย่าง */
+.dashboard-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto; /* สามารถสกรอลดูการ์ดและตารางยาว ๆ ด้านล่างได้ */
+  box-sizing: border-box;
+}
