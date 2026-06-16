@@ -30,7 +30,7 @@ export class Navbar {
   }
 
   goToEditProfile() {
-    this.router.navigate(['/edit-profile']);
+    this.router.navigate(['/dashboard/edit-profile']);
   }
 
   logout() {

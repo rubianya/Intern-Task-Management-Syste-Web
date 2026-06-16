@@ -2,30 +2,30 @@
 
   @if(role === 'ADMIN') {
     <ul>
-      <li><a routerLink="/admin/dashboard" routerLinkActive="active-menu">Dashboard</a></li>
-      <li><a routerLink="/admin/users" routerLinkActive="active-menu">Users Management</a></li>
-      <li><a routerLink="/admin/account-status" routerLinkActive="active-menu">Account Status</a></li>
-      <li><a routerLink="/admin/roles" routerLinkActive="active-menu">Role Management</a></li>
+      <li routerLink="/dashboard/admin" routerLinkActive="active-menu">Dashboard</li>
+      <li routerLink="/dashboard/users-management" routerLinkActive="active-menu">Users Management</li>
+      <li routerLink="/dashboard/account-status" routerLinkActive="active-menu">Account Status</li>
+      <li routerLink="/dashboard/roles" routerLinkActive="active-menu">Role Management</li>
     </ul>
   }
 
   @if(role === 'MENTOR') {
     <ul>
-      <li routerLink="/mentor/dashboard" routerLinkActive="active-menu">Dashboard</li>
-      <li routerLink="/mentor/create-task" routerLinkActive="active-menu">Create Task</li>
-      <li routerLink="/mentor/assign-task" routerLinkActive="active-menu">Assign Task</li>
-      <li routerLink="/mentor/review-tasks" routerLinkActive="active-menu">Review Tasks</li>
-      <li routerLink="/mentor/comments" routerLinkActive="active-menu">Comments</li>
+      <li routerLink="/dashboard/mentor" routerLinkActive="active-menu">Dashboard</li>
+      <li routerLink="/dashboard/create-task" routerLinkActive="active-menu">Create Task</li>
+      <li routerLink="/dashboard/assign-task" routerLinkActive="active-menu">Assign Task</li>
+      <li routerLink="/dashboard/review-tasks" routerLinkActive="active-menu">Review Tasks</li>
+      <li routerLink="/dashboard/comments" routerLinkActive="active-menu">Comments</li>
     </ul>
   }
 
   @if(role === 'INTERN') {
     <ul>
-      <li routerLink="/intern/dashboard" routerLinkActive="active-menu">Dashboard</li>
-      <li routerLink="/intern/my-tasks" routerLinkActive="active-menu">My Tasks</li>
-      <li routerLink="/intern/update-status" routerLinkActive="active-menu">Update Status</li>
-      <li routerLink="/intern/submit-work" routerLinkActive="active-menu">Submit Work</li>
-      <li routerLink="/intern/feedback" routerLinkActive="active-menu">Feedback</li>
+      <li routerLink="/dashboard/intern" routerLinkActive="active-menu">Dashboard</li>
+      <li routerLink="/dashboard/my-tasks" routerLinkActive="active-menu">My Tasks</li>
+      <li routerLink="/dashboard/update-status" routerLinkActive="active-menu">Update Status</li>
+      <li routerLink="/dashboard/submit-work" routerLinkActive="active-menu">Submit Work</li>
+      <li routerLink="/dashboard/feedback" routerLinkActive="active-menu">Feedback</li>
     </ul>
   }
 
