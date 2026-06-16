@@ -11,6 +11,6 @@ import { Component, Input } from '@angular/core';
 export class Sidebar {
 
   @Input()
-  role: string = ''; // ค่าเริ่มต้นเป็น 'ADMIN' สามารถเปลี่ยนได้ตามต้องการ
+  role: string = '';
 
 }

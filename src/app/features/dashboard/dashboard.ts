@@ -1,49 +1,70 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Sidebar } from '../shared/sidebar/sidebar';
-import { AdminDash } from './components/admin-dash/admin-dash';
-import { MentorDash } from './components/mentor-dash/mentor-dash';
-import { InternDash } from './components/intern-dash/intern-dash';
+import { Navbar } from '../shared/navbar/navbar'; // <-- Import Navbar เข้ามา
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, Sidebar, AdminDash, MentorDash, InternDash],
+  imports: [CommonModule, Sidebar, Navbar, RouterOutlet],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
 
-  // กำหนดค่าเริ่มต้นเป็นสิทธิ์ว่างเปล่า หรือสิทธิ์เริ่มต้นไว้ก่อน
   role: 'ADMIN' | 'MENTOR' | 'INTERN' = 'INTERN'; 
   UserName = '';
+  UserEmail = '';
+  UserRoleDisplay = ''; 
 
-  constructor(private router: Router) {}
+  // (ตัวแปร isDropdownOpen และฟังก์ชัน toggle ต่างๆ ถูกลบออก เพราะย้ายไป navbar แล้ว)
+
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    // 1. ดึงข้อมูลสิทธิ์ (role) และชื่อจาก localStorage ที่เราบันทึกไว้ตอน Login สำเร็จ
-    const savedRole = localStorage.getItem('role');
-    const savedName = localStorage.getItem('full_name');
-
-    // 2. ตรวจสอบความปลอดภัย: ถ้าไม่มีข้อมูล 
-    // ให้เด้งกลับไปหน้า Login ทันที เพื่อป้องกันแอบเข้าทาง URL Direct ลัด
-    if (!savedRole || !savedName) {
+    const token = localStorage.getItem('token');
+    if (!token) {
       alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
       this.router.navigate(['/login']);
       return;
     }
 
-    // 3. แปลงค่าสิทธิ์ให้เป็นตัวพิมพ์ใหญ่ (Upper Case) เพื่อให้ตรงเงื่อนไข @if ของคุณ
-    const upperCaseRole = savedRole.toUpperCase();
+    this.authService.getUserProfile().subscribe({
+      next: (profile: any) => {
+        const upperCaseRole = profile.role?.toUpperCase();
+        if (['ADMIN', 'MENTOR', 'INTERN'].includes(upperCaseRole)) {
+          this.role = upperCaseRole;
+        } else {
+          this.role = 'INTERN';
+        }
 
-    if (upperCaseRole === 'ADMIN' || upperCaseRole === 'MENTOR' || upperCaseRole === 'INTERN') {
-      this.role = upperCaseRole;
-    } else {
-      this.role = 'INTERN'; 
-    }
+        if (this.router.url === '/dashboard') {
+          if (this.role === 'ADMIN') {
+            this.router.navigate(['/dashboard/admin']);
+          } else if (this.role === 'MENTOR') {
+            this.router.navigate(['/dashboard/mentor']);
+          } else {
+            this.router.navigate(['/dashboard/intern']);
+          }
+        }
 
-    // 4. แสดงชื่อผู้ใช้งานจริงบนแท็บมุมขวาบน
-    this.UserName = savedName;
+        this.UserRoleDisplay = profile.role;
+        this.UserName = profile.full_name;
+        this.UserEmail = profile.email;
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('ไม่สามารถดึงข้อมูลโปรไฟล์ได้', err);
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }

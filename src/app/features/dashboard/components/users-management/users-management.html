@@ -1,0 +1,88 @@
+<div class="page-wrapper">
+  <header class="page-header">
+    <h1>User Management</h1>
+    <p>Manage all users in one place. Control access, assign roles, and monitor activity across your platform.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters">
+      <div class="search-box">
+        <i class="fi fi-sr-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      
+      <div class="filter-dropdown">
+        <i class="fi fi-sr-user"></i>
+        <select>
+          <option value="">Role</option>
+          <option value="admin">Admin</option>
+          <option value="mentor">Mentor</option>
+          <option value="intern">Intern</option>
+        </select>
+      </div>
+
+      <div class="filter-dropdown">
+        <i class="fi fi-sr-badge-check"></i>
+        <select>
+          <option value="">Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-outline">
+        <i class="fi fi-sr-download"></i> Export
+      </button>
+      <button class="btn-primary">
+        <i class="fi fi-sr-plus"></i> Add User
+      </button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th class="checkbox-col"><input type="checkbox"></th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Status</th>
+          <th>Role</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user.id) {
+          <tr>
+            <td class="checkbox-col"><input type="checkbox"></td>
+            <td class="user-info">
+              <div class="avatar-placeholder">
+                {{ user.full_name.charAt(0) }}
+              </div>
+              <span class="font-medium">{{ user.full_name }}</span>
+            </td>
+            <td class="text-gray">{{ user.email }}</td>
+            <td class="text-gray">{{ user.full_name }}</td>
+            <td>
+              <span class="badge badge-{{ user.status | lowercase }}">
+                {{ user.status }}
+              </span>
+            </td>
+            <td class="text-gray">{{ user.role }}</td>
+            <td class="action-cell">
+              <button class="icon-btn edit" (click)="editUser(user)" title="Edit">
+                <i class="fi fi-sr-pencil"></i>
+              </button>
+              <button class="icon-btn delete" (click)="deleteUser(user.id)" title="Delete">
+                <i class="fi fi-sr-trash"></i>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

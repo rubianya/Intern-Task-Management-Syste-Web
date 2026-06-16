@@ -1,12 +1,13 @@
 .sidebar {
   width: 260px;
   min-height: 100vh;
-  background: #1e293b;
-  color: white;
+  background: #ffffff;
+  color: #1e293b;
   padding: 25px;
 }
 
 .sidebar h2 {
+  margin-top: 0;
   margin-bottom: 30px;
   font-size: 24px;
 }
@@ -25,9 +26,14 @@
 }
 
 .sidebar li:hover {
-  background: #334155;
+  background: #f1f5f9;
 }
 
 .sidebar li:active {
-  background: #2563eb;
+  background: #e2e8f0;
+}
+
+.sidebar li.active-menu {
+  background: #e2e8f0;
+  font-weight: bold;
 }

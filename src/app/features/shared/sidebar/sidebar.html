@@ -1,41 +1,33 @@
 <aside class="sidebar">
 
-  <h2>Intern Task Management System</h2>
-
-  <!-- ADMIN -->
   @if(role === 'ADMIN') {
     <ul>
-      <li>Dashboard</li>
-      <li>Users Management</li>
-      <li>Account Status</li>
-      <li>Role Management</li>
+      <li><a routerLink="/admin/dashboard" routerLinkActive="active-menu">Dashboard</a></li>
+      <li><a routerLink="/admin/users" routerLinkActive="active-menu">Users Management</a></li>
+      <li><a routerLink="/admin/account-status" routerLinkActive="active-menu">Account Status</a></li>
+      <li><a routerLink="/admin/roles" routerLinkActive="active-menu">Role Management</a></li>
     </ul>
   }
 
-  <!-- MENTOR -->
   @if(role === 'MENTOR') {
     <ul>
-      <li>Dashboard</li>
-      <li>Create Task</li>
-      <li>Assign Task</li>
-      <li>Review Tasks</li>
-      <li>Comments</li>
+      <li routerLink="/mentor/dashboard" routerLinkActive="active-menu">Dashboard</li>
+      <li routerLink="/mentor/create-task" routerLinkActive="active-menu">Create Task</li>
+      <li routerLink="/mentor/assign-task" routerLinkActive="active-menu">Assign Task</li>
+      <li routerLink="/mentor/review-tasks" routerLinkActive="active-menu">Review Tasks</li>
+      <li routerLink="/mentor/comments" routerLinkActive="active-menu">Comments</li>
     </ul>
   }
 
-  <!-- INTERN -->
   @if(role === 'INTERN') {
     <ul>
-      <li>Dashboard</li>
-      <li>My Tasks</li>
-      <li>Update Status</li>
-      <li>Submit Work</li>
-      <li>Feedback</li>
+      <li routerLink="/intern/dashboard" routerLinkActive="active-menu">Dashboard</li>
+      <li routerLink="/intern/my-tasks" routerLinkActive="active-menu">My Tasks</li>
+      <li routerLink="/intern/update-status" routerLinkActive="active-menu">Update Status</li>
+      <li routerLink="/intern/submit-work" routerLinkActive="active-menu">Submit Work</li>
+      <li routerLink="/intern/feedback" routerLinkActive="active-menu">Feedback</li>
     </ul>
   }
 
-  <ul>
-    <li>Logout</li>
-  </ul>
 
 </aside>
