@@ -8,25 +8,25 @@
     <div class="filters">
       <div class="search-box">
         <i class="fi fi-sr-search"></i>
-        <input type="text" placeholder="Search">
+        <input type="text" placeholder="Search by name or email" [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange()">
       </div>
       
       <div class="filter-dropdown">
         <i class="fi fi-sr-user"></i>
-        <select>
-          <option value="">Role</option>
-          <option value="admin">Admin</option>
-          <option value="mentor">Mentor</option>
-          <option value="intern">Intern</option>
+        <select [(ngModel)]="selectedRole" (ngModelChange)="onFilterChange()">
+          <option value="">All Roles</option>
+          <option value="Admin">Admin</option>
+          <option value="Mentor">Mentor</option>
+          <option value="Intern">Intern</option>
         </select>
       </div>
 
       <div class="filter-dropdown">
         <i class="fi fi-sr-badge-check"></i>
-        <select>
-          <option value="">Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+        <select [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
         </select>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <button class="btn-outline">
         <i class="fi fi-sr-download"></i> Export
       </button>
-      <button class="btn-primary">
+      <button class="btn-primary" (click)="openAddUserModal()">
         <i class="fi fi-sr-plus"></i> Add User
       </button>
     </div>
@@ -45,30 +45,28 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th class="checkbox-col"><input type="checkbox"></th>
+          <th class="id-col text-center">ID</th>
           <th>Full Name</th>
           <th>Email</th>
-          <th>Username</th>
+          <th>Password</th>
           <th>Status</th>
           <th>Role</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (user of users; track user.id) {
+        @for (user of paginatedUsers; track user.id) {
           <tr>
-            <td class="checkbox-col"><input type="checkbox"></td>
+            <td class="id-col text-center">{{ user.id }}</td>
             <td class="user-info">
-              <div class="avatar-placeholder">
-                {{ user.full_name.charAt(0) }}
-              </div>
+              <div class="avatar-placeholder">{{ user.full_name.charAt(0) }}</div>
               <span class="font-medium">{{ user.full_name }}</span>
             </td>
             <td class="text-gray">{{ user.email }}</td>
-            <td class="text-gray">{{ user.full_name }}</td>
+            <td class="text-gray">{{ user.password }}</td>
             <td>
-              <span class="badge badge-{{ user.status | lowercase }}">
-                {{ user.status }}
+              <span class="badge" [ngClass]="user.active ? 'badge-active' : 'badge-inactive'">
+                {{ user.active ? 'Active' : 'Inactive' }}
               </span>
             </td>
             <td class="text-gray">{{ user.role }}</td>
@@ -81,8 +79,108 @@
               </button>
             </td>
           </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="text-center empty-state">
+              No users found matching your filters.
+            </td>
+          </tr>
         }
       </tbody>
     </table>
+
+    <div class="pagination-container">
+      <div class="pagination-info">
+        Showing <strong>{{ startIndex }}</strong> to <strong>{{ endIndex }}</strong> of <strong>{{ filteredUsers.length }}</strong> entries
+      </div>
+      <div class="pagination-controls">
+        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+          &laquo; Prev
+        </button>
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          Next &raquo;
+        </button>
+      </div>
+    </div>
   </div>
 </div>
+
+@if (isModalOpen) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      
+      <header class="modal-header">
+        <h2>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </header>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Full Name <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="userForm.full_name" placeholder="Enter full name">
+        </div>
+
+        <div class="form-group">
+          <label>Email <span class="required">*</span></label>
+          <input type="email" [(ngModel)]="userForm.email" placeholder="Enter email address">
+        </div>
+
+        <div class="form-group">
+          <label>Password <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="userForm.password" placeholder="Assign a password">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label>Role</label>
+            <select [(ngModel)]="userForm.role">
+              <option value="Admin">Admin</option>
+              <option value="Mentor">Mentor</option>
+              <option value="Intern">Intern</option>
+            </select>
+          </div>
+
+          <div class="form-group half-width">
+            <label>Status</label>
+            <select [ngModel]="userForm.active" (ngModelChange)="userForm.active = ($event === 'true')">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+          
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button class="btn-outline" (click)="closeModal()">Cancel</button>
+        <button class="btn-primary" (click)="saveUser()">{{ isEditMode ? 'Update' : 'Save User' }}</button>
+      </footer>
+
+    </div>
+  </div>
+}
+
+@if (isDeleteModalOpen) {
+  <div class="modal-backdrop" (click)="closeDeleteModal()">
+    <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+      
+      <header class="modal-header">
+        <h2 class="text-danger">Delete User</h2>
+        <button class="close-btn" (click)="closeDeleteModal()">&times;</button>
+      </header>
+
+      <div class="modal-body">
+        <p style="margin: 0; color: #475569; line-height: 1.5;">
+          Are you sure you want to delete this user? <br>This action cannot be undone.
+        </p>
+      </div>
+
+      <footer class="modal-footer">
+        <button class="btn-outline" (click)="closeDeleteModal()">Cancel</button>
+        <button class="btn-danger" (click)="confirmDelete()">Delete</button>
+      </footer>
+
+    </div>
+  </div>
+}

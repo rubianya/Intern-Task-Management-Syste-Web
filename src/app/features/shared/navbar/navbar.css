@@ -1,4 +1,3 @@
-/* --- แถบ Navbar ด้านบนสุด --- */
 .top-navbar {
   display: flex;
   justify-content: space-between;
@@ -24,7 +23,6 @@
   letter-spacing: 0.5px;
 }
 
-/* --- ปุ่ม Profile ฝั่งขวาบน --- */
 .profile-dropdown-container { 
   position: relative; 
 }
@@ -70,7 +68,6 @@
   margin-bottom: 4px; 
 }
 
-/* --- กล่อง Dropdown Profile --- */
 .profile-dropdown-menu {
   position: absolute; 
   top: calc(100% + 8px); 
@@ -176,4 +173,10 @@
 
 .dropdown-links li:hover { 
   background-color: #f8fafc; 
+}
+
+.text-logout {
+  padding-left: 10px;
+  padding-bottom: 5px;
+  font-size: 16px;
 }

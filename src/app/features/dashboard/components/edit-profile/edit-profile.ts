@@ -2,14 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Sidebar } from '../../../shared/sidebar/sidebar';
-import { Navbar } from '../../../shared/navbar/navbar';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, Sidebar, Navbar],
+  imports: [CommonModule, FormsModule],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css'
 })
@@ -79,6 +77,6 @@ export class EditProfile implements OnInit {
     });
   }
   cancel() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/admin']);
   }
 }

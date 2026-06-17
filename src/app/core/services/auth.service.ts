@@ -25,8 +25,4 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/users/${id}`, data); 
   }
 
-  // 4. ฟังก์ชัน Logout
-  logout() {
-    localStorage.removeItem('token');
-  }
 }

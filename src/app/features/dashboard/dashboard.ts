@@ -14,12 +14,10 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Dashboard implements OnInit {
 
-  role: 'ADMIN' | 'MENTOR' | 'INTERN' = 'INTERN'; 
+  role: 'Admin' | 'Mentor' | 'Intern' = 'Intern'; 
   UserName = '';
   UserEmail = '';
   UserRoleDisplay = ''; 
-
-  // (ตัวแปร isDropdownOpen และฟังก์ชัน toggle ต่างๆ ถูกลบออก เพราะย้ายไป navbar แล้ว)
 
   constructor(
     private router: Router, 
@@ -41,13 +39,13 @@ export class Dashboard implements OnInit {
         if (['ADMIN', 'MENTOR', 'INTERN'].includes(upperCaseRole)) {
           this.role = upperCaseRole;
         } else {
-          this.role = 'INTERN';
+          this.role = 'Intern';
         }
 
         if (this.router.url === '/dashboard') {
-          if (this.role === 'ADMIN') {
+          if (this.role === 'Admin') {
             this.router.navigate(['/dashboard/admin']);
-          } else if (this.role === 'MENTOR') {
+          } else if (this.role === 'Mentor') {
             this.router.navigate(['/dashboard/mentor']);
           } else {
             this.router.navigate(['/dashboard/intern']);
