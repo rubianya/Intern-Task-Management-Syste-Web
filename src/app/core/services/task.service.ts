@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Task } from '../models/task';
+import { MentorDash } from '../../features/dashboard/components/mentor-dash/mentor-dash';
 
 @Injectable({
   providedIn: 'root'
@@ -12,22 +12,22 @@ export class TaskService {
   constructor(private http: HttpClient) {}
 
   // 1. ดึงงานทั้งหมด (สำหรับ Dashboard รวม)
-  getAllTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl);
+  getAllTasks(): Observable<MentorDash[]> {
+    return this.http.get<MentorDash[]>(this.apiUrl);
   }
 
   // 2. ดึงงานเฉพาะที่ Mentor คนนี้เป็นคนสร้าง
-  getTasksByMentor(mentorId: number): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/mentor/${mentorId}`);
+  getTasksByMentor(mentorId: number): Observable<MentorDash[]> {
+    return this.http.get<MentorDash[]>(`${this.apiUrl}/mentor/${mentorId}`);
   }
 
   // 3. สร้างงานใหม่ & มอบหมายงาน
-  createTask(taskData: Task): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, taskData);
+  createTask(taskData: MentorDash): Observable<MentorDash> {
+    return this.http.post<MentorDash>(this.apiUrl, taskData);
   }
 
   // 4. อัปเดตสถานะ หรือ ส่ง Comment ตรวจงาน
-  updateTask(taskId: number, taskData: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/${taskId}`, taskData);
+  updateTask(taskId: number, taskData: MentorDash): Observable<MentorDash> {
+    return this.http.put<MentorDash>(`${this.apiUrl}/${taskId}`, taskData);
   }
 }

@@ -8,7 +8,7 @@
     <div class="filters">
       <div class="search-box">
         <i class="fi fi-sr-search"></i>
-        <input type="text" placeholder="Search by name or email" [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange()">
+        <input type="text" placeholder="Search by id or name or email" [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange()">
       </div>
       
       <div class="filter-dropdown">
@@ -32,9 +32,9 @@
     </div>
 
     <div class="actions">
-      <button class="btn-outline">
+      <!-- <button class="btn-outline">
         <i class="fi fi-sr-download"></i> Export
-      </button>
+      </button> -->
       <button class="btn-primary" (click)="openAddUserModal()">
         <i class="fi fi-sr-plus"></i> Add User
       </button>
@@ -49,8 +49,8 @@
           <th>Full Name</th>
           <th>Email</th>
           <th>Password</th>
-          <th>Status</th>
           <th>Role</th>
+          <th>Status</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
@@ -64,12 +64,12 @@
             </td>
             <td class="text-gray">{{ user.email }}</td>
             <td class="text-gray">{{ user.password }}</td>
+            <td class="text-gray">{{ user.role }}</td>
             <td>
               <span class="badge" [ngClass]="user.active ? 'badge-active' : 'badge-inactive'">
                 {{ user.active ? 'Active' : 'Inactive' }}
               </span>
             </td>
-            <td class="text-gray">{{ user.role }}</td>
             <td class="action-cell">
               <button class="icon-btn edit" (click)="editUser(user)" title="Edit">
                 <i class="fi fi-sr-pencil"></i>
@@ -91,7 +91,7 @@
 
     <div class="pagination-container">
       <div class="pagination-info">
-        Showing <strong>{{ startIndex }}</strong> to <strong>{{ endIndex }}</strong> of <strong>{{ filteredUsers.length }}</strong> entries
+        Showing <strong>{{ startIndex }}</strong> to <strong>{{ endIndex }}</strong> of <strong>{{ filteredUsers.length }}</strong> users
       </div>
       <div class="pagination-controls">
         <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">

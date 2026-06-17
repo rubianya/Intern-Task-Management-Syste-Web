@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  
   private apiUrl = 'http://localhost:8081/api';
 
   constructor(private http: HttpClient) {}
@@ -17,7 +18,7 @@ export class AuthService {
 
   // 2. ยิง API ดึงข้อมูล User Profile
   getUserProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/me`); 
+    return this.http.get(`${this.apiUrl}/users/profile`); 
   }
 
   // 3. ยิง API อัปเดตข้อมูลโปรไฟล์

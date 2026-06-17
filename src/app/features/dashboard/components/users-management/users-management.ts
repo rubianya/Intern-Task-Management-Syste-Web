@@ -62,7 +62,8 @@ constructor(
     return this.users.filter(user => {
       const searchLower = this.searchTerm.toLowerCase();
 
-      const matchesSearch = user.full_name?.toLowerCase().includes(searchLower) || 
+      const matchesSearch = user.id.toString().toLowerCase().includes(searchLower) ||
+                            user.full_name?.toLowerCase().includes(searchLower) || 
                             user.email?.toLowerCase().includes(searchLower);
 
       const matchesRole = this.selectedRole ? user.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
@@ -105,7 +106,6 @@ constructor(
         next: (updatedUser) => {
           const index = this.users.findIndex(u => u.id === updatedUser.id);
           if (index !== -1) {
-            // อัปเดตข้อมูล และสร้าง Array ใหม่เพื่อให้ระบบตรวจจับการเปลี่ยนแปลง
             this.users[index] = updatedUser;
             this.users = [...this.users]; 
           }
