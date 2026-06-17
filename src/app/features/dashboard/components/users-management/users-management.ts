@@ -48,8 +48,8 @@ constructor(
 
   loadUsers() {
     this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.users = data;
+      next: (response: any) => {
+        this.users = response.data;
         this.cdr.detectChanges();
       },
       error: (err) => {

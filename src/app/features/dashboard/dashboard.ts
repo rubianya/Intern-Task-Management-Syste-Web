@@ -34,8 +34,8 @@ export class Dashboard implements OnInit {
     }
 
     this.authService.getUserProfile().subscribe({
-      next: (profile: any) => {
-        const upperCaseRole = profile.role?.toUpperCase();
+      next: (response: any) => {
+        const upperCaseRole = response.data.role?.toUpperCase();
         if (['ADMIN', 'MENTOR', 'INTERN'].includes(upperCaseRole)) {
           this.role = upperCaseRole;
         } else {
@@ -52,14 +52,14 @@ export class Dashboard implements OnInit {
           }
         }
 
-        this.UserRoleDisplay = profile.role;
-        this.UserName = profile.full_name;
-        this.UserEmail = profile.email;
+        this.UserRoleDisplay = response.data.role;
+        this.UserName = response.data.full_name;
+        this.UserEmail = response.data.email;
 
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('ไม่สามารถดึงข้อมูลโปรไฟล์ได้', err);
+      error: (error) => {
+        console.error('ไม่สามารถดึงข้อมูลโปรไฟล์ได้', error);
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }

@@ -35,15 +35,15 @@ export class EditProfile implements OnInit {
 
         console.log('ข้อมูลโปรไฟล์ทั้งหมดที่ได้จาก API:', profile);
 
-        this.userId = profile.id;
-        this.originalProfile = profile;
+        this.userId = profile.data.id;
+        this.originalProfile = profile.data;
 
-        this.displayFullName = profile.full_name;
-        this.displayEmail = profile.email;
-        this.role = profile.role?.toUpperCase() || 'INTERN';
+        this.displayFullName = profile.data.full_name;
+        this.displayEmail = profile.data.email;
+        this.role = profile.data.role?.toUpperCase() || 'INTERN';
 
-        this.editFullName = profile.full_name;
-        this.editEmail = profile.email;
+        this.editFullName = profile.data.full_name;
+        this.editEmail = profile.data.email;
 
         this.cdr.detectChanges();
       },
