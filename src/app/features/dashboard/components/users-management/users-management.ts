@@ -37,7 +37,7 @@ export class UsersManagement {
   isDeleteModalOpen: boolean = false;
   userIdToDelete: number | null = null;
 
-constructor(
+  constructor(
     private userService: UserService, 
     private cdr: ChangeDetectorRef
   ) {}
@@ -63,7 +63,7 @@ constructor(
     return this.users.filter(response => {
       const searchLower = this.searchTerm.toLowerCase();
 
-      const matchesSearch = response.id.toString().toLowerCase().includes(searchLower) ||
+      const matchesSearch = //response.id.toString().toLowerCase().includes(searchLower) ||
                             response.full_name?.toLowerCase().includes(searchLower) || 
                             response.email?.toLowerCase().includes(searchLower);
 
@@ -81,8 +81,15 @@ constructor(
   }
 
   openAddUserModal() {
+    this.userForm = { 
+      id: 0, 
+      full_name: '', 
+      email: '', 
+      password: '', 
+      role: 'Intern', 
+      active: true 
+    };
     this.isEditMode = false;
-    this.userForm = { id: 0, full_name: '', email: '', password: '', role: 'INTERN', active: true };
     this.isModalOpen = true;
   }
 
@@ -112,6 +119,7 @@ constructor(
           }
           this.closeModal();
           this.cdr.detectChanges();
+          this.loadUsers();
         },
         error: (err) => console.error('Update failed:', err)
       });
@@ -119,10 +127,15 @@ constructor(
       this.userService.createUser(this.userForm).subscribe({
         next: (newUser) => {
           this.users = [...this.users, newUser]; 
+          alert('บันทึกข้อมูลสำเร็จ!');
           this.closeModal();
           this.cdr.detectChanges();
+          this.loadUsers();
         },
-        error: (err) => console.error('Create failed:', err)
+        error: (err) => {
+          console.error('Create failed:', err)
+          alert('บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบข้อมูลหรือรหัสผ่านให้ถูกต้อง');
+        }
       });
     }
   }
@@ -149,6 +162,7 @@ constructor(
     this.isDeleteModalOpen = false;
     this.userIdToDelete = null;
   }
+
 
   ///// ตัวแปรสำหรับแบ่งหน้า (Pagination) /////
   currentPage: number = 1;
