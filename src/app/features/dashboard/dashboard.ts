@@ -35,12 +35,8 @@ export class Dashboard implements OnInit {
 
     this.authService.getUserProfile().subscribe({
       next: (response: any) => {
-        const upperCaseRole = response.data.role?.toUpperCase();
-        if (['ADMIN', 'MENTOR', 'INTERN'].includes(upperCaseRole)) {
-          this.role = upperCaseRole;
-        } else {
-          this.role = 'Intern';
-        }
+        
+        this.role = response.data.role;
 
         if (this.router.url === '/dashboard') {
           if (this.role === 'Admin') {

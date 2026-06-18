@@ -36,6 +36,11 @@
             </div>
 
             <div class="form-group">
+              <label>Password</label>
+              <input type="password" name="password" [(ngModel)]="editPassword" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-group"> 
               <label>Role (Read Only)</label>
               <input type="text" class="input-disabled" name="role" [(ngModel)]="role" disabled>
             </div>

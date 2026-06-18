@@ -15,10 +15,12 @@ export class EditProfile implements OnInit {
 
   displayFullName = '';
   displayEmail = '';
+  displayPassword ='';
   role = '';
 
   editFullName = '';
   editEmail = '';
+  editPassword = '';
 
   userId!: number;
   originalProfile: any;
@@ -40,10 +42,12 @@ export class EditProfile implements OnInit {
 
         this.displayFullName = profile.data.full_name;
         this.displayEmail = profile.data.email;
-        this.role = profile.data.role?.toUpperCase() || 'INTERN';
+        this.displayPassword = profile.data.password;
+        this.role = profile.data.role;
 
         this.editFullName = profile.data.full_name;
         this.editEmail = profile.data.email;
+        this.editPassword = profile.data.password;
 
         this.cdr.detectChanges();
       },
@@ -58,10 +62,11 @@ export class EditProfile implements OnInit {
     const updateData = {
       ...this.originalProfile,
       full_name: this.editFullName,
-      email: this.editEmail
+      email: this.editEmail,
+      password: this.editPassword
     };
 
-    console.log('📦 ข้อมูลที่จะส่งไปอัปเดต:', updateData);
+    console.log('ข้อมูลที่จะส่งไปอัปเดต:', updateData);
 
     this.authService.updateProfile(this.userId, updateData).subscribe({
       next: (response: any) => {   

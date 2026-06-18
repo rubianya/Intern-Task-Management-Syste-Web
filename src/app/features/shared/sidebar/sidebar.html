@@ -1,6 +1,6 @@
 <aside class="sidebar">
 
-  @if(role === 'ADMIN') {
+  @if(role === 'Admin') {
     <ul>
       <li routerLink="/dashboard/admin" routerLinkActive="active-menu">Dashboard</li>
       <li routerLink="/dashboard/users-management" routerLinkActive="active-menu">Users Management</li>
@@ -8,7 +8,7 @@
     </ul>
   }
 
-  @if(role === 'MENTOR') {
+  @if(role === 'Mentor') {
     <ul>
       <li routerLink="/dashboard/mentor" routerLinkActive="active-menu">Dashboard</li>
       <li routerLink="/dashboard/create-task" routerLinkActive="active-menu">Create Task</li>
@@ -18,7 +18,7 @@
     </ul>
   }
 
-  @if(role === 'INTERN') {
+  @if(role === 'Intern') {
     <ul>
       <li routerLink="/dashboard/intern" routerLinkActive="active-menu">Dashboard</li>
       <li routerLink="/dashboard/my-tasks" routerLinkActive="active-menu">My Tasks</li>
