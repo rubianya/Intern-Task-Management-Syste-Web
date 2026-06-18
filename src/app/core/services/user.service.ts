@@ -18,18 +18,22 @@ export class UserService {
 
     // เพิ่มผู้ใช้ใหม่
     createUser(userData: User): Observable<User> {
-        return this.http.post<User>(`${this.apiUrl}/user`, userData);
+        return this.http.post<User>(`${this.apiUrl}/users`, userData);
     }
 
     // อัปเดตข้อมูลผู้ใช้
-    updateUser(id: string | number, userData: User): Observable<User> {
+    updateUser(id: number, userData: User): Observable<User> {
         return this.http.put<User>(`${this.apiUrl}/users/${id}`, userData);
     }
 
     // ลบผู้ใช้
-    // Backend คืนค่าเป็น String ("ลบข้อมูลผู้ใช้งานสำเร็จ") จึงต้องใส่ responseType: 'text'
-    deleteUser(id: string | number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/delete/${id}`, { responseType: 'text' });
+    deleteUser(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/delete/${id}`);
+    }
+
+    // เปลี่ยนสถานะการใช้งานบัญชี
+    switchActive(id: number, userData: User): Observable<User> {
+        return this.http.put<User>(`${this.apiUrl}//users/${id}/active`,userData);
     }
     
 }

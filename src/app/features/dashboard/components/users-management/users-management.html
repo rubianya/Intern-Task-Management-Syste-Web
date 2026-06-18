@@ -32,9 +32,6 @@
     </div>
 
     <div class="actions">
-      <!-- <button class="btn-outline">
-        <i class="fi fi-sr-download"></i> Export
-      </button> -->
       <button class="btn-primary" (click)="openAddUserModal()">
         <i class="fi fi-sr-plus"></i> Add User
       </button>
@@ -128,7 +125,7 @@
 
         <div class="form-group">
           <label>Password <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="userForm.password" placeholder="Assign a password">
+          <input type="password" [(ngModel)]="userForm.password" placeholder="Assign a password">
         </div>
 
         <div class="form-row">

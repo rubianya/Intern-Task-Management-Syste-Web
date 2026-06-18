@@ -31,7 +31,7 @@ export class UsersManagement {
   isEditMode: boolean = false;
   
   userForm: User = {
-    id: 0, full_name: '', email: '', password: '', role: 'INTERN', active: true
+    id: 0, full_name: '', email: '', password: '', role: 'Intern', active: true
   };
 
   isDeleteModalOpen: boolean = false;
@@ -50,6 +50,7 @@ constructor(
     this.userService.getAllUsers().subscribe({
       next: (response: any) => {
         this.users = response.data;
+        console.log('ข้อมูล Users ที่ดึงมาได้:', this.users);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -59,20 +60,20 @@ constructor(
   }
 
   get filteredUsers(): User[] {
-    return this.users.filter(user => {
+    return this.users.filter(response => {
       const searchLower = this.searchTerm.toLowerCase();
 
-      const matchesSearch = user.id.toString().toLowerCase().includes(searchLower) ||
-                            user.full_name?.toLowerCase().includes(searchLower) || 
-                            user.email?.toLowerCase().includes(searchLower);
+      const matchesSearch = response.id.toString().toLowerCase().includes(searchLower) ||
+                            response.full_name?.toLowerCase().includes(searchLower) || 
+                            response.email?.toLowerCase().includes(searchLower);
 
-      const matchesRole = this.selectedRole ? user.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
+      const matchesRole = this.selectedRole ? response.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
       
       let matchesStatus = true;
       if (this.selectedStatus === 'Active') {
-        matchesStatus = user.active === true;
+        matchesStatus = response.active === true;
       } else if (this.selectedStatus === 'Inactive') {
-        matchesStatus = user.active === false;
+        matchesStatus = response.active === false;
       }
 
       return matchesSearch && matchesRole && matchesStatus;
@@ -85,9 +86,9 @@ constructor(
     this.isModalOpen = true;
   }
 
-  editUser(user: User) {
+  editUser(response: User) {
     this.isEditMode = true;
-    this.userForm = { ...user };
+    this.userForm = { ...response };
     this.isModalOpen = true;
   }
 
@@ -135,7 +136,7 @@ constructor(
     if (this.userIdToDelete) {
       this.userService.deleteUser(this.userIdToDelete).subscribe({
         next: () => {
-          this.users = this.users.filter(user => user.id !== this.userIdToDelete);
+          this.users = this.users.filter(response => response.id !== this.userIdToDelete);
           this.closeDeleteModal();
           this.cdr.detectChanges();
         },
