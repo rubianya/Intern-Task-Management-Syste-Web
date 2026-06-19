@@ -6,6 +6,7 @@ import { MentorDash } from './features/dashboard/components/mentor-dash/mentor-d
 import { InternDash } from './features/dashboard/components/intern-dash/intern-dash';
 import { EditProfile } from './features/dashboard/components/edit-profile/edit-profile';
 import { UsersManagement } from './features/dashboard/components/users-management/users-management';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
     {
@@ -18,6 +19,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard', component: Dashboard, 
+        canActivate: [authGuard], 
         children: [
             { path: 'admin', component: AdminDash },
             { path: 'edit-profile', component: EditProfile },

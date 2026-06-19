@@ -1,156 +1,128 @@
-/* ล้างค่าเริ่มต้น และตั้งค่าพื้นหลังหลัก */
 .login-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #7ec2f9 0%, #63a4f1 100%);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  box-sizing: border-box;
-  padding: 40px;
-}
-
-/* ตัวหุ้มเนื้อหาแบ่งหน้าจอซ้าย-ขวา */
-.login-content-wrapper {
-  flex: 1;
-  display: flex;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0px auto 0 auto;
-  background: #ffffff;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-/* ฝั่งซ้าย: กล่องข้อความ และ การจัดกึ่งกลางรูปภาพ */
-.left-panel {
-  flex: 1.1;
-  background-color: #f8fafc;
-  padding: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* จัดให้เนื้อหาอยู่กึ่งกลางแนวตั้ง */
-  align-items: center;     /* จัดให้เนื้อหาอยู่กึ่งกลางแนวนอน */
-  border-right: 1px solid #f1f5f9;
-  box-sizing: border-box;
-}
-
-/* ตกแต่งหัวข้อฝั่งซ้าย */
-.system-title {
-  font-size: 2.1rem;
-  color: #1f2937;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  text-align: center;
-  margin: 0 0 30px 0; /* เว้นระยะห่างด้านล่างก่อนถึงรูปภาพ */
-}
-
-/* กล่องควบคุมขนาดรูปภาพ */
-.vector-image-wrapper {
-  width: 100%;
-  max-width: 380px; /* จำกัดความกว้างไม่ให้ใหญ่เกินไป */
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f2f5 0%, #e0eafc 100%);
+  padding: 20px;
 }
 
-.vector-image-wrapper img {
+.login-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 550px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.left-panel {
+  flex: 1;
+  background-color: #f7fafe;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.branding {
+  padding: 50px 50px 0 50px;
+}
+
+.system-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0277bd;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.system-subtitle {
+  font-size: 16px;
+  color: #546e7a;
+  margin: 0;
+}
+
+.login-image {
   width: 100%;
   height: auto;
+  max-height: 350px;
   object-fit: contain;
+  margin-top: auto;
+  padding: 0 20px 20px 20px;
 }
 
-/* ฝั่งขวา: พื้นที่วางฟอร์มล็อกอิน */
 .right-panel {
-  flex: 0.9;
+  flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 60px;
-  background: #ffffff;
-}
-
-/* การ์ดครอบฟอร์มให้ดูสะอาดตา */
-.login-card {
-  width: 100%;
-  max-width: 380px;
+  padding: 60px 50px;
+  background-color: #ffffff;
 }
 
 .login-title {
-  font-size: 2.2rem;
-  color: #000000;
-  margin: 0 0 35px 0;
+  font-size: 28px;
   font-weight: 700;
-  text-align: left;
-}
-
-/* จัดสไตล์กล่องรับข้อมูล (Input) */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 1rem;
   color: #333333;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  margin-bottom: 30px;
 }
 
-.form-group input:focus {
-  border-color: #2563eb;
+.login-form {
+  display: flex;
+  flex-direction: column;
 }
 
-.form-group input::placeholder {
-  color: #94a3b8;
+.full-width {
+  width: 100%;
 }
 
-/* ตัวจัดการปุ่มติ๊กถูกและลิงก์ลืมรหัสผ่าน */
+.field-spacing {
+  margin-bottom: 8px;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  padding-top: 6px !important;
+}
+
 .form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
   margin-bottom: 30px;
-  color: #334155;
+  margin-top: -8px;
 }
 
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+.forgot-password {
+  color: #0277bd;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-/* ปุ่ม Login สีน้ำเงินสด */
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
 .btn-login {
-  width: 100%;
-  padding: 14px;
-  background-color: #1565c0;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  padding: 26px 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  letter-spacing: 0.5px;
 }
 
-.btn-login:hover {
-  background-color: #0d47a1;
-}
-
-/* ปรับหน้าจอให้รองรับมือถือ (Responsive) */
-@media (max-width: 868px) {
+@media (max-width: 800px) {
   .login-content-wrapper {
     flex-direction: column;
+    max-width: 500px;
   }
   .left-panel {
-    display: none; /* ซ่อนฝั่งซ้ายบนมือถือเพื่อประหยัดพื้นที่บนหน้าจอ */
+    display: none;
+  }
+  .right-panel {
+    padding: 40px 30px;
   }
 }

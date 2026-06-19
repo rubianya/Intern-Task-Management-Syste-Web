@@ -1,448 +1,527 @@
-/* --- โครงสร้างหลัก --- */
-.page-wrapper {
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+/* =========================================================
+   LAYOUT CONTAINER & TYPOGRAPHY
+   ========================================================= */
+.management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 10px;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
 .page-header {
+  margin-bottom: 30px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.5px;
   text-align: center;
 }
 
-.page-header h1 {
-  font-size: 28px;
-  color: #1e293b;
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.page-header p {
+.page-subtitle {
+  font-size: 15px;
   color: #64748b;
-  font-size: 14px;
   margin: 0;
+  text-align: center;
 }
 
-/* --- Toolbar (ค้นหาและปุ่มกด) --- */
-.toolbar {
+/* =========================================================
+   MAIN CARD & TOOLBAR SECTION
+   ========================================================= */
+.main-data-card {
+  background-color: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.toolbar-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
   flex-wrap: wrap;
   gap: 16px;
 }
 
-.filters {
+.filter-group {
   display: flex;
+  align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.search-box {
+/* สไตล์กล่องค้นหาแบบพรีเมียม */
+.search-box-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
-  padding: 8px 16px;
-  background-color: #fff;
-  width: 250px;
-}
-
-.search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-}
-
-.filter-dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
-  padding: 8px 16px;
-  background-color: #fff;
-}
-
-.filter-dropdown select {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-}
-
-.btn-outline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: transparent;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.btn-outline:hover {
-  background-color: #f1f5f9;
-}
-
-.btn-primary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #355872;
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #274154;
-}
-
-/* --- ตาราง --- */
-.table-card {
   background-color: #f8fafc;
-  border-radius: 8px;
   border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 16px;
+  width: 320px;
+  height: 44px;
+  transition: all 0.2s ease;
+}
+
+.search-box-wrapper:focus-within {
+  background-color: #ffffff;
+  border-color: #0277bd;
+  box-shadow: 0 0 0 3px rgba(2, 119, 189, 0.1);
+}
+
+.search-icon {
+  color: #94a3b8;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.custom-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* สไตล์ Dropdown ตัวกรอง */
+.custom-select {
+  height: 44px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #475569;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+  transition: all 0.2s ease;
+}
+
+.custom-select:focus {
+  background-color: #ffffff;
+  border-color: #0277bd;
+}
+
+.btn-add-user {
+  height: 44px !important;
+  padding: 0 20px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+}
+
+.icon-left {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+/* =========================================================
+   PREMIUM DATA TABLE STYLES
+   ========================================================= */
+.table-responsive-wrapper {
+  width: 100%;
   overflow-x: auto;
 }
 
-.custom-table {
+.premium-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 
-.custom-table th {
-  background-color: #355872;
-  color: #fff;
-  font-weight: 500;
+.premium-table th {
+  background-color: #fafbfc;
+  padding: 16px 24px;
   font-size: 13px;
-  padding: 12px 16px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.custom-table td {
-  padding: 16px;
-  border-bottom: 1px solid #e2e8f0;
+.premium-table td {
+  padding: 16px 24px;
   font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
 }
 
-.custom-table tbody tr {
-  background-color: #fff;
-  transition: background-color 0.2s;
+.premium-table tbody tr:hover {
+  background-color: #f8fafc;
 }
 
-.custom-table tbody tr:hover {
-  background-color: #f1f5f9;
-}
-
-.id-col {
-  width: 60px;
-  text-align: center;
-}
-
-.user-info {
+/* ตกแต่งคอลัมน์ชื่อและอวาตาร์ตัวอักษรแรก */
+.user-name-cell {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.avatar-placeholder {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #cbd5e1;
-  color: #334155;
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
+  border-radius: 50%;
   font-size: 14px;
 }
 
-.font-medium {
-  font-weight: 500;
+.user-name-text {
+  font-weight: 600;
   color: #1e293b;
 }
 
-.text-gray {
-  color: #64748b;
-}
+.text-bold { font-weight: 600; color: #64748b; }
+.text-muted { color: #64748b; }
 
-/* --- สถานะ (Badges) --- */
-.badge {
-  padding: 4px 12px;
-  border-radius: 20px;
+/* =========================================================
+   BADGES & LABELS STYLES (สไตล์ป้ายสถานะ)
+   ========================================================= */
+.role-badge {
+  display: inline-flex;
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
-  display: inline-block;
-  text-align: center;
-  min-width: 80px;
+  border-radius: 20px;
+}
+.badge-admin { background-color: #fee2e2; color: #ef4444; }
+.badge-mentor { background-color: #fef3c7; color: #d97706; }
+.badge-intern { background-color: #dcfce7; color: #16a34a; }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.status-active { color: #16a34a; }
+.status-active::before { background-color: #16a34a; }
+.status-inactive { color: #94a3b8; }
+.status-inactive::before { background-color: #94a3b8; }
+
+/* =========================================================
+   ACTION BUTTONS STYLES
+   ========================================================= */
+.action-buttons-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 
-.badge-active { background-color: #22c55e; color: #fff; }
-.badge-inactive { background-color: #ef4444; color: #fff; }
-
-/* --- ปุ่ม Action --- */
-.text-center { text-align: center; }
-.action-cell { display: flex; justify-content: center; gap: 8px; }
-
-.icon-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: 0.2s;
-}
-
-.icon-btn.edit { color: #64748b; }
-.icon-btn.edit:hover { color: #355872; background-color: #e2e8f0; }
-
-.icon-btn.delete { color: #ef4444; }
-.icon-btn.delete:hover { background-color: #fef2f2; }
-
-.empty-state {
-  padding: 40px 20px !important;
-  color: #64748b;
-  font-size: 15px;
-  background-color: #f8fafc;
-}
-
-/* =========================================
-   Modal Styles
-   ========================================= */
-
-/* พื้นหลัง Modal */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(15, 23, 42, 0.5); /* สีดำโปร่งแสง */
+.action-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* ให้อยู่บนสุด */
-  animation: fadeIn 0.2s ease-out;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
 }
 
-/* กล่องเนื้อหา Modal */
-.modal-content {
-  background-color: #ffffff;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.3s ease-out;
+.edit-btn:hover {
+  background-color: #f0fdf4;
+  border-color: #16a34a;
+  color: #16a34a;
 }
 
-/* ส่วนหัว Modal */
-.modal-header {
+.delete-btn:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* =========================================================
+   PAGINATION FOOTER BAR
+   ========================================================= */
+.pagination-footer-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-bottom: 1px solid #e2e8f0;
+  background-color: #fafbfc;
+  border-top: 1px solid #f1f5f9;
 }
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 20px;
+.pagination-record-info {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.pagination-record-info strong {
   color: #1e293b;
 }
 
-.close-btn {
-  background: transparent;
+.pagination-navigation-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-page-btn:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.nav-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.current-page-indicator {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+.table-empty-state {
+  text-align: center;
+  padding: 60px 0 !important;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 4px 0;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* =========================================================
+   PREMIUM MODAL DIALOG COMPONENT STYLES (ปรับปรุงตำแหน่งกึ่งกลางจอ)
+   ========================================================= */
+.modal-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.4); /* มืดนวลๆ ดูพรีเมียม */
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center; 
+  
+  z-index: 99999; /* ตั้งค่าให้สูงมาก เพื่อให้อยู่เหนือ Sidebar และ Navbar ทุกตัว */
+  animation: fadeIn 0.2s ease-out;
+}
+
+.premium-modal-window {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 650px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  margin: auto; 
+  
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-size-sm {
+  max-width: 450px;
+  margin: auto; /* ล็อคกึ่งกลางจอเช่นกัน */
+}
+
+.premium-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-title-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.modal-close-x-btn {
+  background: none;
   border: none;
-  font-size: 28px;
+  font-size: 24px;
   color: #94a3b8;
   cursor: pointer;
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-.close-btn:hover {
-  color: #ef4444;
-}
-
-/* ส่วนฟอร์ม */
-.modal-body {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #334155;
-}
-
-.form-group .required {
-  color: #ef4444;
-}
-
-.form-group input,
-.form-group select {
-  padding: 10px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
   outline: none;
-  transition: border-color 0.2s;
-  font-family: inherit;
 }
 
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #355872;
+.modal-close-x-btn:hover {
+  color: #475569;
 }
 
-.form-row {
+.premium-modal-body {
+  padding: 28px;
+}
+
+.modal-reactive-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.two-column-form-row {
   display: flex;
   gap: 16px;
+  width: 100%;
 }
 
-.half-width {
-  flex: 1;
+.full-width-field { width: 100%; }
+.half-width-field { flex: 1; }
+
+.field-spacing-box {
+  margin-bottom: 4px;
 }
 
-/* ส่วนท้าย Modal (ปุ่มบันทึก) */
-.modal-footer {
-  padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
+/* แก้ไขระยะห่างตัวหนังสือตัวแดง (Error) ใต้กล่อง Input */
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  padding-top: 6px !important;
+}
+
+.premium-modal-footer {
+  padding: 16px 28px;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  background-color: #f8fafc;
-  border-radius: 0 0 12px 12px;
 }
 
-/* --- ส่วนเพิ่มเติมสำหรับ Delete Modal --- */
-.modal-sm {
-  max-width: 400px; /* ย่อขนาดกล่องให้เล็กลงสำหรับแจ้งเตือน */
+.btn-modal-cancel {
+  font-weight: 600 !important;
+  color: #64748b !important;
 }
 
-.text-danger {
-  color: #ef4444 !important;
+.btn-modal-save {
+  padding: 22px 24px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
 }
 
-.btn-danger {
+/* ---------- ส่วนย่อยของลบข้อมูล (Delete Confirmation) ---------- */
+.text-center-padding {
+  padding: 35px 28px 20px 28px;
+  text-align: center;
+}
+
+.danger-icon-alert-wrapper {
+  width: 56px;
+  height: 56px;
+  background-color: #fef2f2;
+  border-radius: 50%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  background-color: #ef4444;
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
+  margin: 0 auto 16px auto;
 }
 
-.btn-danger:hover {
-  background-color: #dc2626;
+.danger-alert-icon {
+  color: #ef4444;
+  font-size: 24px;
 }
 
-/* Animations */
+.danger-alert-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.danger-alert-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.border-danger { border-bottom: none !important; }
+.color-danger { color: #ef4444; }
+.bg-light-danger { background-color: #fffafb; }
+
+.btn-modal-delete-confirm {
+  padding: 22px 24px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+/* =========================================================
+   ANIMATIONS & RESPONSIVE DESIGN
+   ========================================================= */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.pagination-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  border-radius: 0 0 8px 8px;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #64748b;
-}
-
-.pagination-info strong {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.page-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: 1px solid #cbd5e1;
-  background-color: #ffffff;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #334155;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.page-btn:hover:not(:disabled) {
-  background-color: #f8fafc;
-  border-color: #94a3b8;
-  color: #1e293b;
-}
-
-.page-btn:disabled {
-  background-color: #f1f5f9;
-  color: #94a3b8;
-  border-color: #e2e8f0;
-  cursor: not-allowed;
-}
-
-.page-info {
-  font-size: 14px;
-  font-weight: 500;
-  color: #334155;
-  background-color: #f1f5f9;
-  padding: 6px 12px;
-  border-radius: 6px;
+@media (max-width: 768px) {
+  .toolbar-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-box-wrapper {
+    width: 100%;
+  }
+  .two-column-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }

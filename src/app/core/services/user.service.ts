@@ -1,13 +1,15 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { User } from "../../features/dashboard/components/users-management/users-management";
+import { User } from "../models/user.model";
 import { Observable } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-    private apiUrl = 'http://localhost:8081/api';
+    
+    private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) {}
 
@@ -33,7 +35,7 @@ export class UserService {
 
     // เปลี่ยนสถานะการใช้งานบัญชี
     switchActive(id: number, userData: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}//users/${id}/active`,userData);
+        return this.http.put<User>(`${this.apiUrl}/users/${id}/active`,userData);
     }
     
 }

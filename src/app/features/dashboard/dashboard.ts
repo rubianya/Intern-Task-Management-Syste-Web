@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { Sidebar } from '../shared/sidebar/sidebar';
-import { Navbar } from '../shared/navbar/navbar'; // <-- Import Navbar เข้ามา
+import { Navbar } from '../shared/navbar/navbar';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({

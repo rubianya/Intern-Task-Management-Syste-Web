@@ -1,37 +1,51 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { LogingResponse } from '../../../core/models/auth.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
 
-  email = '';
-  password = '';
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required])
+  });
 
   constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    if (this.email && this.password) {
-      const payload = { email: this.email, password: this.password };
+    if (this.loginForm.valid) {
+      const payload = this.loginForm.value;
 
       this.authService.login(payload).subscribe({
-        next: (response: any) => {
-          // ตรวจสอบว่ามีข้อมูลส่งกลับมาและ response.success เป็น true
+        next: (response: LogingResponse) => {
+
           if (response && response.success && response.data) {
-            
-            // เข้าถึงข้อมูลจาก response.data
             const userData = response.data;
 
             if (userData.active === 1 || userData.active === true) {
               console.log('Login สำเร็จ', response);
-              // บันทึก Token จาก userData.token
               localStorage.setItem('token', userData.token);
               this.router.navigate(['/dashboard']);
             } else {
@@ -47,6 +61,7 @@ export class Login {
 
     } else {
       alert('กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน!');
+      this.loginForm.markAllAsTouched();
     }
   }
 }

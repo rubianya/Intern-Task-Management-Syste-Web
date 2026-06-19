@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
-
-export interface User {
-  id: number;
-  full_name: string;
-  email: string;
-  password: string;
-  role: string;
-  active: boolean;
-}
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-users-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule
+  ],
   templateUrl: './users-management.html',
   styleUrl: './users-management.css',
 })
@@ -29,13 +35,17 @@ export class UsersManagement {
 
   isModalOpen: boolean = false;
   isEditMode: boolean = false;
-  
-  userForm: User = {
-    id: 0, full_name: '', email: '', password: '', role: 'Intern', active: true
-  };
-
   isDeleteModalOpen: boolean = false;
   userIdToDelete: number | null = null;
+
+  userFormGroup = new FormGroup({
+    id: new FormControl(0),
+    full_name: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.minLength(8)]),
+    role: new FormControl('Intern', [Validators.required]),
+    active: new FormControl(true, Validators.required)
+  });
 
   constructor(
     private userService: UserService, 
@@ -81,36 +91,71 @@ export class UsersManagement {
   }
 
   openAddUserModal() {
-    this.userForm = { 
-      id: 0, 
-      full_name: '', 
-      email: '', 
-      password: '', 
-      role: 'Intern', 
-      active: true 
-    };
+
     this.isEditMode = false;
+
+    this.userFormGroup.reset({ id: 0, role: 'Intern', active: true, password: '' });
+
+    // บังคับให้กรอกรหัสผ่าน
+    this.userFormGroup.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+    this.userFormGroup.get('password')?.updateValueAndValidity();
+
     this.isModalOpen = true;
+
   }
 
-  editUser(response: User) {
+  openEditUserModal(response: User) {
+
     this.isEditMode = true;
-    this.userForm = { ...response };
+
+    this.userFormGroup.patchValue({
+      id: response.id,
+      full_name: response.full_name,
+      email: response.email,
+      role: response.role,
+      active: response.active === 1 || response.active === true,
+      password: ''
+    });
+
+    this.userFormGroup.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+    this.userFormGroup.get('password')?.updateValueAndValidity();
+
     this.isModalOpen = true;
+
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.userFormGroup.reset();
   }
 
   saveUser() {
-    if (!this.userForm.full_name || !this.userForm.email || !this.userForm.password) {
-      alert('Please fill in all required fields.');
+    
+    if (this.userFormGroup.invalid) {
+      this.userFormGroup.markAllAsTouched();
+      alert('Please fill in all required fields correctly.');
       return;
     }
 
+    const userData = this.userFormGroup.getRawValue() as User;
+
+    // const rawData = this.userFormGroup.getRawValue();
+    // const userData: any = {
+    //   id: Number(rawData.id),
+    //   full_name: rawData.full_name,
+    //   email: rawData.email,
+    //   role: rawData.role,
+    //   active: rawData.active
+    // };
+    // if (rawData.password && rawData.password.trim() !== '') {
+    //   userData.password = rawData.password;
+    // } else if (!this.isEditMode) {
+    //   alert('Password is required for new users.');
+    //   return;
+    // }
+
     if (this.isEditMode) {
-      this.userService.updateUser(this.userForm.id, this.userForm).subscribe({
+      this.userService.updateUser(Number(userData.id), userData).subscribe({
         next: (updatedUser) => {
           const index = this.users.findIndex(u => u.id === updatedUser.id);
           if (index !== -1) {
@@ -124,7 +169,8 @@ export class UsersManagement {
         error: (err) => console.error('Update failed:', err)
       });
     } else {
-      this.userService.createUser(this.userForm).subscribe({
+      console.log('ข้อมูลที่จะส่งไปสร้าง User ใหม่:', userData);
+      this.userService.createUser(userData).subscribe({
         next: (newUser) => {
           this.users = [...this.users, newUser]; 
           alert('บันทึกข้อมูลสำเร็จ!');
@@ -140,7 +186,7 @@ export class UsersManagement {
     }
   }
 
-  deleteUser(userId: number) {
+  openDeleteModal(userId: number) {
     this.userIdToDelete = userId;
     this.isDeleteModalOpen = true; 
   }
@@ -164,7 +210,8 @@ export class UsersManagement {
   }
 
 
-  ///// ตัวแปรสำหรับแบ่งหน้า (Pagination) /////
+
+  // ----- ตัวแปรสำหรับแบ่งหน้า (Pagination) -----
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
