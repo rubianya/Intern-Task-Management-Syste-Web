@@ -1,31 +1,66 @@
 <aside class="sidebar">
+  <mat-nav-list>
 
-  @if(role === 'Admin') {
-    <ul>
-      <li routerLink="/dashboard/admin" routerLinkActive="active-menu">Dashboard</li>
-      <li routerLink="/dashboard/users-management" routerLinkActive="active-menu">Users Management</li>
-      <li routerLink="/dashboard/edit-profile" routerLinkActive="active-menu">My Profile</li>
-    </ul>
-  }
+    @if(role === 'Admin') {
+      <a mat-list-item routerLink="/dashboard/admin" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/users-management" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Users Management</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/edit-profile" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>manage_accounts</mat-icon>
+        <span matListItemTitle>My Profile</span>
+      </a>
+    }
 
-  @if(role === 'Mentor') {
-    <ul>
-      <li routerLink="/dashboard/mentor" routerLinkActive="active-menu">Dashboard</li>
-      <li routerLink="/dashboard/create-task" routerLinkActive="active-menu">Create Task</li>
-      <li routerLink="/dashboard/assign-task" routerLinkActive="active-menu">Assign Task</li>
-      <li routerLink="/dashboard/review-tasks" routerLinkActive="active-menu">Review Tasks</li>
-      <li routerLink="/dashboard/comments" routerLinkActive="active-menu">Comments</li>
-    </ul>
-  }
+    @if(role === 'Mentor') {
+      <a mat-list-item routerLink="/dashboard/mentor" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/create-task" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>add_task</mat-icon>
+        <span matListItemTitle>Create Task</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/assign-task" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>assignment_ind</mat-icon>
+        <span matListItemTitle>Assign Task</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/review-tasks" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>fact_check</mat-icon>
+        <span matListItemTitle>Review Tasks</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/comments" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>forum</mat-icon>
+        <span matListItemTitle>Comments</span>
+      </a>
+    }
 
-  @if(role === 'Intern') {
-    <ul>
-      <li routerLink="/dashboard/intern" routerLinkActive="active-menu">Dashboard</li>
-      <li routerLink="/dashboard/my-tasks" routerLinkActive="active-menu">My Tasks</li>
-      <li routerLink="/dashboard/update-status" routerLinkActive="active-menu">Update Status</li>
-      <li routerLink="/dashboard/submit-work" routerLinkActive="active-menu">Submit Work</li>
-      <li routerLink="/dashboard/feedback" routerLinkActive="active-menu">Feedback</li>
-    </ul>
-  }
+    @if(role === 'Intern') {
+      <a mat-list-item routerLink="/dashboard/intern" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/my-tasks" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>assignment</mat-icon>
+        <span matListItemTitle>My Tasks</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/update-status" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>update</mat-icon>
+        <span matListItemTitle>Update Status</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/submit-work" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>publish</mat-icon>
+        <span matListItemTitle>Submit Work</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/feedback" routerLinkActive="active-menu">
+        <mat-icon matListItemIcon>feedback</mat-icon>
+        <span matListItemTitle>Feedback</span>
+      </a>
+    }
 
+  </mat-nav-list>
 </aside>

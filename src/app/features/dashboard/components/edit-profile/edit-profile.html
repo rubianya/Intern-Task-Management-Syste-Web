@@ -1,19 +1,18 @@
- <div class="main-body">
-
+<div class="main-body">
   <main class="dashboard-content">
     <div class="edit-profile-container">
-      <div class="profile-card">
+      <mat-card class="profile-card">
           
         <div class="card-header">
           <h2>My Profile</h2>
           <p>Manage your account settings and personal information.</p>
         </div>
 
-        <div class="card-body">
+        <mat-card-content class="card-body">
             
           <div class="avatar-section">
             <div class="avatar-circle">
-              <i class="fi fi-sr-user"></i>
+              <mat-icon style="font-size: 45px; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;">person</mat-icon>
             </div>
             <div class="avatar-text">
               <h3>{{ displayFullName }}</h3>
@@ -23,36 +22,41 @@
 
           <div class="divider"></div>
 
-          <form class="profile-form" (ngSubmit)="saveProfile()">
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-form">
               
-            <div class="form-group">
-              <label>Full Name</label>
-              <input type="text" name="fullName" [(ngModel)]="editFullName" placeholder="Enter your full name" required>
-            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="full_name" placeholder="Enter your full name">
+              <mat-error *ngIf="profileForm.get('full_name')?.hasError('required')">Please enter your full name.</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" name="email" [(ngModel)]="editEmail" placeholder="Enter your email" required>
-            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="Enter your email">
+              <mat-error *ngIf="profileForm.get('email')?.hasError('required')">Please enter your email.</mat-error>
+              <mat-error *ngIf="profileForm.get('email')?.hasError('email')">The email format is incorrect.</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" name="password" [(ngModel)]="editPassword" placeholder="Enter your password" required>
-            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" placeholder="Enter your password">
+              <mat-error *ngIf="profileForm.get('password')?.hasError('required')">Please enter your password.</mat-error>
+              <mat-error *ngIf="profileForm.get('password')?.hasError('minlength')">The password must be at least 8 characters long.</mat-error>
+            </mat-form-field>
 
-            <div class="form-group"> 
-              <label>Role (Read Only)</label>
-              <input type="text" class="input-disabled" name="role" [(ngModel)]="role" disabled>
-            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Role (Read Only)</mat-label>
+              <input matInput [value]="role" disabled>
+            </mat-form-field>
 
             <div class="form-actions">
-              <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
-              <button type="submit" class="btn-save">Save Changes</button>
+              <button mat-stroked-button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+              <button mat-flat-button color="primary" type="submit" class="btn-save">Save Changes</button>
             </div>
 
           </form>
-        </div>
-      </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </main>
 </div>

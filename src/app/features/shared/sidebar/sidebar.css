@@ -1,39 +1,49 @@
 .sidebar {
-  width: 200px;
+  width: 250px;
   min-height: 100vh;
   background: #ffffff;
-  color: #1e293b;
-  padding: 25px;
+  border-right: 1px solid #e2e8f0;
+  padding-top: 20px;
+  box-sizing: border-box;
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  margin-bottom: 30px;
-  font-size: 24px;
+/* --- ปรับแต่งระยะห่างและความสวยงามของเมนู (Mat Nav List) --- */
+::ng-deep .sidebar .mdc-list-item {
+  margin: 4px 16px;
+  border-radius: 8px !important;
+  color: #475569 !important;
+  transition: all 0.2s ease;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
+::ng-deep .sidebar .mdc-list-item:hover {
+  background-color: #f1f5f9 !important;
 }
 
-.sidebar li {
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
+/* --- สถานะเมื่อเมนูถูกเลือก (Active) --- */
+::ng-deep .sidebar .active-menu {
+  background-color: #f0f4f8 !important; 
+  color: #355872 !important;
 }
 
-.sidebar li:hover {
-  background: #f1f5f9;
+::ng-deep .sidebar .active-menu .mdc-list-item__primary-text {
+  font-weight: 600 !important;
 }
 
-.sidebar li:active {
-  background: #e2e8f0;
+::ng-deep .sidebar .active-menu mat-icon {
+  color: #355872 !important;
 }
 
-.sidebar li.active-menu {
-  background: #e2e8f0;
-  font-weight: bold;
+/* --- สีไอคอนเริ่มต้น --- */
+::ng-deep .sidebar mat-icon {
+  color: #64748b;
+}
+
+/* --- ปิดกรอบโฟกัส (Focus Ring) ของ Angular Material บน Sidebar --- */
+::ng-deep .sidebar .mdc-list-item:focus,
+::ng-deep .sidebar .mdc-list-item:focus-visible {
+  outline: none !important;
+}
+
+::ng-deep .sidebar .mdc-list-item__focus-ring {
+  display: none !important;
 }

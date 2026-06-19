@@ -1,17 +1,35 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../../core/services/auth.service';
+import { User } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+CommonModule, 
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css'
 })
 export class EditProfile implements OnInit {
+
+  profileForm!: FormGroup;
+  originalProfile!: User;
+  userId!: number;
 
   displayFullName = '';
   displayEmail = '';
@@ -22,32 +40,43 @@ export class EditProfile implements OnInit {
   editEmail = '';
   editPassword = '';
 
-  userId!: number;
-  originalProfile: any;
-
   constructor(
     private router: Router,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.profileForm = new FormGroup({
+      full_name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8)])
+    });
+  }
 
   ngOnInit(): void {
     this.authService.getUserProfile().subscribe({
-      next: (profile: any) => {
+      next: (response: any) => {
+
+        const profile = response.data as User;
 
         console.log('ข้อมูลโปรไฟล์ทั้งหมดที่ได้จาก API:', profile);
 
-        this.userId = profile.data.id;
-        this.originalProfile = profile.data;
+        this.userId = profile.id;
+        this.originalProfile = profile;
 
-        this.displayFullName = profile.data.full_name;
-        this.displayEmail = profile.data.email;
-        this.displayPassword = profile.data.password;
-        this.role = profile.data.role;
+        this.displayFullName = profile.full_name;
+        this.displayEmail = profile.email;
+        // this.displayPassword = profile.password;
+        this.role = profile.role;
 
-        this.editFullName = profile.data.full_name;
-        this.editEmail = profile.data.email;
-        this.editPassword = profile.data.password;
+        this.profileForm.patchValue({
+          full_name: profile.full_name,
+          email: profile.email,
+          password: profile.password
+        });
+
+        this.editFullName = profile.full_name;
+        this.editEmail = profile.email;
+        this.editPassword = profile.password;
 
         this.cdr.detectChanges();
       },
@@ -59,11 +88,17 @@ export class EditProfile implements OnInit {
   }
 
   saveProfile() {
-    const updateData = {
+
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    const updateData: Partial<User> = {
       ...this.originalProfile,
-      full_name: this.editFullName,
-      email: this.editEmail,
-      password: this.editPassword
+      full_name: this.profileForm.value.full_name,
+      email: this.profileForm.value.email,
+      password: this.profileForm.value.password
     };
 
     console.log('ข้อมูลที่จะส่งไปอัปเดต:', updateData);
@@ -71,7 +106,6 @@ export class EditProfile implements OnInit {
     this.authService.updateProfile(this.userId, updateData).subscribe({
       next: (response: any) => {   
         alert('อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว! กรุณาเข้าสู่ระบบใหม่อีกครั้งเพื่อความปลอดภัย');
-        
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
       },
@@ -81,7 +115,9 @@ export class EditProfile implements OnInit {
       }
     });
   }
+
   cancel() {
     this.router.navigate(['/dashboard/admin']);
   }
+  
 }

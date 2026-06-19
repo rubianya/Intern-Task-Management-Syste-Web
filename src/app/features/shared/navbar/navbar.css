@@ -1,182 +1,124 @@
+/* --- แถบ Navbar หลัก --- */
 .top-navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: #355872;
+  color: #ffffff;
   height: 70px;
   padding: 0 30px;
-  background-color: #355872;
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid #e2e8f0;
-  box-sizing: border-box;
   z-index: 10;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 15px;
 }
 
 .system-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #ffffff;
   letter-spacing: 0.5px;
 }
 
-.profile-dropdown-container { 
-  position: relative; 
+.spacer {
+  flex: 1 1 auto;
 }
 
+/* --- ปุ่ม Profile --- */
 .user-profile-nav {
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 8px 16px;
-  background-color: #f8fafc; 
-  border: 1px solid #e2e8f0; 
-  border-radius: 8px; 
-  cursor: pointer; 
-  transition: all 0.2s ease-in-out;
-}
-.user-profile-nav:hover { 
-  background-color: #f1f5f9; 
-  border-color: #cbd5e1; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  color: #334155;
+  border-radius: 8px;
+  padding: 0 16px; 
+  height: 40px;
+  line-height: 1; 
 }
 
-.user-avatar { 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  font-size: 1.25rem; 
-  color: #334155; 
+.user-display-name {
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
-.user-display-name { 
-  font-size: 0.95rem; 
-  font-weight: 500; 
-  color: #334155; 
+/* --- ระยะห่างของไอคอนในปุ่ม (อัปเดตใหม่) --- */
+.nav-icon-start {
+  margin-right: 0px; /* ให้รูปคนอยู่ชิดกับลูกศร */
 }
 
-.dropdown-icon {
-  display: inline-block; 
-  width: 8px; 
-  height: 8px; 
-  border-bottom: 2px solid #64748b; 
-  border-right: 2px solid #64748b; 
-  transform: rotate(45deg); 
-  margin-left: 8px; 
-  margin-bottom: 4px; 
+.nav-icon-middle {
+  margin-right: 8px; /* ดันลูกศรให้ห่างจากข้อความชื่อเล็กน้อย */
 }
 
-.profile-dropdown-menu {
-  position: absolute; 
-  top: calc(100% + 8px); 
-  right: 0; 
-  width: 280px; 
-  background-color: #ffffff;
-  border-radius: 8px; 
-  box-shadow: 
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0; z-index: 1000; overflow: hidden; animation: slideDown 0.2s ease-out forwards;
+/* --- ส่วนของ Dropdown Menu (MatMenu) --- */
+::ng-deep .custom-profile-menu {
+  min-width: 280px !important;
+  border-radius: 8px !important;
+  margin-top: 12px;
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.dropdown-profile-header { 
-  padding: 20px; 
-  display: flex; 
-  gap: 16px; 
-  align-items: flex-start; 
+.dropdown-profile-header {
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  outline: none;
+  cursor: default; 
 }
 
 .dropdown-large-avatar {
-  width: 60px; 
-  height: 60px; 
-  border-radius: 50%; 
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   background-color: #f1f5f9;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  font-size: 30px; 
-  color: #475569; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #475569;
   flex-shrink: 0;
 }
 
-.dropdown-user-info { 
-  display: flex; 
-  flex-direction: column; 
-  overflow: hidden; 
+/* --- จัดการ CSS ไอคอนแทนการใส่ Style ใน HTML --- */
+.large-avatar-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.dropdown-name { 
-  font-size: 1.1rem; 
-  font-weight: 700; 
-  color: #1e293b; 
-  margin-bottom: 2px; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+.dropdown-user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.dropdown-email { 
-  font-size: 0.85rem; 
-  color: #64748b; 
-  margin-bottom: 12px; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+.dropdown-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-email {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-edit-profile {
-  background-color: #355872; 
-  color: #ffffff; 
-  border: none; 
-  padding: 6px 12px;
-  border-radius: 4px; 
-  font-size: 0.85rem; 
-  font-weight: 600; 
-  cursor: pointer; 
-  align-self: flex-start; 
-  transition: background-color 0.2s;
-}
-
-.btn-edit-profile:hover { 
-  background-color: #7AAACE; 
-}
-
-.dropdown-divider { 
-  height: 1px; 
-  background-color: #e2e8f0; 
-  margin: 0; 
-}
-
-.dropdown-links { 
-  list-style: none; 
-  padding: 8px 0; 
-  margin: 0; 
-}
-
-.dropdown-links li {
-  padding: 12px 20px; 
-  display: flex; 
-  align-items: center; 
-  font-size: 0.95rem;
-  font-weight: 600; 
-  color: #0f172a; 
-  cursor: pointer; 
-  transition: background-color 0.2s;
-}
-
-.dropdown-links li:hover { 
-  background-color: #f8fafc; 
-}
-
-.text-logout {
-  padding-left: 10px;
-  padding-bottom: 5px;
-  font-size: 16px;
+  background-color: #355872 !important;
+  line-height: 24px !important;
+  padding: 4px 12px !important;
+  font-size: 0.85rem !important;
+  align-self: flex-start;
 }
