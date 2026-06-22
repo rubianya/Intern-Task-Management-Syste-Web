@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MentorDash } from '../../features/dashboard/components/mentor-dash/mentor-dash';
+import { MentorDash } from '../../features/dashboard/components/mentorComponent/mentor-dash/mentor-dash';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
