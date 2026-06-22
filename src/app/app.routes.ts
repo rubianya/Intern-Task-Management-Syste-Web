@@ -1,35 +1,39 @@
 import { Routes } from '@angular/router';
-import { Login } from './features/auth/login/login';
 import { authGuard } from './core/guards/auth-guard';
-import { Dashboard } from './features/dashboard/dashboard';
-import { AdminDash } from './features/dashboard/components/adminComponent/admin-dash/admin-dash';
-import { MentorDash } from './features/dashboard/components/mentorComponent/mentor-dash/mentor-dash';
-import { InternDash } from './features/dashboard/components/internComponent/intern-dash/intern-dash';
-import { EditProfile } from './features/shared/edit-profile/edit-profile';
-import { UsersManagement } from './features/dashboard/components/adminComponent/users-management/users-management';
-import { CreateTask } from './features/dashboard/components/mentorComponent/create-task/create-task';
 
 export const routes: Routes = [
     {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
+        path: '', redirectTo: 'login', pathMatch: 'full'
     },
     {
-        path: 'login', component: Login
+        path: 'login',
+        loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
     },
     {
-        path: 'dashboard', component: Dashboard, 
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard),
         canActivate: [authGuard], 
         children: [
-            { path: 'admin', component: AdminDash },
-            { path: 'users-management', component: UsersManagement },
+            {   path: 'admin', 
+                loadComponent: () => import('./features/dashboard/components/adminComponent/admin-dash/admin-dash').then(m => m.AdminDash) 
+            },
+            {   path: 'users-management',
+                loadComponent: () => import('./features/dashboard/components/adminComponent/users-management/users-management').then(m => m.UsersManagement) 
+            },
             
-            { path: 'mentor', component: MentorDash },
-            { path: 'create-task', component: CreateTask },
-            { path: 'intern', component: InternDash },
-            
-            { path: 'edit-profile', component: EditProfile },
+            {   path: 'mentor',
+                loadComponent: () => import('./features/dashboard/components/mentorComponent/mentor-dash/mentor-dash').then(m => m.MentorDash) 
+            },
+            {   path: 'create-task', 
+                loadComponent: () => import('./features/dashboard/components/mentorComponent/create-task/create-task').then(m => m.CreateTask) 
+            },
+            {   path: 'intern', 
+                loadComponent: () => import('./features/dashboard/components/internComponent/intern-dash/intern-dash').then(m => m.InternDash) 
+            },
+
+            {   path: 'edit-profile', 
+                loadComponent: () => import('./features/shared/edit-profile/edit-profile').then(m => m.EditProfile) 
+            },
         ]
     }
     

@@ -139,21 +139,6 @@ export class UsersManagement {
 
     const userData = this.userFormGroup.getRawValue() as User;
 
-    // const rawData = this.userFormGroup.getRawValue();
-    // const userData: any = {
-    //   id: Number(rawData.id),
-    //   full_name: rawData.full_name,
-    //   email: rawData.email,
-    //   role: rawData.role,
-    //   active: rawData.active
-    // };
-    // if (rawData.password && rawData.password.trim() !== '') {
-    //   userData.password = rawData.password;
-    // } else if (!this.isEditMode) {
-    //   alert('Password is required for new users.');
-    //   return;
-    // }
-
     if (this.isEditMode) {
       this.userService.updateUser(Number(userData.id), userData).subscribe({
         next: (updatedUser) => {

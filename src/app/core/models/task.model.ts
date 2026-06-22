@@ -8,3 +8,12 @@ export interface Task {
     created_by?: number;
     dueDate: string;
 }
+
+export interface TaskRequest {
+  title: string;
+  description: string;
+  dueDate: string;
+  assignedToId: number;
+  status?: string;
+  priority?: string;
+}

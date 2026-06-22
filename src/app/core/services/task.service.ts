@@ -1,35 +1,52 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MentorDash } from '../../features/dashboard/components/mentorComponent/mentor-dash/mentor-dash';
 import { environment } from '../../../environments/environment';
+import { Task } from '../models/task.model';
+import { TaskRequest } from '../models/task.model';
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
   
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/tasks`;
 
   constructor(private http: HttpClient) {}
 
   // 1. ดึงงานทั้งหมด (สำหรับ Dashboard รวม)
-  getAllTasks(): Observable<MentorDash[]> {
-    return this.http.get<MentorDash[]>(this.apiUrl);
+  getAllTasks(): Observable<ApiResponse<Task[]>> {
+    return this.http.get<ApiResponse<Task[]>>(this.apiUrl);
+  }
+// 2. ดึงงานตาม ID
+  getTaskById(id: number): Observable<ApiResponse<Task[]>> {
+    return this.http.get<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`);
   }
 
-  // 2. ดึงงานเฉพาะที่ Mentor คนนี้เป็นคนสร้าง
-  getTasksByMentor(mentorId: number): Observable<MentorDash[]> {
-    return this.http.get<MentorDash[]>(`${this.apiUrl}/mentor/${mentorId}`);
+  // 3. สร้างงานใหม่
+  createTask(task: TaskRequest): Observable<ApiResponse<Task[]>> {
+    return this.http.post<ApiResponse<Task[]>>(this.apiUrl, task);
   }
 
-  // 3. สร้างงานใหม่ & มอบหมายงาน
-  createTask(taskData: MentorDash): Observable<MentorDash> {
-    return this.http.post<MentorDash>(this.apiUrl, taskData);
+  // 4. อัปเดตงานทั้งก้อน
+  updateTask(id: number, task: TaskRequest): Observable<ApiResponse<Task[]>> {
+    return this.http.put<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`, task);
   }
 
-  // 4. อัปเดตสถานะ หรือ ส่ง Comment ตรวจงาน
-  updateTask(taskId: number, taskData: MentorDash): Observable<MentorDash> {
-    return this.http.put<MentorDash>(`${this.apiUrl}/${taskId}`, taskData);
+  // 5. อัปเดตแค่สถานะ
+  updateTaskStatus(id: number, status: string): Observable<ApiResponse<Task[]>> {
+    return this.http.patch<ApiResponse<Task[]>>(`${this.apiUrl}/${id}/status`, { status });
   }
+
+  // 6. ลบงาน
+  deleteTask(id: number): Observable<ApiResponse<Task[]>> {
+    return this.http.delete<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`);
+  }
+
 }

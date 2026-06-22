@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'nprogress/nprogress.css';
+
+#nprogress .bar {
+  background: #29d !important; 
+  height: 4px !important;
+}
