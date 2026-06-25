@@ -1,0 +1,285 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h2>Task Management</h2>
+      <p class="subtitle">Manage and track the work of the interns under your supervision.</p>
+    </div>
+    <button class="btn btn-primary" (click)="openCreateTaskModal()">
+      + Create New Task
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Tasks</div>
+      <div class="stat-number">{{ dashboardStats.total }}</div>
+    </div>
+    <div class="stat-card border-todo">
+      <div class="stat-title">To Do</div>
+      <div class="stat-number">{{ dashboardStats.todo }}</div>
+    </div>
+    <div class="stat-card border-progress">
+      <div class="stat-title">In Progress</div>
+      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
+    </div>
+    <div class="stat-card border-done">
+      <div class="stat-title">Done / Review</div>
+      <div class="stat-number">{{ dashboardStats.done }}</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th>Task Title</th>
+          <th>Assigned To</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td class="task-title-cell">{{ task.title }}</td>
+          <td>{{ task.assignedToUserFullName || task.assignedToName }}</td>
+          <td>
+            <span class="badge priority-{{ task.priority | lowercase }}">
+              {{ task.priority }}
+            </span>
+          </td>
+          <td>
+            <span class="badge status-{{ task.status | lowercase }}">
+              {{ task.status }}
+            </span>
+          </td>
+          <td>{{ task.dueDate | date:'dd MMM yyyy' }}</td>
+          <td class="action-buttons">
+            <button class="btn btn-sm btn-info" (click)="openTaskDetail(task.id)">View</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteTask(task.id)">Delete</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="tasks.length === 0">
+          <td colspan="6" class="empty-state">
+            ยังไม่มีงานในระบบ คลิกที่ปุ่ม "+ Create New Task" เพื่อมอบหมายงานแรก
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalOpen">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Create New Task</h3>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">Task Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title" 
+            placeholder="กรอกชื่อหัวข้องานที่ต้องการมอบหมาย"
+            [class.is-invalid]="taskForm.get('title')?.touched && taskForm.get('title')?.invalid"
+          >
+          <div class="error-msg" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('required')">
+            * กรุณากรอกหัวข้อของงาน
+          </div>
+          <div class="error-msg" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('minlength')">
+            * หัวข้องานต้องมีความยาวไม่ต่ำกว่า 3 ตัวอักษร
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description (รายละเอียดงาน)</label>
+          <textarea 
+            id="description" 
+            formControlName="description" 
+            rows="3" 
+            placeholder="ระบุรายละเอียดงาน ขอบเขต หรือลิงก์เอกสารอ้างอิงเบื้องต้น..."
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="priority">Priority</label>
+            <select id="priority" formControlName="priority">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div class="form-group col">
+            <label for="status">Initial Status</label>
+            <select id="status" formControlName="status">
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Assign To Intern(s)<span class="required">*</span></label>
+            
+            <div class="search-box">
+              <input 
+                type="text" 
+                placeholder="ค้นหาชื่อ Intern..." 
+                [(ngModel)]="searchTerm" 
+                [ngModelOptions]="{standalone: true}" 
+                (input)="filterInterns()"
+                class="search-input"
+              >
+            </div>
+
+            <div class="checkbox-list-container" [class.is-invalid]="taskForm.get('assignedToIds')?.touched && taskForm.get('assignedToIds')?.invalid">
+              <label class="checkbox-item" *ngFor="let intern of filteredInterns">
+                <input 
+                  type="checkbox" 
+                  [value]="intern.id"
+                  [checked]="taskForm.get('assignedToIds')?.value?.includes(intern.id)"
+                  (change)="toggleInternSelection(intern.id, $event)"
+                >
+                <span class="intern-name">{{ intern.full_name || intern.fullName }}</span>
+              </label>
+              
+              <div *ngIf="filteredInterns.length === 0" class="no-data-text">
+                ไม่พบรายชื่อผู้ใช้ที่ตรงกับคำค้นหา
+              </div>
+            </div>
+
+            <div class="error-msg" *ngIf="taskForm.get('assignedToIds')?.touched && taskForm.get('assignedToIds')?.invalid">
+              * กรุณาติ๊กเลือกผู้รับมอบหมายงานอย่างน้อย 1 คน
+            </div>
+          </div>
+
+          <div class="form-group col">
+            <label for="dueDate">Due Date <span class="required">*</span></label>
+            <input 
+              type="date" 
+              id="dueDate" 
+              formControlName="dueDate"
+              [class.is-invalid]="taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.invalid"
+            >
+            <div class="error-msg" *ngIf="taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.invalid">
+              * กรุณาระบุวันครบกำหนดส่งงานด้วย
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+         </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Assign Task</button>
+      </div>
+    </form>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isDetailModalOpen && selectedTask">
+  <div class="modal-card detail-modal">
+    <div class="modal-header">
+      <div class="header-title-group">
+        <h3>{{ selectedTask.title }}</h3>
+        <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
+      </div>
+      <button class="close-btn" (click)="closeDetailModal()">&times;</button>
+    </div>
+
+    <div class="modal-body detail-body">
+      <div class="task-info-section">
+        <div class="info-block">
+          <label>Description:</label>
+          <p class="desc-text">{{ selectedTask.description || 'ไม่มีรายละเอียดเพิ่มเติม' }}</p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Assigned To:</label>
+            <div>{{ selectedTask.assignedToUserFullName || selectedTask.assignedToName }}</div>
+          </div>
+          <div class="info-item">
+            <label>Priority:</label>
+            <div>
+              <span class="badge priority-{{ selectedTask.priority | lowercase }}">
+                {{ selectedTask.priority }}
+              </span>
+            </div>
+          </div>
+          <div class="info-item">
+            <label>Due Date:</label>
+            <div class="due-date-text">{{ selectedTask.dueDate | date:'mediumDate' }}</div>
+          </div>
+        </div>
+
+        <div class="status-action-box">
+          <label>Mentor Action (การตรวจงาน):</label>
+          <div class="status-buttons">
+            
+            <ng-container *ngIf="selectedTask.status === 'REVIEW'">
+              <button class="btn btn-sm btn-success" (click)="changeTaskStatus('DONE')">
+                ✅ ตรวจผ่าน (Done)
+              </button>
+              <button class="btn btn-sm btn-warning" (click)="changeTaskStatus('IN_PROGRESS')">
+                🔄 ให้แก้ไขใหม่ (In Progress)
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="selectedTask.status === 'TODO' || selectedTask.status === 'IN_PROGRESS'">
+              <span style="font-size: 0.9rem; color: #6b7280; display: flex; align-items: center; gap: 6px;">
+                ⏳ รอนักศึกษาฝึกงานส่งงาน (ปัจจุบัน: {{ selectedTask.status }})
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="selectedTask.status === 'DONE'">
+              <span style="font-size: 0.9rem; color: #059669; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                🎉 งานนี้ตรวจผ่านและเสร็จสมบูรณ์แล้ว
+              </span>
+            </ng-container>
+
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="task-comment-section">
+        <h4>Discussion & Feedback</h4>
+        <div class="comment-list">
+          <div class="comment-item" *ngFor="let msg of taskComments">
+            <div class="comment-header">
+              <strong>{{ msg.userName }}</strong> <small>{{ msg.createdAt | date:'short' }}</small>
+            </div>
+            <div class="comment-bubble">{{ msg.comment }}</div>
+          </div>
+          <div *ngIf="taskComments.length === 0" class="no-comments">
+            ยังไม่มีคอมเมนต์
+          </div>
+        </div>
+
+        <div class="comment-input-area">
+          <textarea 
+            [(ngModel)]="newComment" 
+            placeholder="พิมพ์คอมเมนต์หรือฟีดแบ็กงานที่นี่..." 
+            rows="2"
+            (keyup.enter)="submitComment()"
+          ></textarea>
+          <button class="btn btn-primary btn-sm" (click)="submitComment()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,546 @@
+/* โครงสร้างหลัก */
+.dashboard-container {
+  padding: 24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #1f2937;
+}
+
+.subtitle {
+  margin: 4px 0 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* ปุ่มต่างๆ */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+
+.btn-info {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+.btn-info:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-danger {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-danger:hover {
+  background-color: #fecaca;
+}
+
+/* การ์ดสรุปตัวเลข (Stats Grid) */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-left: 5px solid #3b82f6;
+}
+
+.border-todo { border-left-color: #9ca3af; }
+.border-progress { border-left-color: #f59e0b; }
+.border-done { border-left-color: #10b981; }
+
+.stat-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+/* ตารางแสดงงาน (Task Table) */
+.table-container {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.task-table th, .task-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.task-table th {
+  background-color: #f9fafb;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.task-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.task-title-cell {
+  font-weight: 600;
+  color: #111827;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ป้ายสถานะ (Badges) */
+.badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-todo { background-color: #f3f4f6; color: #4b5563; }
+.status-in_progress { background-color: #fef3c7; color: #d97706; }
+.status-review { background-color: #e0e7ff; color: #4338ca; } 
+.status-cancelled { background-color: #f1f5f9; color: #94a3b8; text-decoration: line-through; }
+.status-done { background-color: #d1fae5; color: #059669; }
+
+.priority-low { background-color: #e0f2fe; color: #0284c7; }
+.priority-medium { background-color: #fef3c7; color: #d97706; }
+.priority-high { background-color: #fee2e2; color: #dc2626; }
+
+/* โครงสร้างพื้นฐานของ Modal ป๊อปอัป */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 580px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+  animation: modalSlideDown 0.25s ease-out;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
+.modal-card form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+@keyframes modalSlideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 24px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  flex: 1;
+  overflow-y: auto !important;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  padding-top: 6px;
+  padding-bottom: 24px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group.col {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 6px;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.form-group input.is-invalid,
+.form-group select.is-invalid {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2;
+}
+
+.error-msg {
+  color: #dc2626;
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+/* 📥 องค์ประกอบปฏิทินขยับสิทธิ์เลเยอร์เพื่อไม่ให้โดนบัง */
+input[type="date"] {
+  position: relative;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  position: relative;
+  z-index: 10000;
+}
+
+/* 🔍 กล่องค้นหารายชื่อ Intern */
+.search-box {
+  margin-bottom: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: #f9fafb;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+}
+
+/* 👥 ส่วนกล่อง Checkbox รายชื่อสำหรับการมอบหมายงานพร้อมๆ กัน */
+.checkbox-list-container {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  max-height: 115px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.checkbox-list-container.is-invalid {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
+  border-bottom: 1px dashed #f3f4f6;
+  font-size: 0.95rem;
+  color: #374151;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.intern-name {
+  font-weight: 500;
+  flex: 1;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  margin-top: -2px;
+}
+
+.checkbox-item:last-child { border-bottom: none; }
+.checkbox-item:hover { background-color: #f9fafb; }
+.checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+}
+
+.no-data-text {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* 🗂️ หน้าต่างรายละเอียดเชิงลึก (Detail Modal) */
+.detail-modal {
+  max-width: 800px;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  padding: 24px;
+}
+
+.task-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-block label, .info-item label, .status-action-box label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.desc-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.5;
+  background-color: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.due-date-text {
+  font-weight: 600;
+  color: #dc2626;
+}
+
+.status-action-box {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-warning { background-color: #f59e0b; color: white; }
+.btn-success { background-color: #10b981; color: white; }
+
+.task-comment-section {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e5e7eb;
+  padding-left: 24px;
+  height: 400px;
+}
+
+.task-comment-section h4 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.comment-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.comment-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.comment-bubble {
+  background-color: #f3f4f6;
+  padding: 10px 12px;
+  border-radius: 0 12px 12px 12px;
+  font-size: 0.9rem;
+}
+
+.no-comments {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.comment-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-input-area textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 0.9rem;
+  resize: none;
+}
+
+.comment-input-area button {
+  align-self: flex-end;
+}
+
+@media (max-width: 850px) {
+  .detail-body {
+    grid-template-columns: 1fr;
+  }
+  
+  .task-comment-section {
+    border-left: none;
+    padding-left: 0;
+    border-top: 2px solid #e5e7eb;
+    padding-top: 24px;
+    height: 350px;
+  }
+}

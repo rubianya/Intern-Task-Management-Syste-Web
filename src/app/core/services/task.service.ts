@@ -4,12 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Task } from '../models/task.model';
 import { TaskRequest } from '../models/task.model';
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,31 +15,36 @@ export class TaskService {
 
   constructor(private http: HttpClient) {}
 
-  // 1. ดึงงานทั้งหมด (สำหรับ Dashboard รวม)
+  // ดึงงานทั้งหมด (สำหรับ Dashboard รวม)
   getAllTasks(): Observable<ApiResponse<Task[]>> {
     return this.http.get<ApiResponse<Task[]>>(this.apiUrl);
   }
-// 2. ดึงงานตาม ID
+
+  // ดึงข้อมูลงานเฉพาะตัวเอง
+  getAllTasksUser(): Observable<ApiResponse<Task[]>> {
+    return this.http.get<ApiResponse<Task[]>>(`${this.apiUrl}/users`);
+  }
+  // ดึงงานตาม ID
   getTaskById(id: number): Observable<ApiResponse<Task[]>> {
     return this.http.get<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`);
   }
 
-  // 3. สร้างงานใหม่
+  // สร้างงานใหม่
   createTask(task: TaskRequest): Observable<ApiResponse<Task[]>> {
     return this.http.post<ApiResponse<Task[]>>(this.apiUrl, task);
   }
 
-  // 4. อัปเดตงานทั้งก้อน
+  // อัปเดตงานทั้งก้อน
   updateTask(id: number, task: TaskRequest): Observable<ApiResponse<Task[]>> {
     return this.http.put<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`, task);
   }
 
-  // 5. อัปเดตแค่สถานะ
+  // อัปเดตแค่สถานะ
   updateTaskStatus(id: number, status: string): Observable<ApiResponse<Task[]>> {
     return this.http.patch<ApiResponse<Task[]>>(`${this.apiUrl}/${id}/status`, { status });
   }
 
-  // 6. ลบงาน
+  // ลบงาน
   deleteTask(id: number): Observable<ApiResponse<Task[]>> {
     return this.http.delete<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`);
   }
