@@ -29,9 +29,12 @@ export const routes: Routes = [
             {   path: 'intern', 
                 loadComponent: () => import('./features/dashboard/components/internComponent/intern-dash/intern-dash').then(m => m.InternDash) 
             },
-            {
-                path: 'my-task',
+            {   path: 'my-task',
                 loadComponent: () => import('./features/dashboard/components/internComponent/my-task/my-task').then(m => m.MyTask)
+            },
+            {
+                path: 'task-detail/:id',
+                loadComponent: () => import('./features/dashboard/components/internComponent/task-detail/task-detail').then(m => m.TaskDetail)
             },
             {   path: 'edit-profile', 
                 loadComponent: () => import('./features/shared/edit-profile/edit-profile').then(m => m.EditProfile) 

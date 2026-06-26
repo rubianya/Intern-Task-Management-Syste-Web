@@ -49,4 +49,9 @@ export class TaskService {
     return this.http.delete<ApiResponse<Task[]>>(`${this.apiUrl}/${id}`);
   }
 
+  // ดึงประวัติสถานะงาน
+  getTaskHistories(taskId: number): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/status-histories/task/${taskId}`);
+  }
+
 }

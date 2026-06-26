@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TaskService } from '../../../../../core/services/task.service';
-import { CommentService } from '../../../../../core/services/comment.service';
-import { CommentRequest, CommentResponse } from '../../../../../core/models/comment.model';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router'; 
+import { TaskService } from '../../../../../core/services/task.service';
 
 @Component({
   selector: 'app-my-task',
@@ -13,37 +12,42 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './my-task.css',
 })
 export class MyTask implements OnInit {
-
   tasks: any[] = [];
   dashboardStats = { total: 0, todo: 0, inProgress: 0, review: 0 };
-  isDetailModalOpen = false;
-  selectedTask: any = null;
-  taskComments: CommentResponse[] = [];
-  taskHistories: any[] = [];
-  newComment: string = '';
+  
+  searchTerm: string = '';
+  filterStatus: string = '';
 
   constructor(
     private taskService: TaskService,
-    private commentService: CommentService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadMyTasks();
+    this.loadTasks();
   }
 
-  loadMyTasks(): void {
+  get filteredTasks() {
+    if (!this.tasks) return [];
+    
+    return this.tasks.filter(task => {
+      const matchesSearch = task.title.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesStatus = this.filterStatus ? task.status === this.filterStatus : true;
+      return matchesSearch && matchesStatus;
+    });
+  }
+
+  loadTasks(): void {
     this.taskService.getAllTasksUser().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         if (response.success) {
           this.tasks = response.data;
           this.calculateStats();
           this.cdr.detectChanges();
         }
       },
-      error: (err) => {
-        console.error('Failed to load tasks', err);
-      }
+      error: (err) => console.error('Failed to load tasks', err)
     });
   }
 
@@ -52,91 +56,23 @@ export class MyTask implements OnInit {
       total: this.tasks.length,
       todo: this.tasks.filter(t => t.status === 'TODO').length,
       inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      review: this.tasks.filter(t => t.status === 'REVIEW' || t.status === 'DONE').length
+      review: this.tasks.filter(t => t.status === 'REVIEW').length
     };
   }
 
-  // 🟢 1. ฟังก์ชันเปิด Modal ดึงข้อมูลงาน แชท และสร้างไทม์ไลน์จำลอง
-  openTaskDetail(taskId: number): void {
-    this.taskService.getTaskById(taskId).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          this.selectedTask = response.data;
-          this.isDetailModalOpen = true;  
-          this.loadComments(taskId);
-          
-          this.taskHistories = [
-            { changedBy: 'System', oldStatus: null, newStatus: 'TODO', changedAt: new Date(this.selectedTask.createdAt || new Date()) }
-          ];
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => console.error('Failed to fetch task details', err)
-    });
+  getDueDateClass(dueDate: string | Date | null, status: string): string {
+    if (!dueDate || status === 'DONE') return 'due-normal';
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate); due.setHours(0, 0, 0, 0);
+    const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return 'due-overdue';
+    else if (diffDays >= 0 && diffDays <= 2) return 'due-warning';
+    return 'due-normal';
   }
 
-  closeDetailModal(): void {
-    this.isDetailModalOpen = false;
-    this.selectedTask = null;
-    this.taskComments = [];
-    this.taskHistories = [];
-    this.newComment = '';
+  goToTaskDetail(taskId: number): void {
+    this.router.navigate(['/dashboard/task-detail', taskId]);
   }
 
-  // 🟢 2. โหลดคอมเมนต์
-  loadComments(taskId: number): void {
-    this.commentService.getCommentsByTaskId(taskId).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.taskComments = response.data;
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => console.error('Failed to load comments', err)
-    });
-  }
-
-  // 🟢 3. ส่งคอมเมนต์
-  submitComment(): void {
-    if (!this.newComment.trim() || !this.selectedTask) return;
-    const request: CommentRequest = { comment: this.newComment };
-
-    this.commentService.addComment(this.selectedTask.id, request).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.taskComments.push(response.data);
-          this.newComment = '';
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => alert(err.error?.message || 'ไม่สามารถส่งคอมเมนต์ได้')
-    });
-  }
-
-  // 🟢 4. อัปเดตสถานะงาน (รองรับทั้งการกดจากตารางหน้าแรก และกดจากใน Modal)
-  updateMyTaskStatus(taskId: number, newStatus: string): void {
-    this.taskService.updateTaskStatus(taskId, newStatus).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          alert(`อัปเดตสถานะเป็น ${newStatus} เรียบร้อยแล้ว!`);
-          this.loadMyTasks(); // อัปเดตตารางด้านนอก
-          
-          // ถ้าเปิด Modal อยู่ ให้อัปเดต UI ไทม์ไลน์และสถานะใน Modal ทันที
-          if (this.selectedTask && this.selectedTask.id === taskId) {
-            const oldStatus = this.selectedTask.status;
-            this.selectedTask.status = newStatus;
-            
-            this.taskHistories.unshift({
-              changedBy: 'You (Intern)',
-              oldStatus: oldStatus,
-              newStatus: newStatus,
-              changedAt: new Date()
-            });
-            this.cdr.detectChanges();
-          }
-        }
-      },
-      error: (err) => alert(err.error?.message || 'เกิดข้อผิดพลาดในการเปลี่ยนสถานะ')
-    });
-  }
 }
