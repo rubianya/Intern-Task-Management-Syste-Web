@@ -20,8 +20,7 @@ export const routes: Routes = [
             {   path: 'users-management',
                 loadComponent: () => import('./features/dashboard/components/adminComponent/users-management/users-management').then(m => m.UsersManagement) 
             },
-            {
-                path: 'mentor',
+            {   path: 'mentor',
                 loadComponent: () => import ('./features/dashboard/components/mentorComponent/mentor-dash/mentor-dash').then(m => m.MentorDash)
             },
             {   path: 'task-management',
@@ -30,7 +29,10 @@ export const routes: Routes = [
             {   path: 'intern', 
                 loadComponent: () => import('./features/dashboard/components/internComponent/intern-dash/intern-dash').then(m => m.InternDash) 
             },
-
+            {
+                path: 'my-task',
+                loadComponent: () => import('./features/dashboard/components/internComponent/my-task/my-task').then(m => m.MyTask)
+            },
             {   path: 'edit-profile', 
                 loadComponent: () => import('./features/shared/edit-profile/edit-profile').then(m => m.EditProfile) 
             },

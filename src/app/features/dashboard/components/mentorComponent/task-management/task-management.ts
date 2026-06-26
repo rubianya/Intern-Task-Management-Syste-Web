@@ -4,11 +4,8 @@ import { UserService } from '../../../../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskRequest } from '../../../../../core/models/task.model';
-import { forkJoin } from 'rxjs';
 import { CommentRequest, CommentResponse } from '../../../../../core/models/comment.model';
 import { CommentService } from '../../../../../core/services/comment.service';
-import { response } from 'express';
-import { error } from 'console';
 
 @Component({
   selector: 'app-task-management',
@@ -30,6 +27,7 @@ export class TaskManagement implements OnInit {
   isDetailModalOpen = false;
   selectedTask: any = null;
   taskComments: CommentResponse[] = [];
+  taskHistories: any[] = [];
   newComment: string = '';
 
   constructor(
@@ -110,7 +108,7 @@ export class TaskManagement implements OnInit {
   }
 
   calculateStats(): void {
-this.dashboardStats = {
+    this.dashboardStats = {
       total: this.tasks.length,
       todo: this.tasks.filter(t => t.status === 'TODO').length,
       inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
@@ -209,6 +207,10 @@ this.dashboardStats = {
           this.selectedTask = response.data;
           this.isDetailModalOpen = true;
           this.loadComments(taskId);
+          this.taskHistories = [
+            { changedBy: 'System', oldStatus: null, newStatus: 'TODO', changedAt: new Date(this.selectedTask.createdAt || new Date()) }
+          ];
+          this.cdr.detectChanges();
         }
       },
       error: (err) => console.error('Failed to fetch task details', err)
@@ -219,6 +221,7 @@ this.dashboardStats = {
     this.isDetailModalOpen = false;
     this.selectedTask = null;
     this.taskComments = [];
+    this.taskHistories = [];
     this.newComment = '';
   }
 
@@ -227,9 +230,17 @@ this.dashboardStats = {
     this.taskService.updateTaskStatus(this.selectedTask.id, newStatus).subscribe({
       next: (response: any) => {
         if (response.success) {
+          const oldStatus = this.selectedTask.status;
           this.selectedTask.status = newStatus;
+          this.taskHistories.unshift({
+            changedBy: 'You (Mentor)',
+            oldStatus: oldStatus,
+            newStatus: newStatus,
+            changedAt: new Date()
+          });
           this.loadTasks();
           alert(`เปลี่ยนสถานะงานเป็น ${newStatus} สำเร็จ!`);
+          this.cdr.detectChanges();
         }
       },
       error: (err) => {

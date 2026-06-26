@@ -229,7 +229,6 @@
         <div class="status-action-box">
           <label>Mentor Action (การตรวจงาน):</label>
           <div class="status-buttons">
-            
             <ng-container *ngIf="selectedTask.status === 'REVIEW'">
               <button class="btn btn-sm btn-success" (click)="changeTaskStatus('DONE')">
                 ✅ ตรวจผ่าน (Done)
@@ -250,7 +249,27 @@
                 🎉 งานนี้ตรวจผ่านและเสร็จสมบูรณ์แล้ว
               </span>
             </ng-container>
+          </div>
 
+          <div class="timeline-section">
+            <h4>📋 Task Timeline & History</h4>
+            <div class="vertical-timeline">
+              <div class="timeline-item" *ngFor="let history of taskHistories">
+                <div class="timeline-badge" [ngClass]="'badge-' + history.newStatus.toLowerCase()"></div>
+                  <div class="timeline-content">
+                    <span class="timeline-user">{{ history.changedBy }}</span> 
+                    เปลี่ยนสถานะงานเป็น 
+                    <span class="badge status-{{ history.newStatus.toLowerCase() }}">
+                      {{ history.newStatus }}
+                    </span>
+                    <div class="timeline-time">{{ history.changedAt | date:'dd MMM yyyy, HH:mm' }}</div>
+                  </div>
+                </div>
+              <div *ngIf="taskHistories.length === 0" class="no-data-text" style="text-align: left; padding: 0;">
+                ยังไม่มีประวัติการเปลี่ยนสถานะงานนี้
+              </div>
+
+            </div>
           </div>
         </div>
         

@@ -1,0 +1,175 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h2>My Tasks</h2>
+      <p class="subtitle">จัดการและติดตามงานที่คุณได้รับมอบหมาย</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Assigned</div>
+      <div class="stat-number">{{ dashboardStats.total }}</div>
+    </div>
+    <div class="stat-card border-todo">
+      <div class="stat-title">To Do</div>
+      <div class="stat-number">{{ dashboardStats.todo }}</div>
+    </div>
+    <div class="stat-card border-progress">
+      <div class="stat-title">In Progress</div>
+      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
+    </div>
+    <div class="stat-card border-done">
+      <div class="stat-title">Sent for Review</div>
+      <div class="stat-number">{{ dashboardStats.review }}</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th>Task Title</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions (อัปเดตงาน)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td class="task-title-cell">{{ task.title }}</td>
+          <td>
+            <span class="badge priority-{{ task.priority | lowercase }}">{{ task.priority }}</span>
+          </td>
+          <td>
+            <span class="badge status-{{ task.status | lowercase }}">{{ task.status }}</span>
+          </td>
+          <td [ngClass]="{'due-date-text': true}">{{ task.dueDate | date:'dd MMM yyyy' }}</td>
+          
+          <td class="action-buttons">
+            <button class="btn btn-sm btn-info" (click)="openTaskDetail(task.id)">ดูรายละเอียด</button>
+
+            <button 
+              *ngIf="task.status === 'TODO'" 
+              class="btn btn-sm btn-warning" 
+              (click)="updateMyTaskStatus(task.id, 'IN_PROGRESS')">
+              ▶️ เริ่มทำ (In Progress)
+            </button>
+
+            <button 
+              *ngIf="task.status === 'IN_PROGRESS'" 
+              class="btn btn-sm btn-primary" 
+              (click)="updateMyTaskStatus(task.id, 'REVIEW')">
+              📤 ส่งงาน (Review)
+            </button>
+
+            <span *ngIf="task.status === 'REVIEW'" style="font-size: 0.85rem; color: #4338ca; font-weight: 600;">
+              ⏳ รอตรวจ...
+            </span>
+
+            <span *ngIf="task.status === 'DONE'" style="font-size: 0.85rem; color: #059669; font-weight: 600;">
+              ✅ ผ่านแล้ว
+            </span>
+          </td>
+        </tr>
+
+        <tr *ngIf="tasks.length === 0">
+          <td colspan="5" class="empty-state">
+            ยังไม่มีงานที่ได้รับมอบหมายในขณะนี้ ชิลๆ ไปก่อนนะ! ☕
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isDetailModalOpen && selectedTask">
+  <div class="modal-card detail-modal">
+    <div class="modal-header">
+      <div class="header-title-group">
+        <h3>{{ selectedTask.title }}</h3>
+        <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
+      </div>
+      <button class="close-btn" (click)="closeDetailModal()">&times;</button>
+    </div>
+
+    <div class="modal-body detail-body">
+      <div class="task-info-section">
+        <div class="info-block">
+          <label>Description:</label>
+          <p class="desc-text">{{ selectedTask.description || 'ไม่มีรายละเอียดเพิ่มเติม' }}</p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Assigned To:</label>
+            <div>You ({{ selectedTask.assignedToUserFullName || selectedTask.assignedToName }})</div>
+          </div>
+          <div class="info-item">
+            <label>Priority:</label>
+            <div><span class="badge priority-{{ selectedTask.priority | lowercase }}">{{ selectedTask.priority }}</span></div>
+          </div>
+          <div class="info-item">
+            <label>Due Date:</label>
+            <div class="due-date-text">{{ selectedTask.dueDate | date:'mediumDate' }}</div>
+          </div>
+        </div>
+
+        <div class="status-action-box">
+          <label>My Action (อัปเดตงาน):</label>
+          <div class="status-buttons">
+            <button *ngIf="selectedTask.status === 'TODO'" class="btn btn-sm btn-warning" (click)="updateMyTaskStatus(selectedTask.id, 'IN_PROGRESS')">
+              ▶️ เริ่มทำ (In Progress)
+            </button>
+            <button *ngIf="selectedTask.status === 'IN_PROGRESS'" class="btn btn-sm btn-primary" (click)="updateMyTaskStatus(selectedTask.id, 'REVIEW')">
+              📤 ส่งงาน (Review)
+            </button>
+            
+            <span *ngIf="selectedTask.status === 'REVIEW'" style="font-size: 0.9rem; color: #4338ca; font-weight: 600;">
+              ⏳ รอ Mentor ตรวจ...
+            </span>
+            <span *ngIf="selectedTask.status === 'DONE'" style="font-size: 0.9rem; color: #059669; font-weight: 600;">
+              ✅ ตรวจผ่านแล้ว เยี่ยมมาก!
+            </span>
+          </div>
+        </div>
+
+        <div class="timeline-section">
+          <h4>📋 Task Timeline & History</h4>
+          <div class="vertical-timeline">
+            <div class="timeline-item" *ngFor="let history of taskHistories">
+              <div class="timeline-badge" [ngClass]="'badge-' + history.newStatus.toLowerCase()"></div>
+              <div class="timeline-content">
+                <span class="timeline-user">{{ history.changedBy }}</span> เปลี่ยนสถานะเป็น 
+                <span class="badge status-{{ history.newStatus.toLowerCase() }}">{{ history.newStatus }}</span>
+                <div class="timeline-time">{{ history.changedAt | date:'dd MMM yyyy, HH:mm' }}</div>
+              </div>
+            </div>
+            <div *ngIf="taskHistories.length === 0" class="no-data-text">ยังไม่มีประวัติการเปลี่ยนสถานะงานนี้</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-comment-section">
+        <h4>Discussion & Feedback</h4>
+        <div class="comment-list">
+          <div class="comment-item" *ngFor="let msg of taskComments">
+            <div class="comment-header">
+              <strong>{{ msg.userName }}</strong>
+              <small>{{ msg.createdAt | date:'short' }}</small>
+            </div>
+            <div class="comment-bubble">{{ msg.comment }}</div>
+          </div>
+          <div *ngIf="taskComments.length === 0" class="no-comments">ยังไม่มีคอมเมนต์ เริ่มการพูดคุยได้เลย!</div>
+        </div>
+
+        <div class="comment-input-area">
+          <textarea [(ngModel)]="newComment" placeholder="มีคำถามหรืออยากรายงานผลงาน? พิมพ์ที่นี่เลย..." rows="2" (keyup.enter)="submitComment()"></textarea>
+          <button class="btn btn-primary btn-sm" (click)="submitComment()">Send</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
