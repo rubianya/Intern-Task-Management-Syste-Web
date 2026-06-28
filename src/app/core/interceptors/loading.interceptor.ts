@@ -1,15 +1,15 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
-import NProgress from 'nprogress'
+// import { HttpInterceptorFn } from '@angular/common/http';
+// import { finalize } from 'rxjs/operators';
+// import NProgress from 'nprogress'
 
-export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+// export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
  
-    NProgress.start();
+//     NProgress.start();
 
-    return next(req).pipe(
-        finalize(() => {
-            NProgress.done();
-        })
-    );
+//     return next(req).pipe(
+//         finalize(() => {
+//             NProgress.done();
+//         })
+//     );
 
-};
+// };

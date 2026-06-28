@@ -1,8 +1,3 @@
-export interface LoginRequest {
-  email?: string | null;
-  password?: string | null;
-}
-
 export interface LogingResponse {
   success: boolean;
   message?: string;
@@ -13,4 +8,9 @@ export interface LogingResponse {
     full_name: string;
     role: string;
   };
+}
+
+export interface LoginRequest {
+  email?: string | null;
+  password?: string | null;
 }

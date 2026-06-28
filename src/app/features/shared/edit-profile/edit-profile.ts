@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -42,7 +42,7 @@ export class EditProfile implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private userService: UserService,
     private cdr: ChangeDetectorRef
   ) {
     this.profileForm = new FormGroup({
@@ -53,7 +53,7 @@ export class EditProfile implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getUserProfile().subscribe({
+    this.userService.getUserProfile().subscribe({
       next: (response: any) => {
 
         const profile = response.data as User;
@@ -65,7 +65,7 @@ export class EditProfile implements OnInit {
 
         this.displayFullName = profile.full_name;
         this.displayEmail = profile.email;
-        // this.displayPassword = profile.password;
+        this.displayPassword = profile.password;
         this.role = profile.role;
 
         this.profileForm.patchValue({
@@ -103,7 +103,7 @@ export class EditProfile implements OnInit {
 
     console.log('ข้อมูลที่จะส่งไปอัปเดต:', updateData);
 
-    this.authService.updateProfile(this.userId, updateData).subscribe({
+    this.userService.updateProfile(this.userId, updateData).subscribe({
       next: (response: any) => {   
         alert('อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว! กรุณาเข้าสู่ระบบใหม่อีกครั้งเพื่อความปลอดภัย');
         localStorage.removeItem('token');

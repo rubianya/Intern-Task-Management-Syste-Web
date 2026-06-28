@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { Sidebar } from '../shared/sidebar/sidebar';
 import { Navbar } from '../shared/navbar/navbar';
-import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +21,7 @@ export class Dashboard implements OnInit {
 
   constructor(
     private router: Router, 
-    private authService: AuthService,
+    private userService: UserService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -33,7 +33,7 @@ export class Dashboard implements OnInit {
       return;
     }
 
-    this.authService.getUserProfile().subscribe({
+    this.userService.getUserProfile().subscribe({
       next: (response: any) => {
         
         this.role = response.data.role;

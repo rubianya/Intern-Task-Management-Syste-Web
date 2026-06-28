@@ -14,16 +14,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: LoginRequest): Observable<LogingResponse> {
-    return this.http.post<LogingResponse>(`${this.apiUrl}/login`, credentials);
-  }
-
-  getUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/users/profile`); 
-  }
-
-  updateProfile(id: number, data: Partial<User>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/users/${id}`, data); 
+  login(login: LoginRequest): Observable<LogingResponse> {
+    return this.http.post<LogingResponse>(`${this.apiUrl}/login`, login);
   }
 
 }

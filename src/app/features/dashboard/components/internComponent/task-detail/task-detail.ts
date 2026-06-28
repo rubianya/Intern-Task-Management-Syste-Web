@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../../../../core/services/task.service';
 import { CommentService } from '../../../../../core/services/comment.service';
 import { LinkService } from '../../../../../core/services/link.service';
+import { statusHistoryService } from '../../../../../core/services/status-history.service';
 
 @Component({
   selector: 'app-task-detail',
@@ -30,6 +31,7 @@ export class TaskDetail implements OnInit {
     private taskService: TaskService,
     private commentService: CommentService,
     private linkService: LinkService,
+    private historyService: statusHistoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -57,7 +59,7 @@ export class TaskDetail implements OnInit {
   }
 
   loadTaskHistories(taskId: number): void {
-    this.taskService.getTaskHistories(taskId).subscribe({
+    this.historyService.getTaskHistories(taskId).subscribe({
       next: (res) => { 
         if (res.success) {
           this.taskHistories = res.data; 

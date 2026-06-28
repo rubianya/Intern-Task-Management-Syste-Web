@@ -13,6 +13,16 @@ export class UserService {
 
     constructor(private http: HttpClient) {}
 
+    // ดึงข้อมูลโปรไฟล์
+    getUserProfile(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/users/profile`); 
+    }
+
+    // อัปเดตโปรไฟล์
+    updateProfile(id: number, data: Partial<User>): Observable<any> {
+        return this.http.put(`${this.apiUrl}/users/${id}`, data); 
+    }
+
     // ดึงข้อมูลผู้ใช้ทั้งหมด
     getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(`${this.apiUrl}/users`);
