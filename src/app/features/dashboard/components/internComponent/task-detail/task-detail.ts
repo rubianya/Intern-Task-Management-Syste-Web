@@ -41,7 +41,6 @@ export class TaskDetail implements OnInit {
   }
 
   loadAllData(taskId: number): void {
-    // โหลดรายละเอียดงาน
     this.taskService.getTaskById(taskId).subscribe({
       next: (res: any) => {
         if (res.success) {
@@ -51,7 +50,6 @@ export class TaskDetail implements OnInit {
       }
     });
 
-    // โหลดลิงก์ (งานที่ส่ง)
     this.linkService.getLinksByTaskId(taskId).subscribe({
       next: (res: any) => {
         if (res.success) {
@@ -61,7 +59,6 @@ export class TaskDetail implements OnInit {
       }
     });
 
-    // โหลดคอมเมนต์ พร้อมจัดเรียงตามเวลาเก่าไปใหม่
     this.commentService.getCommentsByTaskId(taskId).subscribe({
       next: (res: any) => {
         if (res.success) {
@@ -81,26 +78,26 @@ export class TaskDetail implements OnInit {
     });
   }
 
-  updateMyTaskStatus(taskId: number, newStatus: string): void {
-    if (!confirm('ยืนยันการเริ่มทำงานนี้ใช่หรือไม่?')) return;
-
-    this.taskService.updateTaskStatus(taskId, newStatus).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          this.selectedTask.status = newStatus;
-          this.cdr.detectChanges();
-          alert('อัปเดตสถานะเป็นกำลังดำเนินการเรียบร้อยแล้ว!');
+  updateMyTaskStatus(taskId: number, status: string): void {
+    if (confirm(`คุณต้องการส่งงานใช่หรือไม่?`)) {
+      this.taskService.updateTaskStatus(taskId, status).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.selectedTask.status = status; 
+            alert('อัปเดตสถานะงานเรียบร้อยแล้ว!');
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to update status', err);
+          alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
         }
-      },
-      error: (err) => {
-        console.error('Failed to update task status', err);
-        alert('เกิดข้อผิดพลาด ไม่สามารถอัปเดตสถานะงานได้');
-      }
-    });
+      });
+    }
   }
 
   submitLink(): void {
-    if (this.selectedTask.status === 'REVIEW' || this.selectedTask.status === 'DONE') {
+    if (this.selectedTask.status === 'PENDING' || this.selectedTask.status === 'DONE') {
       alert('ไม่สามารถส่งงานเพิ่มได้ เนื่องจากงานนี้อยู่ในขั้นตอนการตรวจ หรือเสร็จสิ้นแล้วครับ');
       return;
     }

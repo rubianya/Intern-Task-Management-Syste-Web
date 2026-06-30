@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="header-left">
       <button class="btn btn-outline" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i> กลับไปหน้างานของฉัน
+        Back
       </button>
       <div class="header-title-group">
         <h3>{{ selectedTask.title }}</h3>
@@ -21,13 +21,13 @@
 
         <button 
           *ngIf="selectedTask.status === 'IN_PROGRESS'" 
-          class="btn btn-inprogress-task" 
-          (click)="updateMyTaskStatus(selectedTask.id, 'REVIEW')">
-          <i class="fas fa-play"></i> ส่งงาน (Sent)
+          class="btn btn-submit-task" 
+          (click)="updateMyTaskStatus(selectedTask.id, 'PENDING')">
+          <i class="fas fa-paper-plane"></i> ส่งตรวจ (Submit)
         </button>
 
-        <span *ngIf="selectedTask.status === 'REVIEW'" class="status-inprogress-text">
-          <i class="fas fa-spinner fa-spin"></i> ส่งงานแล้ว รอตรวจ...
+        <span *ngIf="selectedTask.status === 'PENDING'" class="status-pending-text">
+          <i class="fas fa-clock fa-spin"></i> รอตรวจ (Pending)
         </span>
       </div>
     </div>
@@ -37,9 +37,9 @@
     <div class="task-info-section">
       <div class="info-grid">
         <div class="info-item">
-          <label>Assigned To:</label>
+          <label>Assigned By:</label>
           <div>
-            <i class="fas fa-user-circle"></i> You ({{ selectedTask.assignedToUserFullName || selectedTask.assignedToName }})
+            <i class="fas fa-user-circle"></i> {{ selectedTask.createByFullName }}
           </div>
         </div>
         <div class="info-item">

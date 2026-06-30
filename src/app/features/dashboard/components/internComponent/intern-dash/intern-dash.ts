@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TaskService } from '../../../../../core/services/task.service';
 import { TaskResponse } from '../../../../../core/models/task.model';
 import { Router } from '@angular/router';
+import { DashboardService } from '../../../../../core/services/dashboard.service';
+import { InternDashboardResponse } from '../../../../../core/models/dashboard.model';
 
 @Component({
   selector: 'app-intern-dash',
@@ -13,15 +15,17 @@ import { Router } from '@angular/router';
 })
 export class InternDash implements OnInit {
   tasks: TaskResponse[] = [];
-  dashboardStats = { total: 0, todo: 0, inProgress: 0, review: 0, done:0 };
+  dashboardStats: InternDashboardResponse | null = null;
 
   constructor(
     private taskService: TaskService,
+    private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.loadDashboardStats();
     this.loadTasks();
   }
 
@@ -30,7 +34,6 @@ export class InternDash implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.tasks = response.data;
-          this.calculateStats();
           this.cdr.detectChanges();
         }
       },
@@ -38,30 +41,37 @@ export class InternDash implements OnInit {
     });
   }
 
-  calculateStats(): void {
-    this.dashboardStats = {
-      total: this.tasks.length,
-      todo: this.tasks.filter(t => t.status === 'TODO').length,
-      inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      review: this.tasks.filter(t => t.status === 'REVIEW').length,
-      done: this.tasks.filter(t => t.status === 'DONE').length
-    };
+  loadDashboardStats(): void {
+    this.dashboardService.getMyDashboard().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.dashboardStats = response.data;
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load dashboard stats', err);
+      }
+    });
   }
 
   get upcomingTasks(): TaskResponse[] {
     if (!this.tasks) return [];
     return [...this.tasks]
-      .filter(task => task.status !== 'DONE')
+      .filter(task => task.status === 'TODO' || task.status === 'IN_PROGRESS')
       .sort((a, b) => {
         const dateA = new Date(a.dueDate || '9999-12-31').getTime();
         const dateB = new Date(b.dueDate || '9999-12-31').getTime();
         return dateA - dateB;
       })
-      .slice(0, 5);
   }
 
-  goToTaskDetail(taskId: number): void {
-    this.router.navigate(['/dashboard/task-detail', taskId]); // ปรับ Route ตามระบบของคุณ
+  viewTasksByStatus(status: string): void {
+    if (status === 'ALL') {
+      this.router.navigate(['/dashboard/my-task']);
+    } else {
+      this.router.navigate(['/dashboard/my-task'], { queryParams: { status: status } });
+    }
   }
 
   getDueDateClass(dueDate: string | Date | null, status: string): string {
@@ -73,6 +83,10 @@ export class InternDash implements OnInit {
     if (diffDays <= 0) return 'due-overdue';
     if (diffDays <= 3) return 'due-urgent';
     return 'due-normal';
+  }
+
+  goToTaskDetail(taskId: number): void {
+    this.router.navigate(['/dashboard/intern-task-detail', taskId]);
   }
 
 }

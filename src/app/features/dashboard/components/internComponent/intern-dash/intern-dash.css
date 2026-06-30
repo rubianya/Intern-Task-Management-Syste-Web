@@ -32,6 +32,9 @@
   gap: 10px;
 }
 
+.border-pending { border-left: 5px solid #f39c12; } /* สีส้ม */
+.border-done { border-left: 5px solid #2ecc71; } /* สีเขียว */
+
 /* ปุ่มแบบเดียวกับ My Task */
 .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
 .btn-info { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
@@ -56,10 +59,29 @@
 .priority-high { background-color: #fee2e2; color: #991b1b; }
 .status-todo { background-color: #f1f5f9; color: #475569; }
 .status-in_progress { background-color: #dbeafe; color: #1e40af; }
-.status-review { background-color: #f3e8ff; color: #6b21a8; }
+.status-pending { background-color: #f3e8ff; color: #6b21a8; }
 .status-done { background-color: #dcfce7; color: #166534; }
 
 /* แจ้งเตือนวันส่งงาน (ให้เหมือน My Task) */
 .due-overdue { color: #dc2626 !important; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .due-warning { color: #ea580c !important; font-weight: 600; display: flex; align-items: center; gap: 6px; }
 .due-normal { color: #334155; }
+
+/* ปรับแต่ง Stat Card ให้ดูรู้ว่าคลิกได้และเปลี่ยนสีพื้นหลังหรือยกตัวเมื่อชี้เมาส์ */
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px); /* ทำให้กล่องลอยขึ้นมาเล็กน้อย */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* เพิ่มสีกรณีที่โค้ดยังไม่มีสีสำหรับคลาสสีของ pending */
+.border-pending {
+  border-left: 4px solid #f59e0b !important; /* สีเหลืองส้ม */
+}
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}

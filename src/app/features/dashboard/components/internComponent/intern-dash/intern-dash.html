@@ -6,29 +6,33 @@
     </div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-title">Total Assigned</div>
-      <div class="stat-number">{{ dashboardStats.total }}</div>
+  <div class="stats-grid" *ngIf="dashboardStats">
+    <div class="stat-card border-total" (click)="viewTasksByStatus('ALL')" style="cursor: pointer;">
+      <h3>Total Tasks</h3>
+      <p class="stat-value">{{ dashboardStats.totalTasks }}</p>
     </div>
-    <div class="stat-card border-todo">
-      <div class="stat-title">To Do</div>
-      <div class="stat-number">{{ dashboardStats.todo }}</div>
+    <div class="stat-card border-todo" (click)="viewTasksByStatus('TODO')" style="cursor: pointer;">
+      <h3>To Do</h3>
+      <p class="stat-value">{{ dashboardStats.todoTasks }}</p>
     </div>
-    <div class="stat-card border-progress">
-      <div class="stat-title">In Progress</div>
-      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
+    <div class="stat-card border-progress" (click)="viewTasksByStatus('IN_PROGRESS')" style="cursor: pointer;">
+      <h3>In Progress</h3>
+      <p class="stat-value">{{ dashboardStats.inProgressTasks }}</p>
     </div>
-    <div class="stat-card border-done">
-      <div class="stat-title">Sent for Review</div>
-      <div class="stat-number">{{ dashboardStats.review }}</div>
+    <div class="stat-card border-pending" (click)="viewTasksByStatus('PENDING')" style="cursor: pointer;">
+      <h3>Pending</h3>
+      <p class="stat-value">{{ dashboardStats.pendingTasks }}</p>
+    </div>
+    <div class="stat-card border-done" (click)="viewTasksByStatus('DONE')" style="cursor: pointer;">
+      <h3>Done</h3>
+      <p class="stat-value">{{ dashboardStats.doneTasks }}</p>
     </div>
   </div>
 
   <div class="upcoming-section">
     <div class="section-header">
       <h3>งานที่ใกล้ถึงกำหนดส่ง (Upcoming Tasks)</h3>
-      <p class="subtitle" style="margin-bottom: 20px;">รายการงานด่วน 5 อันดับแรกที่ต้องการการดำเนินการโดยเร็ว</p>
+      <p class="subtitle" style="margin-bottom: 20px;">รายการงานด่วนที่ต้องการการดำเนินการโดยเร็ว</p>
     </div>
 
     <div class="table-container">

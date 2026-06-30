@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { TaskService } from '../../../../../core/services/task.service';
 import { TaskResponse } from '../../../../../core/models/task.model';
 
@@ -13,14 +13,14 @@ import { TaskResponse } from '../../../../../core/models/task.model';
   styleUrl: './my-task.css',
 })
 export class MyTask implements OnInit {
-  tasks: TaskResponse[] = [];
-  dashboardStats = { total: 0, todo: 0, inProgress: 0, review: 0 };
   
+  tasks: TaskResponse[] = [];
   searchTerm: string = '';
   filterStatus: string = '';
   sortOrder: 'asc' | 'desc' | null = null;
 
   constructor(
+    private route: ActivatedRoute,
     private taskService: TaskService,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -28,6 +28,11 @@ export class MyTask implements OnInit {
 
   ngOnInit(): void {
     this.loadTasks();
+    this.route.queryParams.subscribe(params => {
+      if (params['status']) {
+        this.filterStatus = params['status']; 
+      }
+    });
   }
 
   toggleSort() {
@@ -36,17 +41,18 @@ export class MyTask implements OnInit {
     else this.sortOrder = null;
   }
 
-  get filteredTasks() {
-    if (!this.tasks) return [];
-    
-    let result = [...this.tasks].filter(task => {
+  get filteredTasks(): TaskResponse[] {
+    let result = [...this.tasks];
+    if (this.filterStatus) {
+      result = result.filter(task => task.status === this.filterStatus);
+    }
+    if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      const matchesSearch = task.title.toLowerCase().includes(term) || 
-            (task.createByFullName && task.createByFullName.toLowerCase().includes(term));
-      const matchesStatus = this.filterStatus ? task.status === this.filterStatus : true;
-      return matchesSearch && matchesStatus;
-    });
-
+      result = result.filter(task => 
+        task.title?.toLowerCase().includes(term) || 
+        task.createByFullName?.toLowerCase().includes(term)
+      );
+    }
     if (this.sortOrder) {
       result.sort((a, b) => {
         const dateA = new Date(a.dueDate || '9999-12-31').getTime();
@@ -54,7 +60,6 @@ export class MyTask implements OnInit {
         return this.sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
     }
-
     return result;
   }
 
@@ -63,7 +68,6 @@ export class MyTask implements OnInit {
       next: (response: { success: boolean, data: TaskResponse[] }) => {
         if (response.success) {
           this.tasks = response.data;
-          this.calculateStats();
           this.cdr.detectChanges();
         }
       },
@@ -71,28 +75,19 @@ export class MyTask implements OnInit {
     });
   }
 
-calculateStats(): void {
-  this.dashboardStats = { total: this.tasks.length, todo: 0, inProgress: 0, review: 0 };
-  this.tasks.forEach(t => {
-    if (t.status === 'TODO') this.dashboardStats.todo++;
-    else if (t.status === 'IN_PROGRESS') this.dashboardStats.inProgress++;
-    else if (t.status === 'REVIEW') this.dashboardStats.review++;
-  });
-}
-
   getDueDateClass(dueDate: string | Date | null, status: string): string {
     if (!dueDate || status === 'DONE') return 'due-normal';
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const due = new Date(dueDate); due.setHours(0, 0, 0, 0);
     const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
+    
     if (diffDays < 0) return 'due-overdue';
-    else if (diffDays >= 0 && diffDays <= 2) return 'due-warning';
+    if (diffDays <= 2) return 'due-urgent';
     return 'due-normal';
   }
 
-  goToTaskDetail(taskId: number): void {
-    this.router.navigate(['/dashboard/intern-task-detail', taskId]);
+  goToTaskDetail(id: number): void {
+    this.router.navigate(['/dashboard/intern-task-detail', id]);
   }
 
 }

@@ -172,7 +172,7 @@
 }
 .status-todo { background-color: #f3f4f6; color: #4b5563; }
 .status-in_progress { background-color: #fef3c7; color: #d97706; }
-.status-review { background-color: #e0e7ff; color: #4338ca; } 
+.status-pending { background-color: #e0e7ff; color: #4338ca; } 
 .status-done { background-color: #d1fae5; color: #059669; }
 .priority-low { background-color: #e0f2fe; color: #0284c7; }
 .priority-medium { background-color: #fef3c7; color: #d97706; }
@@ -348,4 +348,49 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* =======================================================
+   🎨 สถานะและการตกแต่งปุ่ม (Pending Status)
+   ======================================================= */
+
+/* สีของป้าย Badge บริเวณข้างๆ ชื่อ Task */
+.status-pending {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
+}
+
+/* ปุ่มสำหรับกดส่งงานให้ Mentor (Submit Task) */
+.btn-submit-task {
+  background-color: #f59e0b; /* สีส้ม */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.btn-submit-task:hover {
+  background-color: #d97706; /* สีส้มเข้มเมื่อชี้เมาส์ */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);
+}
+
+/* ข้อความแสดงสถานะรอตรวจมุมขวาบน (แทนปุ่ม) */
+.status-pending-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d97706;
+  font-weight: 600;
+  background-color: #fef3c7;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px dashed #fcd34d;
 }
