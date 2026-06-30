@@ -56,7 +56,7 @@
           </td>
           <td>{{ task.dueDate | date:'dd MMM yyyy' }}</td>
           <td class="action-buttons">
-            <button class="btn btn-sm btn-info" (click)="openTaskDetail(task.id)">View</button>
+            <button class="btn btn-sm btn-info" (click)="viewTaskDetail(task.id)">View</button>
             <button class="btn btn-sm btn-danger" (click)="deleteTask(task.id)">Delete</button>
           </td>
         </tr>
@@ -121,7 +121,6 @@
             <label for="status">Initial Status</label>
             <select id="status" formControlName="status">
               <option value="TODO">TODO</option>
-              <option value="IN_PROGRESS">IN_PROGRESS</option>
             </select>
           </div>
         </div>
@@ -177,128 +176,10 @@
         </div>
       </div>
 
-      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-      <div class="modal-body">
-         </div>
-
       <div class="modal-footer">
         <button type="button" class="btn btn-info" (click)="closeModal()">Cancel</button>
         <button type="submit" class="btn btn-primary">Assign Task</button>
       </div>
     </form>
-    </form>
-  </div>
-</div>
-
-<div class="modal-overlay" *ngIf="isDetailModalOpen && selectedTask">
-  <div class="modal-card detail-modal">
-    <div class="modal-header">
-      <div class="header-title-group">
-        <h3>{{ selectedTask.title }}</h3>
-        <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
-      </div>
-      <button class="close-btn" (click)="closeDetailModal()">&times;</button>
-    </div>
-
-    <div class="modal-body detail-body">
-      <div class="task-info-section">
-        <div class="info-block">
-          <label>Description:</label>
-          <p class="desc-text">{{ selectedTask.description || 'ไม่มีรายละเอียดเพิ่มเติม' }}</p>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Assigned To:</label>
-            <div>{{ selectedTask.assignedToUserFullName || selectedTask.assignedToName }}</div>
-          </div>
-          <div class="info-item">
-            <label>Priority:</label>
-            <div>
-              <span class="badge priority-{{ selectedTask.priority | lowercase }}">
-                {{ selectedTask.priority }}
-              </span>
-            </div>
-          </div>
-          <div class="info-item">
-            <label>Due Date:</label>
-            <div class="due-date-text">{{ selectedTask.dueDate | date:'mediumDate' }}</div>
-          </div>
-        </div>
-
-        <div class="status-action-box">
-          <label>Mentor Action (การตรวจงาน):</label>
-          <div class="status-buttons">
-            <ng-container *ngIf="selectedTask.status === 'REVIEW'">
-              <button class="btn btn-sm btn-success" (click)="changeTaskStatus('DONE')">
-                ✅ ตรวจผ่าน (Done)
-              </button>
-              <button class="btn btn-sm btn-warning" (click)="changeTaskStatus('IN_PROGRESS')">
-                🔄 ให้แก้ไขใหม่ (In Progress)
-              </button>
-            </ng-container>
-
-            <ng-container *ngIf="selectedTask.status === 'TODO' || selectedTask.status === 'IN_PROGRESS'">
-              <span style="font-size: 0.9rem; color: #6b7280; display: flex; align-items: center; gap: 6px;">
-                ⏳ รอนักศึกษาฝึกงานส่งงาน (ปัจจุบัน: {{ selectedTask.status }})
-              </span>
-            </ng-container>
-
-            <ng-container *ngIf="selectedTask.status === 'DONE'">
-              <span style="font-size: 0.9rem; color: #059669; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                🎉 งานนี้ตรวจผ่านและเสร็จสมบูรณ์แล้ว
-              </span>
-            </ng-container>
-          </div>
-
-          <div class="timeline-section">
-            <h4>📋 Task Timeline & History</h4>
-            <div class="vertical-timeline">
-              <div class="timeline-item" *ngFor="let history of taskHistories">
-                <div class="timeline-badge" [ngClass]="'badge-' + history.newStatus.toLowerCase()"></div>
-                  <div class="timeline-content">
-                    <span class="timeline-user">{{ history.changedBy }}</span> 
-                    เปลี่ยนสถานะงานเป็น 
-                    <span class="badge status-{{ history.newStatus.toLowerCase() }}">
-                      {{ history.newStatus }}
-                    </span>
-                    <div class="timeline-time">{{ history.changedAt | date:'dd MMM yyyy, HH:mm' }}</div>
-                  </div>
-                </div>
-              <div *ngIf="taskHistories.length === 0" class="no-data-text" style="text-align: left; padding: 0;">
-                ยังไม่มีประวัติการเปลี่ยนสถานะงานนี้
-              </div>
-
-            </div>
-          </div>
-        </div>
-        
-      </div>
-
-      <div class="task-comment-section">
-        <h4>Discussion & Feedback</h4>
-        <div class="comment-list">
-          <div class="comment-item" *ngFor="let msg of taskComments">
-            <div class="comment-header">
-              <strong>{{ msg.userName }}</strong> <small>{{ msg.createdAt | date:'short' }}</small>
-            </div>
-            <div class="comment-bubble">{{ msg.comment }}</div>
-          </div>
-          <div *ngIf="taskComments.length === 0" class="no-comments">
-            ยังไม่มีคอมเมนต์
-          </div>
-        </div>
-
-        <div class="comment-input-area">
-          <textarea 
-            [(ngModel)]="newComment" 
-            placeholder="พิมพ์คอมเมนต์หรือฟีดแบ็กงานที่นี่..." 
-            rows="2"
-            (keyup.enter)="submitComment()"
-          ></textarea>
-          <button class="btn btn-primary btn-sm" (click)="submitComment()">Send</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

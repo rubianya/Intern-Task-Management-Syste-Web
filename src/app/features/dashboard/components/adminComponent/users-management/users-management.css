@@ -170,7 +170,7 @@
   gap: 12px;
 }
 
-.user-avatar {
+/* .user-avatar {
   width: 36px;
   height: 36px;
   background-color: #e0f2fe;
@@ -181,7 +181,7 @@
   align-items: center;
   border-radius: 50%;
   font-size: 14px;
-}
+} */
 
 .user-name-text {
   font-weight: 600;
@@ -197,7 +197,7 @@
 .role-badge {
   display: inline-flex;
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   border-radius: 20px;
 }
@@ -524,4 +524,51 @@
     flex-direction: column;
     gap: 0;
   }
+}
+
+/* =========================================================
+   TOGGLE SWITCH STYLES
+   ========================================================= */
+.custom-toggle {
+  margin: 0;
+}
+
+.custom-toggle .text-active {
+  color: #16a34a; /* สีเขียวสำหรับ Active */
+  font-weight: 550;
+  margin-left: 4px;
+}
+
+.custom-toggle .text-inactive {
+  color: #ef4444; /* สีแดงสำหรับ Inactive (Off) */
+  font-weight: 550;
+  margin-left: 4px;
+}
+
+/* ปรับแต่งสไตล์ให้ปุ่มของ Angular Material ดูกลมมนและมีมิติคล้ายตัวอย่างมากขึ้น */
+::ng-deep .mat-mdc-slide-toggle .mdc-switch:unselected:not(:disabled) .mdc-switch__track {
+  background-color: #e2e8f0; /* สีเทาอ่อนตอนปิด */
+}
+
+::ng-deep .mat-mdc-slide-toggle .mdc-switch:selected:not(:disabled) .mdc-switch__track {
+  background-color: #16a34a; /* สีเขียวตอนเปิด */
+}
+
+/* ปรับขนาดของ Slide Toggle ให้เล็กลง */
+.custom-toggle {
+  /* ปรับตัวเลข 0.8 หมายถึงขนาด 80% ของของเดิม (เปลี่ยนเป็น 0.7 ถ้าอยากให้เล็กกว่านี้) */
+  transform: scale(0.8); 
+  transform-origin: left center; /* ล็อคจุดศูนย์กลางให้อยู่ชิดซ้าย ปุ่มจะได้ไม่เบี้ยว */
+  margin: 0;
+}
+
+/* ข้อควรระวัง: เมื่อใช้ scale() ตัวหนังสือด้านในจะถูกย่อขนาดลงไปด้วย 
+  ถ้าคุณรู้สึกว่าตัวหนังสือ Active / Inactive เล็กเกินไป ให้ใช้โค้ดด้านล่างเพื่อขยายเฉพาะตัวหนังสือกลับมาครับ 
+*/
+.custom-toggle .text-active,
+.custom-toggle .text-inactive {
+  display: inline-block;
+  transform: scale(1.25); /* ชดเชยขนาดที่ถูกย่อไป (1 / 0.8 = 1.25) */
+  transform-origin: left center;
+  margin-left: 8px;
 }

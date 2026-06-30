@@ -26,6 +26,10 @@ export const routes: Routes = [
             {   path: 'task-management',
                 loadComponent: () => import('./features/dashboard/components/mentorComponent/task-management/task-management').then(m => m.TaskManagement) 
             },
+            {
+                path: 'mentor-task-detail/:id',
+                loadComponent: () => import('./features/dashboard/components/mentorComponent/task-detail/task-detail').then(m => m.TaskDetail) 
+            },
             {   path: 'intern', 
                 loadComponent: () => import('./features/dashboard/components/internComponent/intern-dash/intern-dash').then(m => m.InternDash) 
             },
@@ -33,7 +37,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/dashboard/components/internComponent/my-task/my-task').then(m => m.MyTask)
             },
             {
-                path: 'task-detail/:id',
+                path: 'intern-task-detail/:id',
                 loadComponent: () => import('./features/dashboard/components/internComponent/task-detail/task-detail').then(m => m.TaskDetail)
             },
             {   path: 'edit-profile', 

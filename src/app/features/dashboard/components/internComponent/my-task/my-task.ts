@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'; 
 import { TaskService } from '../../../../../core/services/task.service';
+import { TaskResponse } from '../../../../../core/models/task.model';
 
 @Component({
   selector: 'app-my-task',
@@ -12,11 +13,12 @@ import { TaskService } from '../../../../../core/services/task.service';
   styleUrl: './my-task.css',
 })
 export class MyTask implements OnInit {
-  tasks: any[] = [];
+  tasks: TaskResponse[] = [];
   dashboardStats = { total: 0, todo: 0, inProgress: 0, review: 0 };
   
   searchTerm: string = '';
   filterStatus: string = '';
+  sortOrder: 'asc' | 'desc' | null = null;
 
   constructor(
     private taskService: TaskService,
@@ -28,19 +30,37 @@ export class MyTask implements OnInit {
     this.loadTasks();
   }
 
+  toggleSort() {
+    if (this.sortOrder === null) this.sortOrder = 'asc';
+    else if (this.sortOrder === 'asc') this.sortOrder = 'desc';
+    else this.sortOrder = null;
+  }
+
   get filteredTasks() {
     if (!this.tasks) return [];
     
-    return this.tasks.filter(task => {
-      const matchesSearch = task.title.toLowerCase().includes(this.searchTerm.toLowerCase());
+    let result = [...this.tasks].filter(task => {
+      const term = this.searchTerm.toLowerCase();
+      const matchesSearch = task.title.toLowerCase().includes(term) || 
+            (task.createByFullName && task.createByFullName.toLowerCase().includes(term));
       const matchesStatus = this.filterStatus ? task.status === this.filterStatus : true;
       return matchesSearch && matchesStatus;
     });
+
+    if (this.sortOrder) {
+      result.sort((a, b) => {
+        const dateA = new Date(a.dueDate || '9999-12-31').getTime();
+        const dateB = new Date(b.dueDate || '9999-12-31').getTime();
+        return this.sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+    }
+
+    return result;
   }
 
   loadTasks(): void {
     this.taskService.getAllTasksUser().subscribe({
-      next: (response: any) => {
+      next: (response: { success: boolean, data: TaskResponse[] }) => {
         if (response.success) {
           this.tasks = response.data;
           this.calculateStats();
@@ -51,14 +71,14 @@ export class MyTask implements OnInit {
     });
   }
 
-  calculateStats(): void {
-    this.dashboardStats = {
-      total: this.tasks.length,
-      todo: this.tasks.filter(t => t.status === 'TODO').length,
-      inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      review: this.tasks.filter(t => t.status === 'REVIEW').length
-    };
-  }
+calculateStats(): void {
+  this.dashboardStats = { total: this.tasks.length, todo: 0, inProgress: 0, review: 0 };
+  this.tasks.forEach(t => {
+    if (t.status === 'TODO') this.dashboardStats.todo++;
+    else if (t.status === 'IN_PROGRESS') this.dashboardStats.inProgress++;
+    else if (t.status === 'REVIEW') this.dashboardStats.review++;
+  });
+}
 
   getDueDateClass(dueDate: string | Date | null, status: string): string {
     if (!dueDate || status === 'DONE') return 'due-normal';
@@ -72,7 +92,7 @@ export class MyTask implements OnInit {
   }
 
   goToTaskDetail(taskId: number): void {
-    this.router.navigate(['/dashboard/task-detail', taskId]);
+    this.router.navigate(['/dashboard/intern-task-detail', taskId]);
   }
 
 }

@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TaskService } from '../../../../../core/services/task.service';
 import { UserService } from '../../../../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskRequest } from '../../../../../core/models/task.model';
-import { CommentRequest, CommentResponse } from '../../../../../core/models/comment.model';
-import { CommentService } from '../../../../../core/services/comment.service';
 
 @Component({
   selector: 'app-task-management',
@@ -24,18 +23,12 @@ export class TaskManagement implements OnInit {
   isModalOpen = false;
   taskForm!: FormGroup;
 
-  isDetailModalOpen = false;
-  selectedTask: any = null;
-  taskComments: CommentResponse[] = [];
-  taskHistories: any[] = [];
-  newComment: string = '';
-
   constructor(
     private taskService: TaskService, 
     private userService: UserService,
-    private commentService: CommentService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router // Injection สำหรับเปลี่ยนหน้า
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +68,7 @@ export class TaskManagement implements OnInit {
       next: (response: any) => {
         const users = response.data ? response.data : response;
         this.interns = users.filter((u: any) => u.role?.toUpperCase() === 'INTERN' && u.active);
-        this.filteredInterns = [...this.interns]; // 👈 3. กำหนดค่าเริ่มต้นให้เท่ากับรายชื่อทั้งหมด
+        this.filteredInterns = [...this.interns]; 
       },
       error: (err) => console.error('Failed to load interns', err)
     });
@@ -83,7 +76,7 @@ export class TaskManagement implements OnInit {
 
   filterInterns(): void {
     if (!this.searchTerm.trim()) {
-      this.filteredInterns = [...this.interns]; // ถ้าไม่ได้พิมพ์อะไร ให้โชว์ทั้งหมด
+      this.filteredInterns = [...this.interns]; 
     } else {
       const term = this.searchTerm.toLowerCase();
       this.filteredInterns = this.interns.filter(intern => 
@@ -94,7 +87,7 @@ export class TaskManagement implements OnInit {
 
   openCreateTaskModal(): void {
     this.isModalOpen = true;
-    this.searchTerm = ''; // 
+    this.searchTerm = ''; 
     this.filteredInterns = [...this.interns];
     
     this.taskForm.reset({
@@ -115,8 +108,17 @@ export class TaskManagement implements OnInit {
       done: this.tasks.filter(t => t.status === 'DONE' || t.status === 'REVIEW').length
     };
   }
+  
+  getRole(): string | null {
+    return localStorage.getItem('role');
+  } 
 
   deleteTask(taskId: number): void {
+    if (this.getRole() === 'Admin' || this.getRole() === 'Mentor') {
+      alert('คุณไม่มีสิทธิ์ลบงานนี้! สิทธิ์ในการลบงานจำกัดเฉพาะ Mentor หรือ Admin เท่านั้นครับ');
+      return;
+    }
+
     if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
       this.taskService.deleteTask(taskId).subscribe({
         next: (response) => {
@@ -127,7 +129,8 @@ export class TaskManagement implements OnInit {
         },
         error: (err) => {
           console.error('Delete failed', err);
-          alert('เกิดข้อผิดพลาดในการลบงาน');
+          const errorMessage = err.error?.message || 'เกิดข้อผิดพลาดในการลบงาน';
+          alert(errorMessage);
         }
       });
     }
@@ -154,18 +157,12 @@ export class TaskManagement implements OnInit {
     this.taskForm.get('assignedToIds')?.setValue(selectedIds);
     this.taskForm.get('assignedToIds')?.markAsTouched();
     this.taskForm.get('assignedToIds')?.updateValueAndValidity();
-    
-    console.log('Intern IDs ที่ถูกเลือกหลังเปลี่ยนสถานะ:', this.taskForm.get('assignedToIds')?.value);
   }
 
   onSubmit(): void {
-    console.log('--- คลิกปุ่ม Assign Task แล้ว ---');
-    console.log('ค่าในฟอร์มปัจจุบัน:', this.taskForm.value);
-    console.log('ฟอร์มผ่านเงื่อนไขหรือไม่:', this.taskForm.valid);
-
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
-      alert('⚠️ ฟอร์มยังไม่สมบูรณ์! กรุณาตรวจสอบช่องที่มีดอกจัน (*)');
+      alert('ฟอร์มยังไม่สมบูรณ์! กรุณาตรวจสอบช่องที่มีดอกจัน (*)');
       return;
     }
     
@@ -173,7 +170,7 @@ export class TaskManagement implements OnInit {
     const selectedInternIds: number[] = formValue.assignedToIds;
 
     if (!selectedInternIds || selectedInternIds.length === 0) {
-      alert('⚠️ กรุณาติ๊กเลือก Intern อย่างน้อย 1 คนครับ');
+      alert('กรุณาตเลือก Intern อย่างน้อย 1 คน');
       return;
     }
 
@@ -188,100 +185,19 @@ export class TaskManagement implements OnInit {
 
     this.taskService.createTask(taskData).subscribe({
       next: (response: any) => {
-        alert(`มอบหมายงานให้ Intern จำนวน ${selectedInternIds.length} คน เรียบร้อยแล้ว! 🚀`);
+        alert(`มอบหมายงานให้ Intern จำนวน ${selectedInternIds.length} คน เรียบร้อยแล้ว!`);
         this.closeModal();
         this.loadTasks(); 
       },
       error: (err) => {
         console.error('Failed to assign tasks', err);
         const errorMsg = err.error?.errors?.assignedToIds || err.error?.message || 'เกิดข้อผิดพลาด';
-        alert('❌ ไม่สามารถบันทึกได้: ' + errorMsg);
+        alert('ไม่สามารถบันทึกได้: ' + errorMsg);
       }
     });
   }
 
-  openTaskDetail(taskId: number): void {
-    this.taskService.getTaskById(taskId).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          this.selectedTask = response.data;
-          this.isDetailModalOpen = true;
-          this.loadComments(taskId);
-          this.taskHistories = [
-            { changedBy: 'System', oldStatus: null, newStatus: 'TODO', changedAt: new Date(this.selectedTask.createdAt || new Date()) }
-          ];
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => console.error('Failed to fetch task details', err)
-    });
+  viewTaskDetail(taskId: number): void {
+    this.router.navigate(['/dashboard/mentor-task-detail', taskId]); 
   }
-
-  closeDetailModal(): void {
-    this.isDetailModalOpen = false;
-    this.selectedTask = null;
-    this.taskComments = [];
-    this.taskHistories = [];
-    this.newComment = '';
-  }
-
-  changeTaskStatus(newStatus: string): void {
-    if (!this.selectedTask) return;
-    this.taskService.updateTaskStatus(this.selectedTask.id, newStatus).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          const oldStatus = this.selectedTask.status;
-          this.selectedTask.status = newStatus;
-          this.taskHistories.unshift({
-            changedBy: 'You (Mentor)',
-            oldStatus: oldStatus,
-            newStatus: newStatus,
-            changedAt: new Date()
-          });
-          this.loadTasks();
-          alert(`เปลี่ยนสถานะงานเป็น ${newStatus} สำเร็จ!`);
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => {
-        console.error('Failed to update status', err);
-        alert(err.error?.message || 'ไม่สามารถเปลี่ยนสถานะได้');
-      }
-    });
-  }
-
-  loadComments(taskId: number): void {
-    this.commentService.getCommentsByTaskId(taskId).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.taskComments = response.data
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => console.error('Failed to load comments', err)
-    });
-  }
-
-  submitComment(): void {
-    if (!this.newComment.trim() || !this.selectedTask) return;
-
-    const request: CommentRequest = {
-      comment: this.newComment
-    };
-    
-    this.commentService.addComment(this.selectedTask.id, request).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.taskComments.push(response.data)
-          this.newComment = '';
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => {
-        console.error('Failed to submit comment', err);
-        alert(err.error?.message || 'ไม่สามารถส่งคอมเมนต์ได้');
-      }
-    });
-  }
-  
 }

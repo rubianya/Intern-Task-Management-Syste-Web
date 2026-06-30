@@ -6,37 +6,22 @@
     </div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-title">Total Assigned</div>
-      <div class="stat-number">{{ dashboardStats.total }}</div>
-    </div>
-    <div class="stat-card border-todo">
-      <div class="stat-title">To Do</div>
-      <div class="stat-number">{{ dashboardStats.todo }}</div>
-    </div>
-    <div class="stat-card border-progress">
-      <div class="stat-title">In Progress</div>
-      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
-    </div>
-    <div class="stat-card border-done">
-      <div class="stat-title">Sent for Review</div>
-      <div class="stat-number">{{ dashboardStats.review }}</div>
-    </div>
-  </div>
-
   <div class="filter-container">
     <div class="search-box">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" placeholder="ค้นหาชื่องาน..." [(ngModel)]="searchTerm" class="search-input" autocomplete="off">
+      <input type="text" 
+            placeholder="ค้นหาชื่องาน หรือ ชื่อผู้สั่งงาน..." 
+            [(ngModel)]="searchTerm" 
+            class="search-input" 
+            autocomplete="off">    
     </div>
     <div class="filter-box">
       <select [(ngModel)]="filterStatus" class="filter-select">
-        <option value="">📋 ทุกสถานะ (All)</option>
-        <option value="TODO">📝 To Do (ยังไม่เริ่ม)</option>
-        <option value="IN_PROGRESS">⏳ In Progress (กำลังทำ)</option>
-        <option value="REVIEW">🔍 Review (รอตรวจ)</option>
-        <option value="DONE">✅ Done (เสร็จสิ้น)</option>
+        <option value="">All Status (ทุกสถานะ)</option>
+        <option value="TODO">To Do (ยังไม่เริ่ม)</option>
+        <option value="IN_PROGRESS">In Progress (กำลังทำ)</option>
+        <option value="REVIEW">Review (รอตรวจ)</option>
+        <option value="DONE">Done (เสร็จสิ้น)</option>
       </select>
     </div>
   </div>
@@ -46,15 +31,24 @@
       <thead>
         <tr>
           <th>Task Title</th>
+          <th>Assigned by</th>
           <th>Priority</th>
           <th>Status</th>
-          <th>Due Date</th>
+          <th>
+            <div style="cursor: pointer; display: flex; align-items: center;" (click)="toggleSort()">
+              Due Date 
+              <i class="fas fa-sort-up" *ngIf="sortOrder === 'asc'" style="margin-left: 8px; color: #94a3b8;"></i>
+              <i class="fas fa-sort-down" *ngIf="sortOrder === 'desc'" style="margin-left: 8px; color: #94a3b8;"></i>
+              <i class="fas fa-sort" *ngIf="sortOrder === null" style="margin-left: 8px; color: #94a3b8;"></i>
+            </div>
+          </th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let task of filteredTasks">
-          <td class="task-title-cell">{{ task.title }}</td>
+          <td class="task-title-cell">{{ task?.title }}</td>
+          <td><span class="badge assigned-{{ task.createByFullName | lowercase }}">{{ task.createByFullName }}</span></td>
           <td><span class="badge priority-{{ task.priority | lowercase }}">{{ task.priority }}</span></td>
           <td><span class="badge status-{{ task.status | lowercase }}">{{ task.status }}</span></td>
           <td [ngClass]="getDueDateClass(task.dueDate, task.status)">
@@ -63,15 +57,13 @@
           </td>
           
           <td class="action-buttons">
-            <button class="btn btn-sm btn-info" (click)="goToTaskDetail(task.id)">
-              <i class="fas fa-eye"></i> ดูรายละเอียดงาน
-            </button>
+            <button class="btn btn-sm btn-info" (click)="goToTaskDetail(task.id)">View</button>
           </td>
         </tr>
 
         <tr *ngIf="filteredTasks.length === 0">
-          <td colspan="5" class="empty-state">
-            ไม่พบงานที่ค้นหา หรือยังไม่มีงานในขณะนี้ ☕
+          <td colspan="6" class="empty-state">
+            ไม่พบงานที่ค้นหา หรือยังไม่มีงานในขณะนี้
           </td>
         </tr>
       </tbody>

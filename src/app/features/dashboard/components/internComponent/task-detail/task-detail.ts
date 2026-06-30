@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../../../../core/services/task.service';
 import { CommentService } from '../../../../../core/services/comment.service';
 import { LinkService } from '../../../../../core/services/link.service';
-import { statusHistoryService } from '../../../../../core/services/status-history.service';
 
 @Component({
   selector: 'app-task-detail',
@@ -17,7 +16,6 @@ import { statusHistoryService } from '../../../../../core/services/status-histor
 export class TaskDetail implements OnInit {
   taskId!: number;
   selectedTask: any = null;
-  taskHistories: any[] = [];
   taskLinks: any[] = [];
   taskComments: any[] = [];
   
@@ -31,7 +29,6 @@ export class TaskDetail implements OnInit {
     private taskService: TaskService,
     private commentService: CommentService,
     private linkService: LinkService,
-    private historyService: statusHistoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -43,77 +40,81 @@ export class TaskDetail implements OnInit {
     }
   }
 
-  loadAllData(id: number): void {
-    this.taskService.getTaskById(id).subscribe({
-      next: (res: any) => { 
+  loadAllData(taskId: number): void {
+    // โหลดรายละเอียดงาน
+    this.taskService.getTaskById(taskId).subscribe({
+      next: (res: any) => {
         if (res.success) {
-          this.selectedTask = res.data; 
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => console.error(err)
-    });
-    this.loadTaskHistories(id);
-    this.loadLinks(id);
-    this.loadComments(id);
-  }
-
-  loadTaskHistories(taskId: number): void {
-    this.historyService.getTaskHistories(taskId).subscribe({
-      next: (res) => { 
-        if (res.success) {
-          this.taskHistories = res.data; 
+          this.selectedTask = res.data;
           this.cdr.detectChanges();
         }
       }
     });
-  }
 
-  loadLinks(taskId: number): void {
+    // โหลดลิงก์ (งานที่ส่ง)
     this.linkService.getLinksByTaskId(taskId).subscribe({
-      next: (res) => { 
+      next: (res: any) => {
         if (res.success) {
-          this.taskLinks = res.data; 
+          this.taskLinks = res.data;
           this.cdr.detectChanges();
         }
       }
     });
-  }
 
-  loadComments(taskId: number): void {
+    // โหลดคอมเมนต์ พร้อมจัดเรียงตามเวลาเก่าไปใหม่
     this.commentService.getCommentsByTaskId(taskId).subscribe({
-      next: (res) => { 
+      next: (res: any) => {
         if (res.success) {
-          this.taskComments = res.data; 
+          this.taskComments = res.data.sort((a: any, b: any) => {
+            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          });
           this.cdr.detectChanges();
+          
+          setTimeout(() => {
+            const commentListEl = document.querySelector('.comment-list');
+            if (commentListEl) {
+              commentListEl.scrollTop = commentListEl.scrollHeight;
+            }
+          }, 50);
         }
       }
     });
   }
 
   updateMyTaskStatus(taskId: number, newStatus: string): void {
+    if (!confirm('ยืนยันการเริ่มทำงานนี้ใช่หรือไม่?')) return;
+
     this.taskService.updateTaskStatus(taskId, newStatus).subscribe({
       next: (response: any) => {
         if (response.success) {
           this.selectedTask.status = newStatus;
           this.cdr.detectChanges();
-          this.loadTaskHistories(taskId); 
+          alert('อัปเดตสถานะเป็นกำลังดำเนินการเรียบร้อยแล้ว!');
         }
       },
-      error: (err) => alert('Failed to update task status')
+      error: (err) => {
+        console.error('Failed to update task status', err);
+        alert('เกิดข้อผิดพลาด ไม่สามารถอัปเดตสถานะงานได้');
+      }
     });
   }
 
   submitLink(): void {
+    if (this.selectedTask.status === 'REVIEW' || this.selectedTask.status === 'DONE') {
+      alert('ไม่สามารถส่งงานเพิ่มได้ เนื่องจากงานนี้อยู่ในขั้นตอนการตรวจ หรือเสร็จสิ้นแล้วครับ');
+      return;
+    }
     if (!this.newLinkLabel.trim() || !this.newLinkUrl.trim()) {
-      alert('กรุณากรอกลิงก์และ URL ให้ครบถ้วนครับ'); return;
+      alert('กรุณากรอกลิงก์และ URL ให้ครบถ้วนครับ'); 
+      return;
     }
     const req = { label: this.newLinkLabel, url: this.newLinkUrl };
     this.linkService.addLinkToTask(this.selectedTask.id, req).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.taskLinks.push(res.data);
-          this.newLinkLabel = ''; this.newLinkUrl = '';
+      next: (response: any) => {
+        if (response.success) {
+          this.taskLinks.push(response.data);
+          this.newLinkLabel = ''; 
+          this.newLinkUrl = '';
           this.cdr.detectChanges();
         }
       }
@@ -121,14 +122,21 @@ export class TaskDetail implements OnInit {
   }
 
   submitComment(): void {
-    if (!this.newComment.trim()) return;
+    if (!this.newComment.trim() || !this.selectedTask) return;
     const req = { comment: this.newComment };
     this.commentService.addComment(this.selectedTask.id, req).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.taskComments.push(res.data);
+      next: (response: any) => {
+        if (response.success) {
+          this.taskComments.push(response.data);
           this.newComment = '';
           this.cdr.detectChanges();
+          
+          setTimeout(() => {
+            const commentListEl = document.querySelector('.comment-list');
+            if (commentListEl) {
+              commentListEl.scrollTop = commentListEl.scrollHeight;
+            }
+          }, 50);
         }
       }
     });
@@ -138,14 +146,15 @@ export class TaskDetail implements OnInit {
     if (!dueDate || status === 'DONE') return 'due-normal';
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const due = new Date(dueDate); due.setHours(0, 0, 0, 0);
-    const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return 'due-overdue';
-    else if (diffDays >= 0 && diffDays <= 2) return 'due-warning';
+    const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 3600 * 24));
+    
+    if (diffDays < 0) return 'due-danger';
+    if (diffDays <= 2) return 'due-warning';
     return 'due-normal';
   }
 
   goBack(): void {
     this.router.navigate(['/dashboard/my-task']);
   }
+
 }

@@ -44,7 +44,7 @@ export class UserService {
     }
 
     // เปลี่ยนสถานะการใช้งานบัญชี
-    switchActive(id: number, userData: User): Observable<User> {
+    toggleActive(id: number, userData: User): Observable<User> {
         return this.http.put<User>(`${this.apiUrl}/users/${id}/active`,userData);
     }
     

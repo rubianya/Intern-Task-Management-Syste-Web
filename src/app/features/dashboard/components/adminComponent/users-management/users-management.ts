@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { response } from 'express';
 
 @Component({
   selector: 'app-users-management',
@@ -20,7 +22,8 @@ import { MatCardModule } from '@angular/material/card';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatSlideToggleModule
   ],
   templateUrl: './users-management.html',
   styleUrl: './users-management.css',
@@ -53,10 +56,13 @@ export class UsersManagement {
   ) {}
 
   ngOnInit(): void {
+
     this.loadUsers();
+
   }
 
   loadUsers() {
+
     this.userService.getAllUsers().subscribe({
       next: (response: any) => {
         this.users = response.data;
@@ -67,13 +73,14 @@ export class UsersManagement {
         console.error('Error fetching users:', err);
       }
     });
+
   }
 
   get filteredUsers(): User[] {
     return this.users.filter(response => {
       const searchLower = this.searchTerm.toLowerCase();
 
-      const matchesSearch = //response.id.toString().toLowerCase().includes(searchLower) ||
+      const matchesSearch = response.id.toString().toLowerCase().includes(searchLower) ||
                             response.full_name?.toLowerCase().includes(searchLower) || 
                             response.email?.toLowerCase().includes(searchLower);
 
@@ -93,13 +100,9 @@ export class UsersManagement {
   openAddUserModal() {
 
     this.isEditMode = false;
-
     this.userFormGroup.reset({ id: 0, role: 'Intern', active: true, password: '' });
-
-    // บังคับให้กรอกรหัสผ่าน
     this.userFormGroup.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.userFormGroup.get('password')?.updateValueAndValidity();
-
     this.isModalOpen = true;
 
   }
@@ -169,14 +172,18 @@ export class UsersManagement {
         }
       });
     }
+
   }
 
   openDeleteModal(userId: number) {
+
     this.userIdToDelete = userId;
     this.isDeleteModalOpen = true; 
+
   }
 
   confirmDelete() {
+
     if (this.userIdToDelete) {
       this.userService.deleteUser(this.userIdToDelete).subscribe({
         next: () => {
@@ -187,11 +194,32 @@ export class UsersManagement {
         error: (err) => console.error('Delete failed:', err)
       });
     }
+
   }
 
   closeDeleteModal() {
     this.isDeleteModalOpen = false;
     this.userIdToDelete = null;
+  }
+
+  toggleUserStatus(user: User, newStatus: boolean): void {
+
+    const previousStatus = user.active;
+    user.active = newStatus;
+    const payload = { active: newStatus } as unknown as User;
+
+    this.userService.toggleActive(user.id!, payload).subscribe({
+      next: (response) => {
+        console.log(`User ID ${user.id} status updated to ${newStatus}`);
+      },
+      error: (err) => {
+        user.active = previousStatus;
+      alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะผู้ใช้งาน');
+      console.error(err);
+      }
+      
+    });
+    
   }
 
 

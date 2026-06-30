@@ -59,10 +59,10 @@
         <tbody>
           @for (user of paginatedUsers; track user.id) {
             <tr>
-              <td class="text-bold">#{{ user.id }}</td>
+              <td class="text-bold">{{ user.id }}</td>
               <td>
                 <div class="user-name-cell">
-                  <span class="user-avatar">{{ user.full_name.charAt(0).toUpperCase() }}</span>
+                  <!-- <span class="user-avatar">{{ user.full_name.charAt(0).toUpperCase() }}</span> -->
                   <span class="user-name-text">{{ user.full_name }}</span>
                 </div>
               </td>
@@ -74,9 +74,15 @@
                 </span>
               </td>
               <td>
-                <span class="status-badge" [ngClass]="user.active ? 'status-active' : 'status-inactive'">
-                  {{ user.active ? 'Active' : 'Inactive' }}
-                </span>
+                <mat-slide-toggle
+                  [checked]="user.active"
+                  color="primary"
+                  class="custom-toggle"
+                  (change)="toggleUserStatus(user, $event.checked)">
+                  <span [class.text-active]="user.active" [class.text-inactive]="!user.active">
+                    {{ user.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </mat-slide-toggle>
               </td>
               <td>
                 <div class="action-buttons-group">
@@ -169,7 +175,6 @@
               <mat-label>Account Status</mat-label>
               <mat-select formControlName="active">
                 <mat-option [value]="true">Active</mat-option>
-                <mat-option [value]="false">Inactive</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

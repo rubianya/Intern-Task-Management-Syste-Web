@@ -16,15 +16,6 @@
 .btn-info:hover { background-color: #e2e8f0; }
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; display: flex; align-items: center; gap: 6px; }
 
-/* Stats Grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat-card { background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid #94a3b8; }
-.stat-title { font-size: 0.9rem; color: #64748b; margin-bottom: 8px; font-weight: 600; }
-.stat-number { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
-.border-todo { border-left-color: #94a3b8; }
-.border-progress { border-left-color: #3b82f6; }
-.border-done { border-left-color: #10b981; }
-
 /* ระบบค้นหาและกรอง */
 .filter-container { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .search-box { position: relative; flex: 1; min-width: 250px; }
@@ -36,9 +27,48 @@
 
 /* ตารางงาน */
 .table-container { background-color: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow-x: auto; }
-.task-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-.task-table th, .task-table td { padding: 16px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-.task-table th { background-color: #f8fafc; font-weight: 600; color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.task-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+/* หัวข้อตาราง (Header) */
+.task-table thead {
+  background-color: #f8fafc;
+}
+
+.task-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b; /* สีเทาเข้ม */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* เนื้อหาตาราง (Body) */
+.task-table td {
+  padding: 16px 20px;
+  font-size: 0.95rem; /* ขนาดตัวอักษรเนื้อหา */
+  color: #334155;     /* สีตัวอักษรเนื้อหา */
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+/* เพิ่ม Effect เมื่อเอาเมาส์ชี้แถว */
+.task-table tbody tr:hover {
+  background-color: #fcfdfe;
+}
+/* ช่วยให้หัวข้อตารางที่เป็นปุ่มกด ดูมีความ Interactive */
+th div:hover {
+  color: #1e293b;
+  transition: color 0.2s;
+}
 .task-title-cell { font-weight: 600; color: #1e293b; max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
 .empty-state { text-align: center; padding: 40px !important; color: #94a3b8; font-style: italic; }
 
@@ -54,7 +84,7 @@
 
 /* แจ้งเตือนวันส่งงาน */
 .due-overdue { color: #dc2626 !important; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.due-overdue::after { content: "⚠️ Overdue"; font-size: 11px; background-color: #fef2f2; border: 1px solid #f87171; padding: 2px 6px; border-radius: 12px; }
+/* .due-overdue::after { content: "⚠️ Overdue"; font-size: 11px; background-color: #fef2f2; border: 1px solid #f87171; padding: 2px 6px; border-radius: 12px; } */
 .due-warning { color: #ea580c !important; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.due-warning::after { content: "warning"; font-size: 11px; background-color: #fef8f2; border: 1px solid #f8b771; padding: 2px 6px; border-radius: 12px; }
+/* .due-warning::after { content: "warning"; font-size: 11px; background-color: #fef8f2; border: 1px solid #f8b771; padding: 2px 6px; border-radius: 12px; } */
 .due-normal { color: #334155; }
