@@ -78,7 +78,7 @@
         </div>
 
         <div class="add-link-form" *ngIf="selectedTask.status === 'TODO' || selectedTask.status === 'IN_PROGRESS'">
-          <input type="text" class="form-control" placeholder="ชื่องาน / อธิบายสั้นๆ" [(ngModel)]="newLinkLabel" autocomplete="off">
+          <input type="text" class="form-control" placeholder="ชื่องาน" [(ngModel)]="newLinkLabel" autocomplete="off">
           <input type="url" class="form-control" placeholder="URL (https://...)" [(ngModel)]="newLinkUrl" autocomplete="off">
           <button class="btn btn-add-link" (click)="submitLink()">
             <i class="fas fa-plus"></i> เพิ่มงาน

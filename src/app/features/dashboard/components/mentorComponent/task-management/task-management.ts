@@ -4,19 +4,21 @@ import { TaskService } from '../../../../../core/services/task.service';
 import { UserService } from '../../../../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { TaskRequest } from '../../../../../core/models/task.model';
+import { TaskRequest, TaskResponse } from '../../../../../core/models/task.model';
+import { User } from '../../../../../core/models/user.model';
 
 @Component({
   selector: 'app-task-management',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './task-management.html',
   styleUrl: './task-management.css',
 })
 export class TaskManagement implements OnInit {
 
-  tasks: any[] = []; 
-  interns: any[] = [];
-  filteredInterns: any[] = [];
+  tasks: TaskResponse[] = []; 
+  interns: User[] = [];
+  filteredInterns: User[] = [];
   searchTerm: string = '';
   dashboardStats = { total: 0, todo: 0, inProgress: 0, pending:0, done: 0 };
 
@@ -32,8 +34,8 @@ export class TaskManagement implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadTasks();
     this.loadIntern();
+    this.loadTasks();
     this.initForm();
   }
 
@@ -64,14 +66,21 @@ export class TaskManagement implements OnInit {
   }
 
   loadIntern(): void {
-    this.userService.getAllUsers().subscribe({
+    this.userService.getActiveInterns().subscribe({
       next: (response: any) => {
-        console.log('Interns list:', response.data);
-        const users = response.data ? response.data : response;
-        this.interns = users.filter((u: any) => u.role?.toUpperCase() === 'INTERN' && u.active);
-        this.filteredInterns = [...this.interns]; 
+        const userList: User[] = response.data || response; 
+
+        if (Array.isArray(userList)) {
+          this.interns = userList.filter((user: User) => 
+            user.role && user.role.toLowerCase() === 'intern'
+          );
+          this.filteredInterns = [...this.interns];
+          console.log('Filtered Interns:', this.filteredInterns);
+        }
       },
-      error: (err) => console.error('Failed to load interns', err)
+      error: (err) => {
+        console.error('Failed to load interns', err);
+      }
     });
   }
 
@@ -81,7 +90,7 @@ export class TaskManagement implements OnInit {
     } else {
       const term = this.searchTerm.toLowerCase();
       this.filteredInterns = this.interns.filter(intern => 
-        (intern.full_name || intern.fullName || '').toLowerCase().includes(term)
+        (intern.full_name || '').toLowerCase().includes(term)
       );
     }
   }
@@ -145,17 +154,14 @@ export class TaskManagement implements OnInit {
   }
 
   toggleInternSelection(internIds: number, event: any): void {
-    const selectedIds = (this.taskForm.get('assignedToIds')?.value || []) as number[];
+    let selectedIds = [...(this.taskForm.get('assignedToIds')?.value || [])] as number[];
 
     if (event.target.checked) {
       if (!selectedIds.includes(internIds)) {
         selectedIds.push(internIds);
       }
     } else {
-      const index = selectedIds.indexOf(internIds);
-      if (index > -1) {
-        selectedIds.splice(index, 1);
-      }
+      selectedIds = selectedIds.filter(id => id !== internIds);
     }
 
     this.taskForm.get('assignedToIds')?.setValue(selectedIds);

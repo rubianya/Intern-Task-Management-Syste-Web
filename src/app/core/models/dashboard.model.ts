@@ -15,3 +15,4 @@ export interface InternDashboardResponse {
   inProgressTasks: number;
   doneTasks: number;
 }
+

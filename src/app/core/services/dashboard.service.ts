@@ -13,22 +13,22 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  // 1. ดึงข้อมูลภาพรวมระบบ (สำหรับ Admin / โชว์รวมๆ)
+  // ดึงข้อมูลภาพรวมระบบ (สำหรับ Admin / โชว์รวมๆ)
   getSummary(): Observable<ApiResponse<DashboardSummaryResponse>> {
     return this.http.get<ApiResponse<DashboardSummaryResponse>>(`${this.apiUrl}/summary`);
   }
 
-  // 2. ดึงข้อมูล Dashboard สำหรับ Intern (ผู้ใช้ที่กำลัง Login)
+  // ดึงข้อมูล Dashboard สำหรับ Intern (ผู้ใช้ที่กำลัง Login)
   getMyDashboard(): Observable<ApiResponse<InternDashboardResponse>> {
     return this.http.get<ApiResponse<InternDashboardResponse>>(`${this.apiUrl}/interns/me`);
   }
 
-  // 3. ดึงข้อมูล Dashboard ของ Intern สำหรับ Mentor
+  // ดึงข้อมูล Dashboard ของ Intern สำหรับ Mentor
   getInternDashboardByMentor(internId: number): Observable<ApiResponse<InternDashboardResponse>> {
     return this.http.get<ApiResponse<InternDashboardResponse>>(`${this.apiUrl}/mentor/interns/${internId}`);
   }
 
-  // 4. ดึงข้อมูลสรุปงานของ Mentor (สำหรับ Mentor ที่ Login)
+  // ดึงข้อมูลสรุปงานของ Mentor (สำหรับ Mentor ที่ Login)
   getMentorSummary(): Observable<ApiResponse<DashboardSummaryResponse>> {
     return this.http.get<ApiResponse<DashboardSummaryResponse>>(`${this.apiUrl}/mentor/summary`);
   }

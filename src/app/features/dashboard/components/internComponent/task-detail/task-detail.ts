@@ -79,7 +79,7 @@ export class TaskDetail implements OnInit {
   }
 
   updateMyTaskStatus(taskId: number, status: string): void {
-    if (confirm(`คุณต้องการส่งงานใช่หรือไม่?`)) {
+    if (confirm(`คุณต้องการอัปเดตสถานะงานใช่หรือไม่?`)) {
       this.taskService.updateTaskStatus(taskId, status).subscribe({
         next: (response: any) => {
           if (response.success) {

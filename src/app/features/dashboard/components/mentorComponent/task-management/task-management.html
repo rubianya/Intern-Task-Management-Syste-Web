@@ -9,29 +9,6 @@
     </button>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-title">Total Tasks</div>
-      <div class="stat-number">{{ dashboardStats.total }}</div>
-    </div>
-    <div class="stat-card border-todo">
-      <div class="stat-title">To Do</div>
-      <div class="stat-number">{{ dashboardStats.todo }}</div>
-    </div>
-    <div class="stat-card border-progress">
-      <div class="stat-title">In Progress</div>
-      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
-    </div>
-    <div class="stat-card border-pending">
-      <div class="stat-title">Pending</div>
-      <div class="stat-number">{{ dashboardStats.pending }}</div>
-    </div>
-    <div class="stat-card border-done">
-      <div class="stat-title">Done</div>
-      <div class="stat-number">{{ dashboardStats.done }}</div>
-    </div>
-  </div>
-
   <div class="table-container">
     <table class="task-table">
       <thead>
@@ -47,7 +24,7 @@
       <tbody>
         <tr *ngFor="let task of tasks">
           <td class="task-title-cell">{{ task.title }}</td>
-          <td>{{ task.assignedToUserFullName || task.assignedToName }}</td>
+          <td>{{ task.assignedToUserFullName }}</td>
           <td>
             <span class="badge priority-{{ task.priority | lowercase }}">
               {{ task.priority }}
@@ -152,7 +129,7 @@
                   [checked]="taskForm.get('assignedToIds')?.value?.includes(intern.id)"
                   (change)="toggleInternSelection(intern.id, $event)"
                 >
-                <span class="intern-name">{{ intern.full_name || intern.fullName }}</span>
+                <span class="intern-name">{{ intern.full_name }}</span>
               </label>
               
               <div *ngIf="filteredInterns.length === 0" class="no-data-text">

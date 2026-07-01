@@ -1,1 +1,22 @@
-<p>mentor-dash works!</p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Tasks</div>
+      <div class="stat-number">{{ dashboardStats.total }}</div>
+    </div>
+    <div class="stat-card border-todo">
+      <div class="stat-title">To Do</div>
+      <div class="stat-number">{{ dashboardStats.todo }}</div>
+    </div>
+    <div class="stat-card border-progress">
+      <div class="stat-title">In Progress</div>
+      <div class="stat-number">{{ dashboardStats.inProgress }}</div>
+    </div>
+    <div class="stat-card border-pending">
+      <div class="stat-title">Pending</div>
+      <div class="stat-number">{{ dashboardStats.pending }}</div>
+    </div>
+    <div class="stat-card border-done">
+      <div class="stat-title">Done</div>
+      <div class="stat-number">{{ dashboardStats.done }}</div>
+    </div>
+  </div>

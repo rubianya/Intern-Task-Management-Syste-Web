@@ -19,14 +19,19 @@ export class UserService {
     }
 
     // อัปเดตโปรไฟล์
-    updateProfile(id: number, data: Partial<User>): Observable<any> {
-        return this.http.put(`${this.apiUrl}/users/${id}`, data); 
+    updateProfile(id: number, userData: Partial<User>): Observable<any> {
+        return this.http.put(`${this.apiUrl}/users/${id}`, userData); 
     }
 
-    // ดึงข้อมูลผู้ใช้ทั้งหมด
-    getAllUsers(): Observable<User[]> {
-        return this.http.get<User[]>(`${this.apiUrl}/users`);
+    // ดึงข้อมูลผู้ใช้ทั้งหมด (สำหรับ Admin)
+    getAllUsers(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/users`);
     } 
+
+    // ดึงข้อมูลเฉพาะ Intern ที่ Active (สำหรับ Mentor)
+    getActiveInterns(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/users/interns`);
+    }
 
     // เพิ่มผู้ใช้ใหม่
     createUser(userData: User): Observable<User> {
