@@ -24,9 +24,10 @@ export class TaskService {
   getAllTasksUser(): Observable<ApiResponse<TaskResponse[]>> {
     return this.http.get<ApiResponse<TaskResponse[]>>(`${this.apiUrl}/users`);
   }
+
   // ดึงงานตาม ID
-  getTaskById(id: number): Observable<ApiResponse<TaskResponse[]>> {
-    return this.http.get<ApiResponse<TaskResponse[]>>(`${this.apiUrl}/${id}`);
+  getTaskById(id: number): Observable<ApiResponse<TaskResponse>> {
+    return this.http.get<ApiResponse<TaskResponse>>(`${this.apiUrl}/${id}`);
   }
 
   // สร้างงานใหม่

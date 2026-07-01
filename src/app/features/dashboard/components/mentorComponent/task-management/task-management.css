@@ -159,7 +159,7 @@
 
 .status-todo { background-color: #f3f4f6; color: #4b5563; }
 .status-in_progress { background-color: #fef3c7; color: #d97706; }
-.status-review { background-color: #e0e7ff; color: #4338ca; } 
+.status-pending { background-color: #e0e7ff; color: #4338ca; } 
 .status-cancelled { background-color: #f1f5f9; color: #94a3b8; text-decoration: line-through; }
 .status-done { background-color: #d1fae5; color: #059669; }
 
@@ -602,7 +602,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* เปลี่ยนสีจุดตามสถานะงาน */
 .timeline-badge.badge-todo { background-color: #4b5563; box-shadow: 0 0 0 2px #f3f4f6; }
 .timeline-badge.badge-in_progress { background-color: #d97706; box-shadow: 0 0 0 2px #fef3c7; }
-.timeline-badge.badge-review { background-color: #4338ca; box-shadow: 0 0 0 2px #e0e7ff; }
+.timeline-badge.badge-pending { background-color: #4338ca; box-shadow: 0 0 0 2px #e0e7ff; }
 .timeline-badge.badge-done { background-color: #059669; box-shadow: 0 0 0 2px #d1fae5; }
 
 .timeline-content {

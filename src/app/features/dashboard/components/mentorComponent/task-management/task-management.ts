@@ -18,7 +18,7 @@ export class TaskManagement implements OnInit {
   interns: any[] = [];
   filteredInterns: any[] = [];
   searchTerm: string = '';
-  dashboardStats = { total: 0, todo: 0, inProgress: 0, done: 0 };
+  dashboardStats = { total: 0, todo: 0, inProgress: 0, pending:0, done: 0 };
 
   isModalOpen = false;
   taskForm!: FormGroup;
@@ -28,7 +28,7 @@ export class TaskManagement implements OnInit {
     private userService: UserService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private router: Router // Injection สำหรับเปลี่ยนหน้า
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +66,7 @@ export class TaskManagement implements OnInit {
   loadIntern(): void {
     this.userService.getAllUsers().subscribe({
       next: (response: any) => {
+        console.log('Interns list:', response.data);
         const users = response.data ? response.data : response;
         this.interns = users.filter((u: any) => u.role?.toUpperCase() === 'INTERN' && u.active);
         this.filteredInterns = [...this.interns]; 
@@ -105,7 +106,8 @@ export class TaskManagement implements OnInit {
       total: this.tasks.length,
       todo: this.tasks.filter(t => t.status === 'TODO').length,
       inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      done: this.tasks.filter(t => t.status === 'DONE' || t.status === 'REVIEW').length
+      pending: this.tasks.filter(t => t.status === 'PENDING').length,
+      done: this.tasks.filter(t => t.status === 'DONE').length
     };
   }
   
@@ -114,7 +116,9 @@ export class TaskManagement implements OnInit {
   } 
 
   deleteTask(taskId: number): void {
-    if (this.getRole() === 'Admin' || this.getRole() === 'Mentor') {
+    const role = this.getRole();
+
+    if (role === 'Admin' || role === 'Mentor') {
       alert('คุณไม่มีสิทธิ์ลบงานนี้! สิทธิ์ในการลบงานจำกัดเฉพาะ Mentor หรือ Admin เท่านั้นครับ');
       return;
     }
@@ -140,15 +144,15 @@ export class TaskManagement implements OnInit {
     this.isModalOpen = false;
   }
 
-  toggleInternSelection(internId: number, event: any): void {
+  toggleInternSelection(internIds: number, event: any): void {
     const selectedIds = (this.taskForm.get('assignedToIds')?.value || []) as number[];
 
     if (event.target.checked) {
-      if (!selectedIds.includes(internId)) {
-        selectedIds.push(internId);
+      if (!selectedIds.includes(internIds)) {
+        selectedIds.push(internIds);
       }
     } else {
-      const index = selectedIds.indexOf(internId);
+      const index = selectedIds.indexOf(internIds);
       if (index > -1) {
         selectedIds.splice(index, 1);
       }

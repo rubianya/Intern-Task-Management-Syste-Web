@@ -4,7 +4,7 @@ export interface CommentResponse {
   taskTitle: string;
   userId: number;
   comment: string;
-  userName: string; // รับค่าจาก user.getFull_name()
+  userName: string;
   createdAt: string | Date;
 }
 
