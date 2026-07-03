@@ -1,9 +1,94 @@
-<h1>Admin Dashboard</h1>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">ภาพรวมระบบและการนำทางจัดการบัญชีผู้ใช้งาน</p>
+  </div>
 
-<div class="cards">
+  <div class="cards-grid" *ngIf="userSummary; else loading">
+    
+    <div class="card overview-card" (click)="goToUserManagement()">
+      <div class="card-icon overview-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="card-content">
+        <h3>ผู้ใช้งานทั้งหมดในระบบ</h3>
+        <p class="number">{{ userSummary.totalUsers }}</p>
+        <span class="action-text">ดูรายชื่อทั้งหมด <i class="fa-solid fa-arrow-right"></i></span>
+      </div>
+    </div>
+    
+    <div class="card role-card">
+      <div class="card-header-zone" (click)="goToUserManagement('Admin')">
+        <div class="role-title">
+          <div class="card-icon admin-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <h3>Administrators</h3>
+        </div>
+        <span class="badge total-badge">{{ userSummary.totalAdmin }}</span>
+      </div>
+      <div class="status-action-grid">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Admin', 'active'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Active</span>
+          <span class="val">{{ userSummary.activeAdmin }}</span>
+        </button>
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Admin', 'inactive'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Inactive</span>
+          <span class="val">{{ userSummary.inactiveAdmin }}</span>
+        </button>
+      </div>
+    </div>
 
-  <div class="card">Total Users</div>
-  <div class="card">Total Tasks</div>
-  <div class="card">Active Mentors</div>
+    <div class="card role-card">
+      <div class="card-header-zone" (click)="goToUserManagement('Mentor')">
+        <div class="role-title">
+          <div class="card-icon mentor-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <h3>Mentors</h3>
+        </div>
+        <span class="badge total-badge">{{ userSummary.totalMentor }}</span>
+      </div>
+      <div class="status-action-grid">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Mentor', 'active'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Active</span>
+          <span class="val">{{ userSummary.activeMentor }}</span>
+        </button>
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Mentor', 'inactive'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Inactive</span>
+          <span class="val">{{ userSummary.inactiveMentor }}</span>
+        </button>
+      </div>
+    </div>
 
+    <div class="card role-card">
+      <div class="card-header-zone" (click)="goToUserManagement('Intern')">
+        <div class="role-title">
+          <div class="card-icon intern-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          <h3>Interns</h3>
+        </div>
+        <span class="badge total-badge">{{ userSummary.totalIntern }}</span>
+      </div>
+      <div class="status-action-grid">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Intern', 'active'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Active</span>
+          <span class="val">{{ userSummary.activeIntern }}</span>
+        </button>
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Intern', 'inactive'); $event.stopPropagation()">
+          <span class="dot"></span>
+          <span class="lbl">Inactive</span>
+          <span class="val">{{ userSummary.inactiveIntern }}</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-zone">
+      <div class="spinner"></div>
+      <p>กำลังประมวลผลข้อมูล Dashboard...</p>
+    </div>
+  </ng-template>
 </div>

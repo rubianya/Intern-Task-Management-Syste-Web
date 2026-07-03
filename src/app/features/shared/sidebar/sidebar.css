@@ -47,3 +47,41 @@
 ::ng-deep .sidebar .mdc-list-item__focus-ring {
   display: none !important;
 }
+
+/* =========================================================
+   🌟 RESPONSIVE: พับ SIDEBAR เหลือแค่ ICON บนหน้าจอมือถือ
+   ========================================================= */
+@media screen and (max-width: 768px) {
+  /* 1. หดความกว้างของ Sidebar จาก 250px เหลือ 70px (พอดีกับไอคอน) */
+  .sidebar {
+    width: 70px !important;
+    min-width: 70px !important;
+    padding-top: 15px;
+  }
+
+  /* 2. ซ่อนตัวหนังสือเมนูทั้งหมดออกไป */
+  .sidebar .sidebar-text {
+    display: none !important;
+  }
+
+  /* 3. ปรับระยะขอบ (Margin) ของรายการเมนู Angular Material ให้แคบลงและอยู่กึ่งกลาง */
+  ::ng-deep .sidebar .mdc-list-item {
+    margin: 6px 8px !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* 4. จัดตำแหน่งไอคอนให้อยู่ตรงกลางการ์ดเมนูพอดีเป๊ะ */
+  ::ng-deep .sidebar .mdc-list-item__start {
+    margin: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  ::ng-deep .sidebar mat-icon {
+    margin: 0 !important;
+    font-size: 22px; /* ปรับขนาดไอคอนให้เด่นชัดขึ้นบนมือถือ */
+  }
+}

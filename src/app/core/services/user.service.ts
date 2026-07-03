@@ -48,9 +48,9 @@ export class UserService {
     toggleUserStatus(id: number, status: { active: boolean }): Observable<ApiResponse<any>> {
         return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}/active`, status);
     }
-
+    
     // ลบผู้ใช้
     deleteUser(id: number): Observable<ApiResponse<any>> {
-        return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/users/${id}`);
+        return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/delete/${id}`);
     }
 }

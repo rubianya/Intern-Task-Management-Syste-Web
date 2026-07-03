@@ -19,6 +19,12 @@ export interface MentorDashboardResponse {
 export interface AdminDashboardResponse {
   totalUsers: number;
   totalAdmin: number;
+  activeAdmin: number;
+  inactiveAdmin: number;
   totalMentor: number;
+  activeMentor: number;
+  inactiveMentor: number;
   totalIntern: number;
+  activeIntern: number;
+  inactiveIntern: number;
 }

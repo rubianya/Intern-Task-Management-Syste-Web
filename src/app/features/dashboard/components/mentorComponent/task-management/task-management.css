@@ -153,21 +153,21 @@
   border-color: #2563eb;
 }
 
-/* --- ส่วนตารางแสดงข้อมูล (Table Container) --- */
+/* --- โครงสร้างตาราง --- */
 .table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow-x: auto; /* 🌟 ทำให้ตารางเลื่อนแนวนอนได้เมื่อล้นกรอบ */
   border: 1px solid #e5e7eb;
-  min-height: 355px;
+  /* เพิ่ม margin-bottom เผื่อไว้ให้ Scrollbar ไม่ไปเบียดกับ Pagination */
+  margin-bottom: 20px; 
 }
 
 .task-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
-  font-size: 0.95rem;
+  min-width: 800px; /* เพิ่มบรรทัดนี้ */
 }
 
 .task-table th {
@@ -432,4 +432,55 @@
   color: white;
   border-color: #2563eb;
   box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN (หน้าจอขนาดเล็กและโทรศัพท์)
+   ========================================================= */
+@media screen and (max-width: 768px) {
+  /* ปรับระยะขอบหน้าจอหลักให้พอดีมือถือ */
+  .dashboard-container {
+    padding: 16px 12px;
+  }
+
+  .header {
+    font-size: 1.4rem;
+  }
+
+  /* ปรับแถบค้นหาและตัวกรองให้เรียงลงมาเป็นแนวตั้ง */
+  .filter-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .search-box, .filter-box {
+    width: 100%;
+  }
+
+  /* ให้ปุ่ม Create Task กว้างเต็มพื้นที่บนมือถือ */
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ปรับส่วนการแบ่งหน้า (Pagination) ให้ซ้อนกัน */
+  .pagination-container {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  /* ปรับ Modal ให้เต็มจอมากขึ้นบนมือถือ */
+  .modal-card {
+    width: 95%;
+    margin: 20px auto;
+    max-height: 90vh;
+    overflow-y: auto; /* ป้องกันเนื้อหา Modal ล้นจอ */
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
 }

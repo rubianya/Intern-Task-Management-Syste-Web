@@ -78,20 +78,21 @@
   color: #f59e0b;
 }
 
-/* --- ส่วนตารางแสดงข้อมูลงานรอตรวจ --- */
+/* --- โครงสร้าง Layout ของตารางค้างรอตรวจ --- */
 .table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
   border: 1px solid #e5e7eb;
+  overflow-x: auto; /* 🌟 จุดสำคัญ: เปิดให้ตารางสามารถ Scroll แนวด้านข้างได้ถ้าจอมือถือเล็กเกินไป */
+  margin-top: 15px;
 }
 
+/* บังคับความกว้างขั้นต่ำของตัวตารางไม่ให้ข้อมูลบีบอัดกัน */
 .task-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
-  font-size: 0.95rem;
+  min-width: 800px; /* 🌟 เพิ่มบรรทัดนี้เพื่อกำหนดระยะยืดตารางขั้นต่ำเวลาเลื่อนสกรอลล์บาร์ */
 }
 
 .task-table th {
@@ -174,4 +175,49 @@
 
 .text-center {
   text-align: center;
+}
+
+/* =======================
+     RESPONSIVE DESIGN 
+   ======================= */
+@media screen and (max-width: 768px) {
+  /* ปรับระยะขอบและสเปซภาพรวม */
+  .dashboard-container {
+    padding: 16px 12px;
+  }
+
+  /* ส่วนหัวปรับโครงสร้างให้เรียงตัวลงมา (ถ้ามีปุ่มด้านขวา) */
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .header {
+    font-size: 1.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* 🌟 ปรับแต่งการ์ดสถิติ (Stats Grid) 5 บล็อกให้อ่านง่ายบนมือถือ */
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* ปรับขนาดขั้นต่ำของกล่องให้เล็กลงเพื่อความพอดี */
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    padding: 16px; /* ลด padding ให้การ์ดไม่ดูบวมเกินไปบนจอเล็ก */
+  }
+
+  .stat-title {
+    font-size: 0.8rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem; /* ปรับขนาดฟอนต์ตัวเลขให้อ่านง่ายพอดีจอ */
+  }
 }

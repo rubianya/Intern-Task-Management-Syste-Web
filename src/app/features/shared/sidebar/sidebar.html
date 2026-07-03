@@ -4,45 +4,45 @@
     @if(role === 'Admin') {
       <a mat-list-item routerLink="/dashboard/admin" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <span matListItemTitle class="sidebar-text">Dashboard</span>
       </a>
       <a mat-list-item routerLink="/dashboard/users-management" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>people</mat-icon>
-        <span matListItemTitle>Users Management</span>
+        <span matListItemTitle class="sidebar-text">Users Management</span>
       </a>
       <a mat-list-item routerLink="/dashboard/edit-profile" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>manage_accounts</mat-icon>
-        <span matListItemTitle>My Profile</span>
+        <span matListItemTitle class="sidebar-text">My Profile</span>
       </a>
     }
 
     @if(role === 'Mentor') {
       <a mat-list-item routerLink="/dashboard/mentor" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <span matListItemTitle class="sidebar-text">Dashboard</span>
       </a>
       <a mat-list-item routerLink="/dashboard/task-management" routerLinkActive="active-menu">
-        <mat-icon matListItemIcon>task_management</mat-icon>
-        <span matListItemTitle>Task Management</span>
+        <mat-icon matListItemIcon>task</mat-icon>
+        <span matListItemTitle class="sidebar-text">Task Management</span>
       </a>
       <a mat-list-item routerLink="/dashboard/edit-profile" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>manage_accounts</mat-icon>
-        <span matListItemTitle>My Profile</span>
+        <span matListItemTitle class="sidebar-text">My Profile</span>
       </a>
     }
 
     @if(role === 'Intern') {
       <a mat-list-item routerLink="/dashboard/intern" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <span matListItemTitle class="sidebar-text">Dashboard</span>
       </a>
       <a mat-list-item routerLink="/dashboard/my-task" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>assignment</mat-icon>
-        <span matListItemTitle>My Tasks</span>
+        <span matListItemTitle class="sidebar-text">My Tasks</span>
       </a>
       <a mat-list-item routerLink="/dashboard/edit-profile" routerLinkActive="active-menu">
         <mat-icon matListItemIcon>manage_accounts</mat-icon>
-        <span matListItemTitle>My Profile</span>
+        <span matListItemTitle class="sidebar-text">My Profile</span>
       </a>
     }
 

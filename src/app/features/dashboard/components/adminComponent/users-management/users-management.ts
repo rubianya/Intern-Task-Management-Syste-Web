@@ -9,7 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { response } from 'express';
+import { ActivatedRoute } from '@angular/router';
+import { ApiResponse } from '../../../../../core/models/api-response.model';
 
 @Component({
   selector: 'app-users-management',
@@ -41,39 +42,50 @@ export class UsersManagement {
   isDeleteModalOpen: boolean = false;
   userIdToDelete: number | null = null;
 
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+
   userFormGroup = new FormGroup({
     id: new FormControl(0),
     full_name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.minLength(8)]),
     role: new FormControl('Intern', [Validators.required]),
-    active: new FormControl(true, Validators.required)
+    active: new FormControl(true, Validators.required) 
   });
 
   constructor(
     private userService: UserService, 
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-
     this.loadUsers();
 
+    this.route.queryParams.subscribe(params => {
+      const roleParam = params['role'];
+      const statusParam = params['active']; 
+      if (roleParam) {
+        this.selectedRole = roleParam;
+      }
+      if (statusParam) {
+        this.selectedStatus = statusParam.charAt(0).toUpperCase() + statusParam.slice(1).toLowerCase();
+      }
+      this.currentPage = 1; 
+    });
   }
 
   loadUsers() {
-
     this.userService.getAllUsers().subscribe({
-      next: (response: any) => {
+      next: (response: ApiResponse<UserResponse[]>) => {
         this.users = response.data;
-        console.log('ข้อมูล Users ที่ดึงมาได้:', this.users);
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error fetching users:', err);
       }
     });
-
   }
 
   get filteredUsers(): UserResponse[] {
@@ -85,12 +97,12 @@ export class UsersManagement {
                             response.email?.toLowerCase().includes(searchLower);
 
       const matchesRole = this.selectedRole ? response.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
-      
+
       let matchesStatus = true;
       if (this.selectedStatus === 'Active') {
-        matchesStatus = response.active === true;
+        matchesStatus = (response.active === true || response.active === 1);
       } else if (this.selectedStatus === 'Inactive') {
-        matchesStatus = response.active === false;
+        matchesStatus = (response.active === false || response.active === 0);
       }
 
       return matchesSearch && matchesRole && matchesStatus;
@@ -98,17 +110,14 @@ export class UsersManagement {
   }
 
   openAddUserModal() {
-
     this.isEditMode = false;
     this.userFormGroup.reset({ id: 0, role: 'Intern', active: true, password: '' });
     this.userFormGroup.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.userFormGroup.get('password')?.updateValueAndValidity();
     this.isModalOpen = true;
-
   }
 
   openEditUserModal(response: UserResponse ) {
-
     this.isEditMode = true;
 
     this.userFormGroup.patchValue({
@@ -124,7 +133,6 @@ export class UsersManagement {
     this.userFormGroup.get('password')?.updateValueAndValidity();
 
     this.isModalOpen = true;
-
   }
 
   closeModal() {
@@ -133,7 +141,6 @@ export class UsersManagement {
   }
 
   saveUser() {
-    
     if (this.userFormGroup.invalid) {
       this.userFormGroup.markAllAsTouched();
       alert('Please fill in all required fields correctly.');
@@ -157,7 +164,6 @@ export class UsersManagement {
         error: (err) => console.error('Update failed:', err)
       });
     } else {
-      console.log('ข้อมูลที่จะส่งไปสร้าง User ใหม่:', userData);
       this.userService.createUser(userData).subscribe({
         next: (response) => {
           const newUser = response.data;
@@ -173,18 +179,14 @@ export class UsersManagement {
         }
       });
     }
-
   }
 
   openDeleteModal(userId: number) {
-
     this.userIdToDelete = userId;
     this.isDeleteModalOpen = true; 
-
   }
 
   confirmDelete() {
-
     if (this.userIdToDelete) {
       this.userService.deleteUser(this.userIdToDelete).subscribe({
         next: () => {
@@ -195,7 +197,6 @@ export class UsersManagement {
         error: (err) => console.error('Delete failed:', err)
       });
     }
-
   }
 
   closeDeleteModal() {
@@ -204,7 +205,6 @@ export class UsersManagement {
   }
 
   toggleUserStatus(user: UserResponse, newStatus: boolean): void {
-
     const previousStatus = user.active;
     user.active = newStatus;
     const payload = { active: newStatus };
@@ -218,14 +218,9 @@ export class UsersManagement {
       alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะผู้ใช้งาน');
       console.error(err);
       }
-      
     });
-    
   }
 
-  // ----- ตัวแปรสำหรับแบ่งหน้า (Pagination) -----
-  currentPage: number = 1;
-  itemsPerPage: number = 10;
 
   onFilterChange() {
     this.currentPage = 1;
