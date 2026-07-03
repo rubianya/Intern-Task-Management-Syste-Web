@@ -1,54 +1,80 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DashboardService } from '../../../../../core/services/dashboard.service';
 import { TaskService } from '../../../../../core/services/task.service';
-import { UserService } from '../../../../../core/services/user.service';
-import { FormBuilder } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MentorDashboardResponse } from '../../../../../core/models/dashboard.model';
+import { TaskResponse } from '../../../../../core/models/task.model';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mentor-dash',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './mentor-dash.html',
   styleUrl: './mentor-dash.css',
 })
 export class MentorDash implements OnInit {
 
-  dashboardStats = { total: 0, todo: 0, inProgress: 0, pending:0, done: 0 };
+  dashboardStats: MentorDashboardResponse = {
+    totalTasks: 0,
+    todoTasks: 0,
+    inProgressTasks: 0,
+    pendingTasks: 0,
+    doneTasks: 0
+  };
+
+  pendingTasksList: TaskResponse[] = [];
 
   constructor(
+    private dashboardService: DashboardService,
     private taskService: TaskService,
-    private userService: UserService,
-    private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.loadDashboardStats();
+    this.loadPendingTasks();
   }
 
-  loadTasks(): void {
-    this.taskService.getAllTasksUser().subscribe({
+  loadDashboardStats(): void {
+    this.dashboardService.getMentorSummary().subscribe({
       next: (response) => {
-        if (response.success) {
-          const tasks = response.data;
-          this.calculateStats(tasks);
+        if (response && response.data) {
+          this.dashboardStats = response.data;
           this.cdr.detectChanges();
         }
       },
       error: (error) => {
-        console.error('Error fetching tasks:', error);
+        console.error('Error fetching mentor dashboard stats:', error);
       }
     });
   }
 
-  calculateStats(tasks: any[]): void {
-    this.dashboardStats = {
-      total: tasks.length,
-      todo: tasks.filter(t => t.status === 'TODO').length,
-      inProgress: tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      pending: tasks.filter(t => t.status === 'PENDING').length,
-      done: tasks.filter(t => t.status === 'DONE').length
-    };
+  viewTasksByStatus(status: string): void {
+    if (status === '') {
+      this.router.navigate(['/dashboard/task-management']);
+    } else {
+      this.router.navigate(['/dashboard/task-management'], { queryParams: { status: status } });
+    }
+  }
+
+  loadPendingTasks(): void {
+    this.taskService.getAllTasks().subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.pendingTasksList = response.data.filter((task: TaskResponse) => task.status === 'PENDING');
+          this.cdr.detectChanges();
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching tasks for dashboard pending table:', error);
+      }
+    });
+  }
+
+  viewTaskDetail(taskId: number): void {
+    this.router.navigate(['/dashboard/mentor-task-detail', taskId]);
   }
 
 }

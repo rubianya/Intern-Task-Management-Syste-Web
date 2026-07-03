@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { InternDashboardResponse, DashboardSummaryResponse } from '../models/dashboard.model';
+import { InternDashboardResponse, MentorDashboardResponse,  } from '../models/dashboard.model';
+import { UserResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,9 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  // ดึงข้อมูลภาพรวมระบบ (สำหรับ Admin / โชว์รวมๆ)
-  getSummary(): Observable<ApiResponse<DashboardSummaryResponse>> {
-    return this.http.get<ApiResponse<DashboardSummaryResponse>>(`${this.apiUrl}/summary`);
+  // ดึงข้อมูลภาพรวมระบบ (สำหรับ Admin)
+  getSummary(): Observable<ApiResponse<MentorDashboardResponse>> {
+    return this.http.get<ApiResponse<MentorDashboardResponse>>(`${this.apiUrl}/summary`);
   }
 
   // ดึงข้อมูล Dashboard สำหรับ Intern (ผู้ใช้ที่กำลัง Login)
@@ -29,7 +30,7 @@ export class DashboardService {
   }
 
   // ดึงข้อมูลสรุปงานของ Mentor (สำหรับ Mentor ที่ Login)
-  getMentorSummary(): Observable<ApiResponse<DashboardSummaryResponse>> {
-    return this.http.get<ApiResponse<DashboardSummaryResponse>>(`${this.apiUrl}/mentor/summary`);
+  getMentorSummary(): Observable<ApiResponse<MentorDashboardResponse>> {
+    return this.http.get<ApiResponse<MentorDashboardResponse>>(`${this.apiUrl}/mentor/summary`);
   }
 }

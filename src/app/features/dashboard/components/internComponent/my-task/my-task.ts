@@ -28,6 +28,7 @@ export class MyTask implements OnInit {
 
   ngOnInit(): void {
     this.loadTasks();
+    
     this.route.queryParams.subscribe(params => {
       if (params['status']) {
         this.filterStatus = params['status']; 

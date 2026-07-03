@@ -2,10 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskService } from '../../../../../core/services/task.service';
 import { UserService } from '../../../../../core/services/user.service';
+import { DashboardService } from '../../../../../core/services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskRequest, TaskResponse } from '../../../../../core/models/task.model';
-import { User } from '../../../../../core/models/user.model';
+import { UserResponse } from '../../../../../core/models/user.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-task-management',
@@ -17,18 +19,25 @@ import { User } from '../../../../../core/models/user.model';
 export class TaskManagement implements OnInit {
 
   tasks: TaskResponse[] = []; 
-  interns: User[] = [];
-  filteredInterns: User[] = [];
+  interns: UserResponse[] = [];
+  filteredInterns: UserResponse[] = [];
   searchTerm: string = '';
-  dashboardStats = { total: 0, todo: 0, inProgress: 0, pending:0, done: 0 };
-
+  filterStatus: string = '';
   isModalOpen = false;
   taskForm!: FormGroup;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+
+  dashboardStats: any = {
+    totalTasks: 0, todoTasks: 0, inProgressTasks: 0, pendingTasks: 0, doneTasks: 0
+  };
 
   constructor(
     private taskService: TaskService, 
+    private dashboardService: DashboardService,
     private userService: UserService,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -36,134 +45,144 @@ export class TaskManagement implements OnInit {
   ngOnInit(): void {
     this.loadIntern();
     this.loadTasks();
+    this.loadDashboardStats();
     this.initForm();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['status']) {
+        this.filterStatus = params['status'];
+        this.onFilterChange();
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   initForm(): void {
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+      title: ['', [Validators.required, Validators.maxLength(255)]],
       description: [''],
-      priority: ['Medium', Validators.required],
       status: ['TODO', Validators.required],
-      assignedToIds: [[], [Validators.required, Validators.minLength(1)]],
-      dueDate: ['', Validators.required]
-    });
-  }
-
-  loadTasks(): void {
-    this.taskService.getAllTasksUser().subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.tasks = response.data;
-          this.calculateStats();
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load tasks', err);
-      }
+      priority: ['MEDIUM', Validators.required],
+      dueDate: ['', Validators.required],
+      assignedToIds: [[], Validators.required]
     });
   }
 
   loadIntern(): void {
     this.userService.getActiveInterns().subscribe({
-      next: (response: any) => {
-        const userList: User[] = response.data || response; 
-
-        if (Array.isArray(userList)) {
-          this.interns = userList.filter((user: User) => 
-            user.role && user.role.toLowerCase() === 'intern'
-          );
-          this.filteredInterns = [...this.interns];
-          console.log('Filtered Interns:', this.filteredInterns);
+      next: (response) => {
+        if (response && response.data) {
+          this.interns = response.data;
+          this.filteredInterns = response.data;
+          this.cdr.detectChanges();
         }
       },
-      error: (err) => {
-        console.error('Failed to load interns', err);
-      }
+      error: (err) => console.error('Failed to load interns', err)
     });
   }
 
-  filterInterns(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredInterns = [...this.interns]; 
-    } else {
-      const term = this.searchTerm.toLowerCase();
-      this.filteredInterns = this.interns.filter(intern => 
-        (intern.full_name || '').toLowerCase().includes(term)
-      );
+  loadTasks(): void {
+    this.taskService.getAllTasks().subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.tasks = response.data;
+          this.cdr.detectChanges();
+        } else if (Array.isArray(response)) {
+          this.tasks = response;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Failed to load tasks', err)
+    });
+  }
+
+  loadDashboardStats(): void {
+    this.dashboardService.getMentorSummary().subscribe({
+      next: (res) => {
+        if (res && res.data) {
+          this.dashboardStats = res.data;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Failed to load dashboard stats', err)
+    });
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
+  }
+
+  get filteredTasks(): TaskResponse[] {
+    return this.tasks.filter(task => {
+      const searchStr = this.searchTerm.toLowerCase().trim();
+      const matchesSearch = !searchStr ? true :
+        (task.title && task.title.toLowerCase().includes(searchStr)) ||
+        (task.assignedToUserFullName && task.assignedToUserFullName.toLowerCase().includes(searchStr));
+
+      const matchesStatus = !this.filterStatus ? true : task.status === this.filterStatus;
+
+      return matchesSearch && matchesStatus;
+    });
+  }
+
+  get paginatedTasks(): TaskResponse[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredTasks.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredTasks.length / this.itemsPerPage) || 1;
+  }
+
+  get startIndex(): number {
+    return this.filteredTasks.length === 0 ? 0 : (this.currentPage - 1) * this.itemsPerPage + 1;
+  }
+
+  get endIndex(): number {
+    const end = this.currentPage * this.itemsPerPage;
+    return end > this.filteredTasks.length ? this.filteredTasks.length : end;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
     }
   }
 
   openCreateTaskModal(): void {
     this.isModalOpen = true;
-    this.searchTerm = ''; 
-    this.filteredInterns = [...this.interns];
-    
-    this.taskForm.reset({
-      title: '',
-      description: '',
-      priority: 'Medium',
-      status: 'TODO',
-      assignedToIds: [],
-      dueDate: ''
-    });
-  }
-
-  calculateStats(): void {
-    this.dashboardStats = {
-      total: this.tasks.length,
-      todo: this.tasks.filter(t => t.status === 'TODO').length,
-      inProgress: this.tasks.filter(t => t.status === 'IN_PROGRESS').length,
-      pending: this.tasks.filter(t => t.status === 'PENDING').length,
-      done: this.tasks.filter(t => t.status === 'DONE').length
-    };
-  }
-  
-  getRole(): string | null {
-    return localStorage.getItem('role');
-  } 
-
-  deleteTask(taskId: number): void {
-    const role = this.getRole();
-
-    if (role === 'Admin' || role === 'Mentor') {
-      alert('คุณไม่มีสิทธิ์ลบงานนี้! สิทธิ์ในการลบงานจำกัดเฉพาะ Mentor หรือ Admin เท่านั้นครับ');
-      return;
-    }
-
-    if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
-      this.taskService.deleteTask(taskId).subscribe({
-        next: (response) => {
-          if (response.success) {
-            alert(response.message);   
-            this.loadTasks(); 
-          }
-        },
-        error: (err) => {
-          console.error('Delete failed', err);
-          const errorMessage = err.error?.message || 'เกิดข้อผิดพลาดในการลบงาน';
-          alert(errorMessage);
-        }
-      });
-    }
+    this.initForm();
   }
 
   closeModal(): void {
     this.isModalOpen = false;
+    this.taskForm.reset();
   }
 
-  toggleInternSelection(internIds: number, event: any): void {
-    let selectedIds = [...(this.taskForm.get('assignedToIds')?.value || [])] as number[];
-
+  toggleInternSelection(internId: number, event: any): void {
+    const selectedIds = [...(this.taskForm.get('assignedToIds')?.value || [])];
     if (event.target.checked) {
-      if (!selectedIds.includes(internIds)) {
-        selectedIds.push(internIds);
+      if (!selectedIds.includes(internId)) {
+        selectedIds.push(internId);
       }
     } else {
-      selectedIds = selectedIds.filter(id => id !== internIds);
+      const index = selectedIds.indexOf(internId);
+      if (index > -1) {
+        selectedIds.splice(index, 1);
+      }
     }
-
     this.taskForm.get('assignedToIds')?.setValue(selectedIds);
     this.taskForm.get('assignedToIds')?.markAsTouched();
     this.taskForm.get('assignedToIds')?.updateValueAndValidity();
@@ -179,11 +198,6 @@ export class TaskManagement implements OnInit {
     const formValue = this.taskForm.value;
     const selectedInternIds: number[] = formValue.assignedToIds;
 
-    if (!selectedInternIds || selectedInternIds.length === 0) {
-      alert('กรุณาตเลือก Intern อย่างน้อย 1 คน');
-      return;
-    }
-
     const taskData: TaskRequest = {
       title: formValue.title,
       description: formValue.description,
@@ -195,19 +209,36 @@ export class TaskManagement implements OnInit {
 
     this.taskService.createTask(taskData).subscribe({
       next: (response: any) => {
-        alert(`มอบหมายงานให้ Intern จำนวน ${selectedInternIds.length} คน เรียบร้อยแล้ว!`);
+        alert(`มอบหมายงานให้ Intern เรียบร้อยแล้ว!`);
         this.closeModal();
         this.loadTasks(); 
+        this.loadDashboardStats(); 
       },
       error: (err) => {
         console.error('Failed to assign tasks', err);
-        const errorMsg = err.error?.errors?.assignedToIds || err.error?.message || 'เกิดข้อผิดพลาด';
-        alert('ไม่สามารถบันทึกได้: ' + errorMsg);
+        alert('เกิดข้อผิดพลาดในการมอบหมายงาน');
       }
     });
   }
 
   viewTaskDetail(taskId: number): void {
-    this.router.navigate(['/dashboard/mentor-task-detail', taskId]); 
+    this.router.navigate(['/dashboard/mentor-task-detail', taskId]);
+  }
+
+  deleteTask(taskId: number): void {
+    if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
+      this.taskService.deleteTask(taskId).subscribe({
+        next: (response: any) => {
+          alert('ลบข้อมูลงานออกจากระบบสำเร็จเรียบร้อยแล้ว');
+          this.loadTasks();
+          this.loadDashboardStats(); 
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Delete failed', err);
+          alert('เกิดข้อผิดพลาดในการลบงาน');
+        }
+      });
+    }
   }
 }

@@ -1,12 +1,30 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <div>
-      <h2>Task Management</h2>
+      <h2 class="header">Task Management</h2>
       <p class="subtitle">Manage and track the work of the interns under your supervision.</p>
     </div>
-    <button class="btn btn-primary" (click)="openCreateTaskModal()">
-      + Create New Task
-    </button>
+  </div>
+
+  <div class="filter-container">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" 
+            placeholder="ค้นหาชื่องาน หรือ ชื่อผู้รับมอบหมาย..." 
+            [(ngModel)]="searchTerm" 
+            class="search-input" 
+            autocomplete="off">    
+    </div>
+    <div class="filter-box">
+      <select [(ngModel)]="filterStatus" class="filter-select">
+        <option value="">All Status (ทุกสถานะ)</option>
+        <option value="TODO">To Do (ยังไม่เริ่ม)</option>
+        <option value="IN_PROGRESS">In Progress (กำลังทำ)</option>
+        <option value="PENDING">Pending (รอตรวจ)</option>
+        <option value="DONE">Done (เสร็จสิ้น)</option>
+      </select>
+    </div>
+     <button class="btn btn-primary" (click)="openCreateTaskModal()">+ Create New Task</button>
   </div>
 
   <div class="table-container">
@@ -22,33 +40,60 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let task of tasks">
+        <tr *ngFor="let task of paginatedTasks">
           <td class="task-title-cell">{{ task.title }}</td>
-          <td>{{ task.assignedToUserFullName }}</td>
+          <td>{{ task.assignedToUserFullName || 'ยังไม่ได้มอบหมาย' }}</td>
           <td>
-            <span class="badge priority-{{ task.priority | lowercase }}">
+            <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">
               {{ task.priority }}
             </span>
           </td>
           <td>
-            <span class="badge status-{{ task.status | lowercase }}">
+            <span class="status-badge" [ngClass]="task.status.toLowerCase()">
               {{ task.status }}
             </span>
           </td>
-          <td>{{ task.dueDate | date:'dd MMM yyyy' }}</td>
-          <td class="action-buttons">
-            <button class="btn btn-sm btn-info" (click)="viewTaskDetail(task.id)">View</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteTask(task.id)">Delete</button>
+          <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon view-btn" (click)="viewTaskDetail(task.id)" title="ดูรายละเอียด">
+                <i class="fas fa-eye"></i> ตรวจงาน
+              </button>
+              <button class="btn-icon delete-btn" (click)="deleteTask(task.id)" title="ลบงาน">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </td>
         </tr>
-
-        <tr *ngIf="tasks.length === 0">
-          <td colspan="6" class="empty-state">
-            ยังไม่มีงานในระบบ คลิกที่ปุ่ม "+ Create New Task" เพื่อมอบหมายงานแรก
+        
+        <tr *ngIf="filteredTasks.length === 0">
+          <td colspan="6" class="text-center py-4" style="text-align: center; padding: 20px; color: #6b7280;">
+            ไม่พบข้อมูลงานที่ตรงตามเงื่อนไขค้นหา
           </td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="pagination-container" *ngIf="filteredTasks.length > 0">
+    <div class="pagination-info">
+      Showing <span>{{ startIndex }}</span> to <span>{{ endIndex }}</span> of <span>{{ filteredTasks.length }}</span> entries
+    </div>
+    <div class="pagination-controls">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+
+      <button class="page-number-btn" 
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              [class.active]="currentPage === (i + 1)"
+              (click)="goToPage(i + 1)">
+        {{ i + 1 }}
+      </button>
+
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -58,71 +103,45 @@
       <h3>Create New Task</h3>
       <button class="close-btn" (click)="closeModal()">&times;</button>
     </div>
-
+    
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
       <div class="modal-body">
         <div class="form-group">
           <label for="title">Task Title <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="title" 
-            formControlName="title" 
-            placeholder="กรอกชื่อหัวข้องานที่ต้องการมอบหมาย"
-            [class.is-invalid]="taskForm.get('title')?.touched && taskForm.get('title')?.invalid"
-          >
-          <div class="error-msg" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('required')">
-            * กรุณากรอกหัวข้อของงาน
-          </div>
-          <div class="error-msg" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('minlength')">
-            * หัวข้องานต้องมีความยาวไม่ต่ำกว่า 3 ตัวอักษร
+          <input type="text" id="title" formControlName="title" placeholder="ระบุชื่อหัวข้อของงาน...">
+          <div class="error-msg" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.invalid">
+            * จำเป็นต้องกรอกชื่อหัวข้องาน
           </div>
         </div>
 
         <div class="form-group">
-          <label for="description">Description (รายละเอียดงาน)</label>
-          <textarea 
-            id="description" 
-            formControlName="description" 
-            rows="3" 
-            placeholder="ระบุรายละเอียดงาน ขอบเขต หรือลิงก์เอกสารอ้างอิงเบื้องต้น..."
-          ></textarea>
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" rows="3" placeholder="ระบุรายละเอียดงานเพิ่มเติม..."></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group col">
-            <label for="priority">Priority</label>
+            <label for="priority">Priority <span class="required">*</span></label>
             <select id="priority" formControlName="priority">
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
             </select>
           </div>
 
           <div class="form-group col">
-            <label for="status">Initial Status</label>
+            <label for="status">Initial Status <span class="required">*</span></label>
             <select id="status" formControlName="status">
-              <option value="TODO">TODO</option>
+              <option value="TODO">To Do</option>
             </select>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group col">
-            <label>Assign To Intern(s)<span class="required">*</span></label>
-            
-            <div class="search-box">
-              <input 
-                type="text" 
-                placeholder="ค้นหาชื่อ Intern..." 
-                [(ngModel)]="searchTerm" 
-                [ngModelOptions]="{standalone: true}" 
-                (input)="filterInterns()"
-                class="search-input"
-              >
-            </div>
-
-            <div class="checkbox-list-container" [class.is-invalid]="taskForm.get('assignedToIds')?.touched && taskForm.get('assignedToIds')?.invalid">
-              <label class="checkbox-item" *ngFor="let intern of filteredInterns">
+            <label>Assign To Interns <span class="required">*</span></label>
+            <div class="intern-checkbox-list">
+              <label class="checkbox-item" *ngFor="let intern of interns">
                 <input 
                   type="checkbox" 
                   [value]="intern.id"
@@ -131,25 +150,18 @@
                 >
                 <span class="intern-name">{{ intern.full_name }}</span>
               </label>
-              
-              <div *ngIf="filteredInterns.length === 0" class="no-data-text">
-                ไม่พบรายชื่อผู้ใช้ที่ตรงกับคำค้นหา
+              <div *ngIf="interns.length === 0" class="no-data-text">
+                ไม่พบรายชื่อผู้ใช้ที่พร้อมรับมอบหมาย
               </div>
             </div>
-
             <div class="error-msg" *ngIf="taskForm.get('assignedToIds')?.touched && taskForm.get('assignedToIds')?.invalid">
-              * กรุณาติ๊กเลือกผู้รับมอบหมายงานอย่างน้อย 1 คน
+              * กรุณาเลือกผู้รับมอบหมายงานอย่างน้อย 1 คน
             </div>
           </div>
 
           <div class="form-group col">
             <label for="dueDate">Due Date <span class="required">*</span></label>
-            <input 
-              type="date" 
-              id="dueDate" 
-              formControlName="dueDate"
-              [class.is-invalid]="taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.invalid"
-            >
+            <input type="date" id="dueDate" formControlName="dueDate">
             <div class="error-msg" *ngIf="taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.invalid">
               * กรุณาระบุวันครบกำหนดส่งงานด้วย
             </div>

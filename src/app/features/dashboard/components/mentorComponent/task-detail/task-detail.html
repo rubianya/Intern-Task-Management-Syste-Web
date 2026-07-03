@@ -1,22 +1,19 @@
 <div class="page-container" *ngIf="selectedTask">
+
   <div class="page-header">
     <div class="header-left">
       <button class="btn btn-outline" (click)="goBack()">← Back</button>
-      <div class="header-title-group">
-        <h3>{{ selectedTask.title }}</h3>
-        <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
-      </div>
     </div>
-
+    
     <div class="header-right">
       <div class="action-header-box">
         <div class="status-buttons">
-          <ng-container *ngIf="selectedTask.status === 'REVIEW'">
-            <button class="btn btn-sm btn-success" (click)="changeTaskStatus('DONE')">Done</button>
-            <button class="btn btn-sm btn-danger" (click)="changeTaskStatus('IN_PROGRESS')">Cancelled</button>
+          <ng-container *ngIf="selectedTask.status === 'PENDING'">
+            <button class="btn btn-sm btn-success" (click)="changeTaskStatus('DONE')"><i class="fas fa-check"></i> Done (Approve Review)</button>
+            <button class="btn btn-sm btn-danger" (click)="changeTaskStatus('IN_PROGRESS')"><i class="fas fa-times"></i> Cancel (Sent Back)</button>
           </ng-container>
           <ng-container *ngIf="selectedTask.status === 'DONE'">
-            <span class="status-completed-text">🎉 completed</span>
+            <span class="status-completed-text"><i class="fas fa-check-circle"></i> complete</span>
           </ng-container>
         </div>
       </div>
@@ -25,6 +22,10 @@
 
   <div class="page-body">
     <div class="task-info-section">
+      <div class="header-title-group">
+        <h3>{{ selectedTask.title }}</h3>
+        <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
+      </div>
       <div class="info-grid">
         <div class="info-item">
           <label>Assigned To:</label>

@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { User } from '../../../core/models/user.model';
+import { UserResponse } from '../../../core/models/user.model';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
@@ -28,12 +28,12 @@ CommonModule,
 export class EditProfile implements OnInit {
 
   profileForm!: FormGroup;
-  originalProfile!: User;
+  originalProfile!: UserResponse;
   userId!: number;
 
   displayFullName = '';
   displayEmail = '';
-  displayPassword ='';
+  displayPassword = '';
   role = '';
 
   editFullName = '';
@@ -56,7 +56,7 @@ export class EditProfile implements OnInit {
     this.userService.getUserProfile().subscribe({
       next: (response: any) => {
 
-        const profile = response.data as User;
+        const profile = response.data as UserResponse;
 
         console.log('ข้อมูลโปรไฟล์ทั้งหมดที่ได้จาก API:', profile);
 
@@ -94,7 +94,7 @@ export class EditProfile implements OnInit {
       return;
     }
 
-    const updateData: Partial<User> = {
+    const updateData: Partial<UserResponse> = {
       ...this.originalProfile,
       full_name: this.profileForm.value.full_name,
       email: this.profileForm.value.email,

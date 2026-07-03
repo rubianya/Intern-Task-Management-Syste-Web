@@ -8,24 +8,28 @@
 
   <div class="stats-grid" *ngIf="dashboardStats">
     <div class="stat-card border-total" (click)="viewTasksByStatus('ALL')" style="cursor: pointer;">
-      <h3>Total Tasks</h3>
-      <p class="stat-value">{{ dashboardStats.totalTasks }}</p>
+      <div class="stat-title">Total Tasks</div>
+      <div class="stat-number">{{ dashboardStats.totalTasks }}</div>
     </div>
+    
     <div class="stat-card border-todo" (click)="viewTasksByStatus('TODO')" style="cursor: pointer;">
-      <h3>To Do</h3>
-      <p class="stat-value">{{ dashboardStats.todoTasks }}</p>
+      <div class="stat-title">To Do</div>
+      <div class="stat-number">{{ dashboardStats.todoTasks }}</div>
     </div>
+
     <div class="stat-card border-progress" (click)="viewTasksByStatus('IN_PROGRESS')" style="cursor: pointer;">
-      <h3>In Progress</h3>
-      <p class="stat-value">{{ dashboardStats.inProgressTasks }}</p>
+      <div class="stat-title">In Progress</div>
+      <div class="stat-number">{{ dashboardStats.inProgressTasks }}</div>
     </div>
+    
     <div class="stat-card border-pending" (click)="viewTasksByStatus('PENDING')" style="cursor: pointer;">
-      <h3>Pending</h3>
-      <p class="stat-value">{{ dashboardStats.pendingTasks }}</p>
+      <div class="stat-title">Pending</div>
+      <div class="stat-number">{{ dashboardStats.pendingTasks }}</div>
     </div>
+    
     <div class="stat-card border-done" (click)="viewTasksByStatus('DONE')" style="cursor: pointer;">
-      <h3>Done</h3>
-      <p class="stat-value">{{ dashboardStats.doneTasks }}</p>
+      <div class="stat-title">Done</div>
+      <div class="stat-number">{{ dashboardStats.doneTasks }}</div>
     </div>
   </div>
 

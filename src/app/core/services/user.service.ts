@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { User } from "../models/user.model";
+import { UserResponse } from "../models/user.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
+import { ApiResponse } from "../models/api-response.model";
 
 @Injectable({
   providedIn: 'root'
@@ -14,43 +15,42 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     // ดึงข้อมูลโปรไฟล์
-    getUserProfile(): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/users/profile`); 
+    getUserProfile(): Observable<ApiResponse<UserResponse>> {
+        return this.http.get<ApiResponse<UserResponse>>(`${this.apiUrl}/users/profile`); 
     }
 
     // อัปเดตโปรไฟล์
-    updateProfile(id: number, userData: Partial<User>): Observable<any> {
-        return this.http.put(`${this.apiUrl}/users/${id}`, userData); 
+    updateProfile(id: number, userData: Partial<UserResponse>): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}`, userData); 
     }
 
-    // ดึงข้อมูลผู้ใช้ทั้งหมด (สำหรับ Admin)
-    getAllUsers(): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/users`);
+    // ดึงข้อมูลผู้ใช้ทั้งหมด สำหรับ Admin
+    getAllUsers(): Observable<ApiResponse<UserResponse[]>> {
+        return this.http.get<ApiResponse<UserResponse[]>>(`${this.apiUrl}/users`);
     } 
 
-    // ดึงข้อมูลเฉพาะ Intern ที่ Active (สำหรับ Mentor)
-    getActiveInterns(): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/users/interns`);
+    // ดึงข้อมูลเฉพาะ Intern ที่ Active สำหรับ Mentor
+    getActiveInterns(): Observable<ApiResponse<UserResponse[]>> {
+        return this.http.get<ApiResponse<UserResponse[]>>(`${this.apiUrl}/users/interns`);
     }
 
     // เพิ่มผู้ใช้ใหม่
-    createUser(userData: User): Observable<User> {
-        return this.http.post<User>(`${this.apiUrl}/users`, userData);
+    createUser(userData: UserResponse): Observable<ApiResponse<UserResponse>> {
+        return this.http.post<ApiResponse<UserResponse>>(`${this.apiUrl}/users`, userData);
     }
 
     // อัปเดตข้อมูลผู้ใช้
-    updateUser(id: number, userData: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}/users/${id}`, userData);
+    updateUser(id: number, userData: UserResponse): Observable<ApiResponse<UserResponse>> {
+        return this.http.put<ApiResponse<UserResponse>>(`${this.apiUrl}/users/${id}`, userData);
+    }
+
+    // เปิด-ปิด สถานะบัญชีใช้งาน
+    toggleUserStatus(id: number, status: { active: boolean }): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}/active`, status);
     }
 
     // ลบผู้ใช้
-    deleteUser(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/delete/${id}`);
+    deleteUser(id: number): Observable<ApiResponse<any>> {
+        return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/users/${id}`);
     }
-
-    // เปลี่ยนสถานะการใช้งานบัญชี
-    toggleActive(id: number, userData: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}/users/${id}/active`,userData);
-    }
-    
 }

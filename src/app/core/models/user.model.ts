@@ -1,4 +1,6 @@
-export interface User {
+
+
+export interface UserResponse {
   id: number;   
   full_name: string;
   email: string;

@@ -1,4 +1,4 @@
-/* โครงสร้างหลัก */
+/* --- โครงสร้าง Layout หลัก --- */
 .dashboard-container {
   padding: 24px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,14 +10,54 @@
 .dashboard-header h2 { margin: 0; font-size: 1.75rem; color: #1f2937; }
 .subtitle { margin: 4px 0 0 0; color: #6b7280; font-size: 0.9rem; }
 
-/* Stats Grid (คงเอกลักษณ์เดิมไว้ แต่ปรับเงาให้เนียนขึ้น) */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat-card { background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 4px solid #94a3b8; }
-.stat-title { font-size: 0.9rem; color: #64748b; margin-bottom: 8px; font-weight: 600; }
-.stat-number { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
-.border-todo { border-left-color: #94a3b8; }
-.border-progress { border-left-color: #3b82f6; }
-.border-done { border-left-color: #10b981; }
+/* --- จัดกลุ่มการ์ดสถิติ (Stats Grid) ให้สวยงามโมเดิร์นเหมือน Mentor --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* ดึงเนื้อหาจัดเรียงกึ่งกลาง */
+  border-top: 4px solid transparent; /* ใช้เส้นนำสายตาขอบบนแทนขอบซ้าย */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* เอฟเฟกต์ยกตัวขึ้นเล็กน้อยเวลาเมาส์ชี้ */
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+.stat-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+/* รหัสสีขอบบนแยกตามสเตตัสสไตล์เดียวกันเป๊ะ */
+.border-total { border-top-color: #2563eb; }     /* สีน้ำเงิน */
+.border-todo { border-top-color: #6b7280; }      /* สีเทา */
+.border-progress { border-top-color: #8b5cf6; }  /* สีม่วง (In Progress) */
+.border-pending { border-top-color: #f59e0b; }   /* สีส้ม */
+.border-done { border-top-color: #10b981; }      /* สีเขียว */
 
 /* ส่วนหัว Upcoming */
 .upcoming-section {
@@ -31,9 +71,6 @@
   align-items: center;
   gap: 10px;
 }
-
-.border-pending { border-left: 5px solid #f39c12; } /* สีส้ม */
-.border-done { border-left: 5px solid #2ecc71; } /* สีเขียว */
 
 /* ปุ่มแบบเดียวกับ My Task */
 .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }

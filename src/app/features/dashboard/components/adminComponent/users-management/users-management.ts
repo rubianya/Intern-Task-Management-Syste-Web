@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User } from '../../../../../core/models/user.model';
+import { UserResponse } from '../../../../../core/models/user.model';
 import { UserService } from '../../../../../core/services/user.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,7 +30,7 @@ import { response } from 'express';
 })
 export class UsersManagement {
 
-  users: User[] = [];
+  users: UserResponse[] = [];
 
   searchTerm: string = '';
   selectedRole: string = '';
@@ -76,7 +76,7 @@ export class UsersManagement {
 
   }
 
-  get filteredUsers(): User[] {
+  get filteredUsers(): UserResponse[] {
     return this.users.filter(response => {
       const searchLower = this.searchTerm.toLowerCase();
 
@@ -107,7 +107,7 @@ export class UsersManagement {
 
   }
 
-  openEditUserModal(response: User) {
+  openEditUserModal(response: UserResponse ) {
 
     this.isEditMode = true;
 
@@ -140,15 +140,15 @@ export class UsersManagement {
       return;
     }
 
-    const userData = this.userFormGroup.getRawValue() as User;
+    const userData = this.userFormGroup.getRawValue() as UserResponse;
 
     if (this.isEditMode) {
       this.userService.updateUser(Number(userData.id), userData).subscribe({
-        next: (updatedUser) => {
+        next: (response) => {
+          const updatedUser = response.data;
           const index = this.users.findIndex(u => u.id === updatedUser.id);
           if (index !== -1) {
             this.users[index] = updatedUser;
-            this.users = [...this.users]; 
           }
           this.closeModal();
           this.cdr.detectChanges();
@@ -159,8 +159,9 @@ export class UsersManagement {
     } else {
       console.log('ข้อมูลที่จะส่งไปสร้าง User ใหม่:', userData);
       this.userService.createUser(userData).subscribe({
-        next: (newUser) => {
-          this.users = [...this.users, newUser]; 
+        next: (response) => {
+          const newUser = response.data;
+          this.users = [...this.users, newUser];
           alert('บันทึกข้อมูลสำเร็จ!');
           this.closeModal();
           this.cdr.detectChanges();
@@ -202,13 +203,13 @@ export class UsersManagement {
     this.userIdToDelete = null;
   }
 
-  toggleUserStatus(user: User, newStatus: boolean): void {
+  toggleUserStatus(user: UserResponse, newStatus: boolean): void {
 
     const previousStatus = user.active;
     user.active = newStatus;
-    const payload = { active: newStatus } as unknown as User;
+    const payload = { active: newStatus };
 
-    this.userService.toggleActive(user.id!, payload).subscribe({
+    this.userService.toggleUserStatus(user.id!, payload).subscribe({
       next: (response) => {
         console.log(`User ID ${user.id} status updated to ${newStatus}`);
       },
@@ -222,8 +223,6 @@ export class UsersManagement {
     
   }
 
-
-
   // ----- ตัวแปรสำหรับแบ่งหน้า (Pagination) -----
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -232,7 +231,7 @@ export class UsersManagement {
     this.currentPage = 1;
   }
 
-  get paginatedUsers(): User[] {
+  get paginatedUsers(): UserResponse[] {
     const startIndex = (this.currentPage - 1 ) * this.itemsPerPage;
     return this.filteredUsers.slice(startIndex, startIndex + this.itemsPerPage);
   }
