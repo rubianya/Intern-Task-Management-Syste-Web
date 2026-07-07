@@ -59,12 +59,12 @@ export class TaskManagement implements OnInit {
 
   initForm(): void {
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(255)]],
+      title: ['', Validators.required],
       description: [''],
-      status: ['TODO', Validators.required],
       priority: ['MEDIUM', Validators.required],
+      status: ['TODO'],
       dueDate: ['', Validators.required],
-      assignedToIds: [[], Validators.required],
+      assignedToIds: [[] as number[], Validators.required],
       isGroupTask: [false]
     });
   }
@@ -73,7 +73,7 @@ export class TaskManagement implements OnInit {
     this.userService.getActiveInterns().subscribe({
       next: (response) => {
         if (response && response.data) {
-          this.interns = response.data;
+          this.interns = response.data.filter((intern: UserResponse) => intern.active === true);
           this.filteredInterns = response.data;
           this.cdr.detectChanges();
         }
@@ -84,7 +84,7 @@ export class TaskManagement implements OnInit {
 
   loadTasks(): void {
     this.taskService.getAllTasks().subscribe({
-      next: (response: any) => {
+      next: (response) => {
         if (response && response.data) {
           this.tasks = response.data;
           this.cdr.detectChanges();
@@ -113,17 +113,22 @@ export class TaskManagement implements OnInit {
     this.currentPage = 1;
   }
 
-  get filteredTasks(): TaskResponse[] {
-    return this.tasks.filter(task => {
-      const searchStr = this.searchTerm.toLowerCase().trim();
-      const matchesSearch = !searchStr ? true :
-        (task.title && task.title.toLowerCase().includes(searchStr)) ||
-        (task.assignedToUserFullName && task.assignedToUserFullName.toLowerCase().includes(searchStr));
+  get filteredTasks() {
+    let filtered = this.tasks;
 
-      const matchesStatus = !this.filterStatus ? true : task.status === this.filterStatus;
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(task => 
+        task.title.toLowerCase().includes(term) || 
+        task.createByFullName?.toLowerCase().includes(term) ||
+        (task.assignedToUserFullNames && task.assignedToUserFullNames.some(name => name.toLowerCase().includes(term)))
+      );
+    }
 
-      return matchesSearch && matchesStatus;
-    });
+    if (this.filterStatus) {
+      filtered = filtered.filter(task => task.status === this.filterStatus);
+    }
+    return filtered;
   }
 
   get paginatedTasks(): TaskResponse[] {
@@ -191,22 +196,10 @@ export class TaskManagement implements OnInit {
       alert('ฟอร์มยังไม่สมบูรณ์! กรุณาตรวจสอบช่องที่มีดอกจัน (*)');
       return;
     }
-    
-    const formValue = this.taskForm.value;
-    const selectedInternIds: number[] = formValue.assignedToIds;
-
-    const taskData: TaskRequest = {
-      title: formValue.title,
-      description: formValue.description,
-      status: formValue.status,
-      priority: formValue.priority,
-      dueDate: formValue.dueDate,
-      assignedToIds: selectedInternIds,
-      isGroupTask: formValue.isGroupTask
-    };
+    const taskData: TaskRequest = this.taskForm.value as TaskRequest;
 
     this.taskService.createTask(taskData).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         alert(`มอบหมายงานให้ Intern เรียบร้อยแล้ว!`);
         this.closeModal();
         this.loadTasks(); 
@@ -226,7 +219,7 @@ export class TaskManagement implements OnInit {
   deleteTask(taskId: number): void {
     if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
       this.taskService.deleteTask(taskId).subscribe({
-        next: (response: any) => {
+        next: (response) => {
           alert('ลบข้อมูลงานออกจากระบบสำเร็จเรียบร้อยแล้ว');
           this.loadTasks();
           this.loadDashboardStats(); 

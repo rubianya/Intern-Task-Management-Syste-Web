@@ -1,12 +1,12 @@
 export interface TaskResponse {
     id: number;
     title: string;
-    description?: string;
+    description: string;
     status: string;
     priority: string;
-    dueDate: string | Date;
-    assignedToUserFullName: string; 
-    createByFullName: string;     
+    dueDate: string;
+    assignedToUserFullNames: string[];
+    createByFullName: string;   
 }
 
 export interface TaskRequest {

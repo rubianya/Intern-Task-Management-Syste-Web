@@ -42,7 +42,9 @@
       <tbody>
         <tr *ngFor="let task of paginatedTasks">
           <td class="task-title-cell">{{ task.title }}</td>
-          <td>{{ task.assignedToUserFullName || 'ยังไม่ได้มอบหมาย' }}</td>
+          <td>
+            {{ task.assignedToUserFullNames.length ? task.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
+          </td>
           <td>
             <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">
               {{ task.priority }}
@@ -138,15 +140,15 @@
         </div>
 
         <div class="form-group mb-3">
-          <label class="form-label">ประเภทการมอบหมายงาน</label>
+          <label class="form-label">Types of assignments</label>
           <div class="radio-group d-flex gap-3 mt-2">
             <label class="radio-container">
               <input type="radio" formControlName="isGroupTask" [value]="false"> 
-              <span>งานเดี่ยว (แยกสร้างคนละงาน)</span>
+              <span>Single Task</span>
             </label>
             <label class="radio-container">
               <input type="radio" formControlName="isGroupTask" [value]="true"> 
-              <span>งานกลุ่ม (งานเดียวกัน รับผิดชอบร่วมกัน)</span>
+              <span>Group Task</span>
             </label>
           </div>
         </div>

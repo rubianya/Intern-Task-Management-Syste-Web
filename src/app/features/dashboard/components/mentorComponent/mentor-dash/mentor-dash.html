@@ -53,7 +53,9 @@
       <tbody>
         <tr *ngFor="let task of pendingTasksList">
           <td class="task-title-cell">{{ task.title }}</td>
-          <td>{{ task.assignedToUserFullName || 'ยังไม่ได้มอบหมาย' }}</td>
+          <td>
+            {{ task.assignedToUserFullNames.length ? task.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
+          </td>
           <td>
             <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">
               {{ task.priority }}
