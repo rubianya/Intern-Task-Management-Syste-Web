@@ -205,26 +205,36 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); 
 }
 
-/* ปุ่ม View (สีฟ้า) */
-.view-btn { 
-  color: #2563eb; 
-  border-color: #bfdbfe; 
+/* --- สถานะปกติ (สีเทาพื้นฐานเหมือนหน้า User Management) --- */
+.view-btn, .edit-btn, .delete-btn {
+  color: #6b7280;          /* สีไอคอน/ตัวหนังสือสีเทา */
+  border-color: #d1d5db;   /* กรอบสีเทาอ่อน */
+  background-color: white; /* พื้นหลังสีขาว */
+  transition: all 0.2s ease-in-out; /* อนิเมชันความนุ่มนวล */
 }
 
+/* --- สถานะตอนนำเมาส์ไปวาง (Hover States) --- */
+
+/* 1. ปุ่ม View: สีน้ำแดง (Dark Red / Maroon) */
 .view-btn:hover { 
-  background-color: #eff6ff; 
-  border-color: #2563eb; 
+  color: #2563eb;
+  background-color: #eff6ff;
+  border-color: #2563eb;
   transform: translateY(-1px); 
 }
 
-/* ปุ่ม Delete (สีแดง) */
-.delete-btn { 
-  color: #dc2626; 
-  border-color: #fecaca;
+/* 2. ปุ่ม Edit: สีเขียว (Green) */
+.edit-btn:hover { 
+  color: #16a34a;
+  background-color: #f0fdf4;
+  border-color: #16a34a;
+  transform: translateY(-1px); 
 }
 
+/* 3. ปุ่ม Delete: สีแดง (Red) */
 .delete-btn:hover { 
-  background-color: #fef2f2; 
+  color: #dc2626;
+  background-color: #fef2f2;
   border-color: #dc2626;
   transform: translateY(-1px);
 }

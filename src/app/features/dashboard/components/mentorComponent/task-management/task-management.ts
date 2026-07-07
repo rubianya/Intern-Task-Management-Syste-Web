@@ -27,6 +27,8 @@ export class TaskManagement implements OnInit {
   taskForm!: FormGroup;
   currentPage: number = 1;
   itemsPerPage: number = 5;
+  isEditMode: boolean = false;
+  editingTaskId: number | null = null;
 
   dashboardStats: any = {
     totalTasks: 0, todoTasks: 0, inProgressTasks: 0, pendingTasks: 0, doneTasks: 0
@@ -168,8 +170,10 @@ export class TaskManagement implements OnInit {
   }
 
   openCreateTaskModal(): void {
+    this.isEditMode = false;
+    this.editingTaskId = null;
+    this.taskForm.reset({ priority: 'MEDIUM', status: 'TODO', assignedToIds: [], isGroupTask: false });
     this.isModalOpen = true;
-    this.initForm();
   }
 
   closeModal(): void {
@@ -196,19 +200,57 @@ export class TaskManagement implements OnInit {
       alert('ฟอร์มยังไม่สมบูรณ์! กรุณาตรวจสอบช่องที่มีดอกจัน (*)');
       return;
     }
+    
     const taskData: TaskRequest = this.taskForm.value as TaskRequest;
 
-    this.taskService.createTask(taskData).subscribe({
-      next: (response) => {
-        alert(`มอบหมายงานให้ Intern เรียบร้อยแล้ว!`);
-        this.closeModal();
-        this.loadTasks(); 
-        this.loadDashboardStats(); 
-      },
-      error: (err) => {
-        console.error('Failed to assign tasks', err);
-        alert('เกิดข้อผิดพลาดในการมอบหมายงาน');
-      }
+    if (this.isEditMode && this.editingTaskId !== null) {
+      this.taskService.updateTask(this.editingTaskId, taskData).subscribe({
+        next: (response) => {
+          alert('แก้ไขข้อมูลงานเรียบร้อยแล้ว!');
+          this.closeModal();
+          this.loadTasks(); 
+          this.loadDashboardStats(); 
+        },
+        error: (err) => {
+          console.error('Failed to update task', err);
+          alert('เกิดข้อผิดพลาดในการแก้ไขงาน');
+        }
+      });
+    } else {
+      this.taskService.createTask(taskData).subscribe({
+        next: (response) => {
+          alert('มอบหมายงานให้ Intern เรียบร้อยแล้ว!');
+          this.closeModal();
+          this.loadTasks(); 
+          this.loadDashboardStats(); 
+        },
+        error: (err) => {
+          console.error('Failed to assign tasks', err);
+          alert('เกิดข้อผิดพลาดในการมอบหมายงาน');
+        }
+      });
+    }
+  }
+
+  openEditTaskModal(task: TaskResponse): void {
+    this.isEditMode = true;
+    this.editingTaskId = task.id;
+    this.isModalOpen = true;
+
+    const selectedIds = task.assignedToUserFullNames 
+      ? this.interns
+          .filter(intern => task.assignedToUserFullNames.includes(intern.fullName))
+          .map(intern => intern.id)
+      : [];
+
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      assignedToIds: selectedIds,
+      isGroupTask: task.assignedToUserFullNames && task.assignedToUserFullNames.length > 1
     });
   }
 

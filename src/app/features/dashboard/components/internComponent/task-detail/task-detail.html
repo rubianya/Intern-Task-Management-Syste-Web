@@ -1,9 +1,7 @@
 <div class="page-container" *ngIf="selectedTask">
   <div class="page-header">
     <div class="header-left">
-      <button class="btn btn-outline" (click)="goBack()">
-        Back
-      </button>
+      <button class="btn btn-outline" (click)="goBack()">← Back</button>
       <div class="header-title-group">
         <h3>{{ selectedTask.title }}</h3>
         <span class="badge status-{{ selectedTask.status | lowercase }}">{{ selectedTask.status }}</span>
@@ -39,7 +37,7 @@
         <div class="info-item">
           <label>Assigned By:</label>
           <div>
-            <i class="fas fa-user-circle"></i> {{ selectedTask.createByFullName }}
+            {{ selectedTask.createByFullName }}
           </div>
         </div>
         <div class="info-item">
@@ -53,7 +51,7 @@
         <div class="info-item">
           <label>Due Date:</label>
           <div class="due-date-text" [ngClass]="getDueDateClass(selectedTask.dueDate, selectedTask.status)">
-            <i class="far fa-calendar-alt"></i> {{ selectedTask.dueDate | date:'mediumDate' }}
+            {{ selectedTask.dueDate | date:'mediumDate' }}
           </div>
         </div>
       </div>

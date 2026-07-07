@@ -30,14 +30,7 @@
         <div class="info-item">
           <label>Assigned To:</label>
           <div>
-            <ng-container *ngIf="selectedTask.assignedToNames && selectedTask.assignedToNames.length > 0; else noAssignee">
-              <span *ngFor="let name of selectedTask.assignedToNames; let isLast = last">
-                {{ name }}{{ !isLast ? ', ' : '' }}
-              </span>
-            </ng-container>
-            <ng-template #noAssignee>
-              <span class="text-muted">ยังไม่ได้มอบหมาย</span>
-            </ng-template>
+            {{ selectedTask.assignedToUserFullNames.length ? selectedTask.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
           </div>
         </div>
         <div class="info-item">
