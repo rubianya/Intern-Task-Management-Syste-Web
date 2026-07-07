@@ -1,11 +1,11 @@
-export interface LogingResponse {
+export interface LoginResponse {
   success: boolean;
   message?: string;
   data: {
     token: string;
     active: boolean | number;
     email: string;
-    full_name: string;
+    fullName: string;
     role: string;
   };
 }

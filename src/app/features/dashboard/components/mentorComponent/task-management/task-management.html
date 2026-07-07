@@ -148,7 +148,7 @@
                   [checked]="taskForm.get('assignedToIds')?.value?.includes(intern.id)"
                   (change)="toggleInternSelection(intern.id, $event)"
                 >
-                <span class="intern-name">{{ intern.full_name }}</span>
+                <span class="intern-name">{{ intern.fullName }}</span>
               </label>
               <div *ngIf="interns.length === 0" class="no-data-text">
                 ไม่พบรายชื่อผู้ใช้ที่พร้อมรับมอบหมาย

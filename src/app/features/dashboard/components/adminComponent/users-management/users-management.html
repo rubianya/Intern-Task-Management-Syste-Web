@@ -62,8 +62,8 @@
               <td class="text-bold">{{ user.id }}</td>
               <td>
                 <div class="user-name-cell">
-                  <!-- <span class="user-avatar">{{ user.full_name.charAt(0).toUpperCase() }}</span> -->
-                  <span class="user-name-text">{{ user.full_name }}</span>
+                  <!-- <span class="user-avatar">{{ user.fullName.charAt(0).toUpperCase() }}</span> -->
+                  <span class="user-name-text">{{ user.fullName }}</span>
                 </div>
               </td>
               <td class="text-muted">{{ user.email }}</td>
@@ -141,8 +141,8 @@
           
           <mat-form-field appearance="outline" class="full-width-field field-spacing-box">
             <mat-label>Full Name</mat-label>
-            <input matInput formControlName="full_name" placeholder="Enter first and last name">
-            <mat-error *ngIf="userFormGroup.get('full_name')?.hasError('required')">Full Name is required.</mat-error>
+            <input matInput formControlName="fullName" placeholder="Enter first and last name">
+            <mat-error *ngIf="userFormGroup.get('fullName')?.hasError('required')">Full Name is required.</mat-error>
           </mat-form-field>
 
           <div class="two-column-form-row">

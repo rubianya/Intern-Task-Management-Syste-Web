@@ -46,7 +46,7 @@ export class EditProfile implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.profileForm = new FormGroup({
-      full_name: new FormControl('', Validators.required),
+      fullName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)])
     });
@@ -63,18 +63,18 @@ export class EditProfile implements OnInit {
         this.userId = profile.id;
         this.originalProfile = profile;
 
-        this.displayFullName = profile.full_name;
+        this.displayFullName = profile.fullName;
         this.displayEmail = profile.email;
         this.displayPassword = profile.password;
         this.role = profile.role;
 
         this.profileForm.patchValue({
-          full_name: profile.full_name,
+          fullName: profile.fullName,
           email: profile.email,
           password: profile.password
         });
 
-        this.editFullName = profile.full_name;
+        this.editFullName = profile.fullName;
         this.editEmail = profile.email;
         this.editPassword = profile.password;
 
@@ -96,7 +96,7 @@ export class EditProfile implements OnInit {
 
     const updateData: Partial<UserResponse> = {
       ...this.originalProfile,
-      full_name: this.profileForm.value.full_name,
+      fullName: this.profileForm.value.fullName,
       email: this.profileForm.value.email,
       password: this.profileForm.value.password
     };

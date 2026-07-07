@@ -49,7 +49,7 @@ export class Dashboard implements OnInit {
         }
 
         this.UserRoleDisplay = response.data.role;
-        this.UserName = response.data.full_name;
+        this.UserName = response.data.fullName;
         this.UserEmail = response.data.email;
 
         this.cdr.detectChanges();

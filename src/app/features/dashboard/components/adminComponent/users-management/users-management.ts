@@ -47,7 +47,7 @@ export class UsersManagement {
 
   userFormGroup = new FormGroup({
     id: new FormControl(0),
-    full_name: new FormControl('', [Validators.required]),
+    fullName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.minLength(8)]),
     role: new FormControl('Intern', [Validators.required]),
@@ -93,7 +93,7 @@ export class UsersManagement {
       const searchLower = this.searchTerm.toLowerCase();
 
       const matchesSearch = response.id.toString().toLowerCase().includes(searchLower) ||
-                            response.full_name?.toLowerCase().includes(searchLower) || 
+                            response.fullName?.toLowerCase().includes(searchLower) || 
                             response.email?.toLowerCase().includes(searchLower);
 
       const matchesRole = this.selectedRole ? response.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
@@ -122,7 +122,7 @@ export class UsersManagement {
 
     this.userFormGroup.patchValue({
       id: response.id,
-      full_name: response.full_name,
+      fullName: response.fullName,
       email: response.email,
       role: response.role,
       active: response.active === 1 || response.active === true,
