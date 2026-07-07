@@ -137,6 +137,20 @@
           </div>
         </div>
 
+        <div class="form-group mb-3">
+          <label class="form-label">ประเภทการมอบหมายงาน</label>
+          <div class="radio-group d-flex gap-3 mt-2">
+            <label class="radio-container">
+              <input type="radio" formControlName="isGroupTask" [value]="false"> 
+              <span>งานเดี่ยว (แยกสร้างคนละงาน)</span>
+            </label>
+            <label class="radio-container">
+              <input type="radio" formControlName="isGroupTask" [value]="true"> 
+              <span>งานกลุ่ม (งานเดียวกัน รับผิดชอบร่วมกัน)</span>
+            </label>
+          </div>
+        </div>
+
         <div class="form-row">
           <div class="form-group col">
             <label>Assign To Interns <span class="required">*</span></label>
@@ -146,7 +160,7 @@
                   type="checkbox" 
                   [value]="intern.id"
                   [checked]="taskForm.get('assignedToIds')?.value?.includes(intern.id)"
-                  (change)="toggleInternSelection(intern.id, $event)"
+                  (change)="toggleInternSelection(intern.id)"
                 >
                 <span class="intern-name">{{ intern.fullName }}</span>
               </label>
@@ -171,7 +185,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-info" (click)="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Assign Task</button>
+        <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">Assign Task</button>
       </div>
     </form>
   </div>

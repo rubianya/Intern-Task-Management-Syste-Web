@@ -64,7 +64,8 @@ export class TaskManagement implements OnInit {
       status: ['TODO', Validators.required],
       priority: ['MEDIUM', Validators.required],
       dueDate: ['', Validators.required],
-      assignedToIds: [[], Validators.required]
+      assignedToIds: [[], Validators.required],
+      isGroupTask: [false]
     });
   }
 
@@ -171,21 +172,17 @@ export class TaskManagement implements OnInit {
     this.taskForm.reset();
   }
 
-  toggleInternSelection(internId: number, event: any): void {
-    const selectedIds = [...(this.taskForm.get('assignedToIds')?.value || [])];
-    if (event.target.checked) {
-      if (!selectedIds.includes(internId)) {
-        selectedIds.push(internId);
-      }
+  toggleInternSelection(internId: number) {
+    const currentAssignedToIds = this.taskForm.get('assignedToIds')?.value as number[];
+    if (currentAssignedToIds.includes(internId)) {
+      this.taskForm.patchValue({
+        assignedToIds: currentAssignedToIds.filter(id => id !== internId)
+      });
     } else {
-      const index = selectedIds.indexOf(internId);
-      if (index > -1) {
-        selectedIds.splice(index, 1);
-      }
+      this.taskForm.patchValue({
+        assignedToIds: [...currentAssignedToIds, internId]
+      });
     }
-    this.taskForm.get('assignedToIds')?.setValue(selectedIds);
-    this.taskForm.get('assignedToIds')?.markAsTouched();
-    this.taskForm.get('assignedToIds')?.updateValueAndValidity();
   }
 
   onSubmit(): void {
@@ -204,7 +201,8 @@ export class TaskManagement implements OnInit {
       status: formValue.status,
       priority: formValue.priority,
       dueDate: formValue.dueDate,
-      assignedToIds: selectedInternIds
+      assignedToIds: selectedInternIds,
+      isGroupTask: formValue.isGroupTask
     };
 
     this.taskService.createTask(taskData).subscribe({

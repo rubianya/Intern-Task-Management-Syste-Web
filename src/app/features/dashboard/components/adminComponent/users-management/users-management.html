@@ -50,7 +50,6 @@
             <th style="width: 80px;">ID</th>
             <th>Full Name</th>
             <th>Email</th>
-            <th>Password</th>
             <th>Role</th>
             <th>Status</th>
             <th style="text-align: center; width: 140px;">Actions</th>
@@ -62,12 +61,10 @@
               <td class="text-bold">{{ user.id }}</td>
               <td>
                 <div class="user-name-cell">
-                  <!-- <span class="user-avatar">{{ user.fullName.charAt(0).toUpperCase() }}</span> -->
                   <span class="user-name-text">{{ user.fullName }}</span>
                 </div>
               </td>
               <td class="text-muted">{{ user.email }}</td>
-              <td class="text-muted">{{ user.password }}</td>
               <td>
                 <span class="role-badge" [ngClass]="'badge-' + user.role.toLowerCase()">
                   {{ user.role }}

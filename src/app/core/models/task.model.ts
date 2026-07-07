@@ -15,5 +15,6 @@ export interface TaskRequest {
     status?: string;
     priority?: string;
     dueDate: string | Date;
-    assignedToIds: number[]; 
+    assignedToIds: number[];
+    isGroupTask: boolean;
 }

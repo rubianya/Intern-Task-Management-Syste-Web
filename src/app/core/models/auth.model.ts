@@ -5,7 +5,6 @@ export interface LoginResponse {
     token: string;
     active: boolean | number;
     email: string;
-    fullName: string;
     role: string;
   };
 }

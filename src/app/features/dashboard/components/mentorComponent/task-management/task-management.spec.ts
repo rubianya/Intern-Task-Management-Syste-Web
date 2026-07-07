@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MentorDash } from './task-management';
+import { TaskManagement } from './task-management';
 
-describe('MentorDash', () => {
-  let component: MentorDash;
-  let fixture: ComponentFixture<MentorDash>;
+describe('TaskManagement', () => {
+  let component: TaskManagement;
+  let fixture: ComponentFixture<TaskManagement>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MentorDash],
+      imports: [TaskManagement],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MentorDash);
+    fixture = TestBed.createComponent(TaskManagement);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
