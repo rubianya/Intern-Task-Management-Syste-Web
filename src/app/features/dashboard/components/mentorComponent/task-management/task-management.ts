@@ -20,8 +20,8 @@ export class TaskManagement implements OnInit {
 
   tasks: TaskResponse[] = []; 
   interns: UserResponse[] = [];
-  filteredInterns: UserResponse[] = [];
   searchTerm: string = '';
+  filterIntern: string = '';
   filterStatus: string = '';
   isModalOpen = false;
   taskForm!: FormGroup;
@@ -76,7 +76,7 @@ export class TaskManagement implements OnInit {
       next: (response) => {
         if (response && response.data) {
           this.interns = response.data.filter((intern: UserResponse) => intern.active === true);
-          this.filteredInterns = response.data;
+          this.filterIntern = '';
           this.cdr.detectChanges();
         }
       },
@@ -113,6 +113,18 @@ export class TaskManagement implements OnInit {
 
   onFilterChange(): void {
     this.currentPage = 1;
+  }
+
+  get filteredInterns() {
+    if (!this.filterIntern) {
+      return this.interns;
+    }
+    
+    const searchTerm = this.filterIntern.toLowerCase();
+
+    return this.interns.filter(intern => 
+      intern.fullName.toLowerCase().includes(searchTerm)
+    );
   }
 
   get filteredTasks() {

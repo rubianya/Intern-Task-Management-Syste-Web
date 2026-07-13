@@ -1,59 +1,61 @@
-# InternTaskManagementSysteWeb
+# 📋 Intern Task Management System (Web Frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.14.
+ระบบจัดการงานสำหรับนักศึกษาฝึกงาน (Intern Task Management System) พัฒนาด้วย **Angular** เพื่อเป็นเครื่องมือช่วยในการมอบหมายงาน ติดตามความคืบหน้า และประเมินผลการทำงานของนักศึกษาฝึกงานภายในองค์กร ระบบถูกออกแบบมาให้ใช้งานง่าย รองรับการแบ่งสิทธิ์ผู้ใช้งาน และทำงานร่วมกับ API ฝั่ง Backend (Spring Boot) ได้อย่างสมบูรณ์แบบ
 
-## Development server
+## ✨ ฟีเจอร์หลัก (Key Features)
 
-To start a local development server, run:
+ระบบมีการแบ่งสิทธิ์การใช้งาน (Role-Based Access Control) ออกเป็น 3 ระดับ ดังนี้:
 
-```bash
-ng serve
-```
+### 👨‍💼 1. Admin (ผู้ดูแลระบบ)
+* **Admin Dashboard:** ดูสถิติภาพรวมของระบบ จำนวนผู้ใช้งาน และจำนวนงานทั้งหมด
+* **User Management:** ระบบจัดการบัญชีผู้ใช้งาน (เพิ่ม/แก้ไขข้อมูล) ด้วยฟอร์มที่ได้มาตรฐาน
+* **Active/Inactive Toggle:** ระบบปุ่มสวิตช์ เปิด-ปิดสถานะบัญชีผู้ใช้งานได้แบบ Real-time โดยไม่ต้องรีเฟรชหน้าจอ
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 🧑‍🏫 2. Mentor (พี่เลี้ยง)
+* **Task Management:** สร้าง, แก้ไข, ลบ และมอบหมายงานให้นักศึกษาฝึกงาน
+* **Group & Single Tasks:** รองรับฟีเจอร์การสั่ง "งานเดี่ยว" และ "งานกลุ่ม" (สามารถเลือก Intern ได้หลายคนพร้อมกัน)
+* **Real-time Search:** ค้นหารายชื่อนักศึกษาฝึกงานเพื่อมอบหมายงานได้อย่างรวดเร็ว
+* **Task Tracking & Review:** ติดตามสถานะงานที่สั่งไป, ตรวจงาน และดูประวัติการเปลี่ยนสถานะงาน
+* **Commenting System:** ระบบคอมเมนต์สำหรับพูดคุย ให้คำแนะนำ และแจ้งแก้ไขงานกับ Intern ได้โดยตรงในหน้ารายละเอียดงาน
 
-## Code scaffolding
+### 🎓 3. Intern (นักศึกษาฝึกงาน)
+* **Intern Dashboard:** หน้ากระดานสรุปสถิติงานของตนเอง (To Do, In Progress, Pending)
+* **Upcoming Tasks:** ตารางสรุปงานด่วนที่กำลังจะถึงกำหนดส่ง (Due Date)
+* **Task Filtering & Searching:** ระบบค้นหางานด้วยชื่อหัวข้อ หรือ "ชื่อพี่เลี้ยงผู้สั่งงาน" พร้อมระบบกรองตามสถานะงานแบบ Real-time
+* **Task Execution:** กดปุ่มเพื่อเปลี่ยนสถานะการทำงาน (เช่น "เริ่มงาน") และส่งงานเพื่อรอการตรวจสอบ (Pending)
+* **Interactive Task Detail:** ดูรายละเอียดงาน, ประวัติสถานะ และคอมเมนต์โต้ตอบกับพี่เลี้ยงได้ทันที
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🚀 เทคโนโลยีและโครงสร้าง (Tech Stack & Best Practices)
 
-```bash
-ng generate component component-name
-```
+โปรเจกต์นี้เขียนขึ้นโดยยึดตามมาตรฐานการพัฒนา (Frontend Best Practices) อย่างเคร่งครัด:
+* **Framework:** Angular (TypeScript)
+* **UI/UX Design:** CSS3, Angular Material (เน้นดีไซน์ Modern Clean & Responsive)
+* **Forms:** ใช้ Reactive Forms พร้อม Form Validation เต็มรูปแบบ
+* **Security:** มี Route Guards ป้องกันการเข้าถึงหน้าเว็บข้ามสิทธิ์
+* **Interceptors:**
+    * `JwtInterceptor`: จัดการแนบ Auth Token ไปกับทุก API อัตโนมัติ
+    * `LoadingInterceptor`: ดักจับ API เพื่อแสดง Loading Spinner กลางหน้าจอแบบรวมศูนย์
+* **User Experience (UX):** ติดตั้ง `NProgress` แถบโหลดสถานะด้านบนขอบจอ เพื่อให้ผู้ใช้ทราบเมื่อระบบกำลังทำงานเบื้องหลัง
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ การติดตั้งและรันโปรเจกต์ (Installation & Setup)
 
-```bash
-ng generate --help
-```
+**ข้อกำหนดเบื้องต้น (Prerequisites):**
+* เครื่องของคุณต้องติดตั้ง [Node.js](https://nodejs.org/) และ [Angular CLI](https://angular.io/cli) 
 
-## Building
+**ขั้นตอนการรันโปรเจกต์:**
 
-To build the project run:
+1. **Clone โปรเจกต์ลงมาที่เครื่อง:**
+   ```bash
+   git clone [https://github.com/rubianya/Intern-Task-Management-Syste-Web.git](https://github.com/rubianya/Intern-Task-Management-Syste-Web.git)
+   cd Intern-Task-Management-Syste-Web
 
-```bash
-ng build
-```
+2. **ติดตั้ง Dependencies (แพ็กเกจที่จำเป็น):**
+    ```bash
+    npm install
+    ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+3. **รันโปรเจกต์ (Development Server):**
+    ```bash
+    ng serve
+    ```
+    Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.

@@ -159,8 +159,17 @@
         <div class="form-row">
           <div class="form-group col">
             <label>Assign To Interns <span class="required">*</span></label>
+            <div class="search-box">
+              <input type="text" 
+                    placeholder="ค้นหา ชื่อผู้รับมอบหมาย" 
+                    [(ngModel)]="filterIntern" 
+                    [ngModelOptions]="{standalone: true}" 
+                    class="search-input" 
+                    autocomplete="off"> 
+            </div>
             <div class="intern-checkbox-list">
-              <label class="checkbox-item" *ngFor="let intern of interns">
+              
+              <label class="checkbox-item" *ngFor="let intern of filteredInterns">
                 <input 
                   type="checkbox" 
                   [value]="intern.id"
@@ -169,9 +178,11 @@
                 >
                 <span class="intern-name">{{ intern.fullName }}</span>
               </label>
-              <div *ngIf="interns.length === 0" class="no-data-text">
-                ไม่พบรายชื่อผู้ใช้ที่พร้อมรับมอบหมาย
+              
+              <div *ngIf="filteredInterns.length === 0" class="no-data-text">
+                ไม่พบรายชื่อผู้ใช้ที่ตรงกับคำค้นหา
               </div>
+
             </div>
             <div class="error-msg" *ngIf="taskForm.get('assignedToIds')?.touched && taskForm.get('assignedToIds')?.invalid">
               * กรุณาเลือกผู้รับมอบหมายงานอย่างน้อย 1 คน
