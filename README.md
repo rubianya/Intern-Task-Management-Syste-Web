@@ -51,11 +51,12 @@
 
 2. **ติดตั้ง Dependencies (แพ็กเกจที่จำเป็น):**
     ```bash
-    npm install
+    npm install หรือ npm i
     ```
 
 3. **รันโปรเจกต์ (Development Server):**
     ```bash
     ng serve
     ```
-    Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+    เมื่อเซิร์ฟเวอร์ทำงานแล้ว ให้เปิดเบราว์เซอร์ของคุณและไปที่ `http://localhost:4200/`
+    แอปพลิเคชันจะโหลดใหม่โดยอัตโนมัติทุกครั้งที่คุณแก้ไขไฟล์ต้นฉบับใดๆ
