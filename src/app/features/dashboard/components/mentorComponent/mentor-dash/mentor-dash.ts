@@ -60,7 +60,7 @@ export class MentorDash implements OnInit {
   }
 
   loadPendingTasks(): void {
-    this.taskService.getAllTasks().subscribe({
+    this.taskService.getAllTasksUser().subscribe({
       next: (response: any) => {
         if (response && response.data) {
           this.pendingTasksList = response.data.filter((task: TaskResponse) => task.status === 'PENDING');

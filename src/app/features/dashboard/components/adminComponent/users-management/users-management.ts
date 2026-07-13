@@ -221,7 +221,6 @@ export class UsersManagement {
     });
   }
 
-
   onFilterChange() {
     this.currentPage = 1;
   }

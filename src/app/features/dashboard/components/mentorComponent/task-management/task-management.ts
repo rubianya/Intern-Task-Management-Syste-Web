@@ -66,7 +66,7 @@ export class TaskManagement implements OnInit {
       priority: ['MEDIUM', Validators.required],
       status: ['TODO'],
       dueDate: ['', Validators.required],
-      assignedToIds: [[] as number[], Validators.required],
+      assignedToIds: [[] as number[]],
       isGroupTask: [false]
     });
   }
@@ -85,7 +85,7 @@ export class TaskManagement implements OnInit {
   }
 
   loadTasks(): void {
-    this.taskService.getAllTasks().subscribe({
+    this.taskService.getAllTasksUser().subscribe({
       next: (response) => {
         if (response && response.data) {
           this.tasks = response.data;

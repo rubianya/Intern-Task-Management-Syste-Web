@@ -20,7 +20,6 @@ export class TaskDetail implements OnInit {
   taskHistories: any[] = [];
   taskLinks: any[] = [];
   taskComments: any[] = [];
-
   newComment: string = '';
   linkLabel: string = '';
   linkUrl: string = '';

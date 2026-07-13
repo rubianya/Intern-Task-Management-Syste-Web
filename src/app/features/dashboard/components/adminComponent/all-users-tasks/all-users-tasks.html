@@ -1,0 +1,98 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h2 class="header">All Users Tasks</h2>
+      <p class="subtitle">View and manage tasks assigned to all users.</p>
+    </div>
+  </div>
+
+  <div class="filter-container">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" 
+            placeholder="ค้นหาชื่องาน หรือ ชื่อผู้รับมอบหมาย..." 
+            [(ngModel)]="searchTerm"
+            class="search-input" 
+            autocomplete="off">   
+    </div>
+    <div class="filter-box">
+      <select [(ngModel)]="filterStatus" class="filter-select">
+        <option value="">All Status (ทุกสถานะ)</option>
+        <option value="TODO">To Do (ยังไม่เริ่ม)</option>
+        <option value="IN_PROGRESS">In Progress (กำลังทำ)</option>
+        <option value="PENDING">Pending (รอตรวจ)</option>
+        <option value="DONE">Done (เสร็จสิ้น)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th>Task Title</th>
+          <th>Created By</th>
+          <th>Assigned To</th>
+          <!-- <th>Priority</th> -->
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of paginatedTasks">
+            <td class="task-title-cell">{{ task.title }}</td>
+                <td>{{ task.createByFullName}}</td>
+            <td>
+                {{ task.assignedToUserFullNames.length ? task.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
+            </td>
+            <!-- <td>
+                <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">
+                {{ task.priority }}
+                </span>
+            </td> -->
+            <td>
+                <span class="status-badge" [ngClass]="task.status.toLowerCase()">
+                {{ task.status }}
+                </span>
+            </td>
+            <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
+            <td>
+                <div class="action-buttons">
+                <button class="btn-icon view-btn" (click)="viewTaskDetail(task.id)" title="ดูรายละเอียด">
+                    <i class="fas fa-eye"></i> ดูรายละเอียด
+                </button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr *ngIf="filteredTasks.length === 0">
+          <td colspan="5" class="text-center py-4" style="text-align: center; padding: 20px; color: #6b7280;">
+            ไม่พบข้อมูลงานที่ตรงตามเงื่อนไขค้นหา
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination-container" *ngIf="filteredTasks.length > 0">
+    <div class="pagination-info">
+        Showing <span>{{ startIndex }}</span> to <span>{{ endIndex }}</span> of <span>{{ filteredTasks.length }}</span> entries
+    </div>
+    <div class="pagination-controls">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+
+        <button class="page-number-btn" 
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                [class.active]="currentPage === (i + 1)"
+                (click)="goToPage(i + 1)">
+            {{ i + 1 }}
+        </button>
+
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+  </div>
+</div>
