@@ -72,12 +72,12 @@
               </td>
               <td>
                 <mat-slide-toggle
-                  [checked]="user.active"
+                  [checked]="user.status === 'A'"
                   color="primary"
                   class="custom-toggle"
                   (change)="toggleUserStatus(user, $event.checked)">
-                  <span [class.text-active]="user.active" [class.text-inactive]="!user.active">
-                    {{ user.active ? 'Active' : 'Inactive' }}
+                  <span [class.text-active]="user.status === 'A'" [class.text-inactive]="user.status !== 'A'">
+                    {{ user.status === 'A' ? 'Active' : 'Inactive' }}
                   </span>
                 </mat-slide-toggle>
               </td>
@@ -170,9 +170,9 @@
 
             <mat-form-field appearance="outline" class="half-width-field">
               <mat-label>Account Status</mat-label>
-              <mat-select formControlName="active">
-                <mat-option [value]="true">Active</mat-option>
-                <mat-option [value]="false">Inactive</mat-option>
+              <mat-select formControlName="status">
+                <mat-option [value]="'A'">Active</mat-option>
+                <mat-option [value]="'I'">Inactive</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

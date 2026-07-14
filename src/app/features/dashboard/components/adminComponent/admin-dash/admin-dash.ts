@@ -36,11 +36,11 @@ export class AdminDash implements OnInit {
     });
   }
 
-  goToUserManagement(role?: string, active?: string): void {
+  goToUserManagement(role?: string, status?: string): void {
     const queryParams: any = {};
     
     if (role) queryParams.role = role;
-    if (active) queryParams.active = active;
+    if (status) queryParams.status = status;
 
     this.router.navigate(['/dashboard/users-management'], { queryParams });
   }

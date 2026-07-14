@@ -4,5 +4,5 @@ export interface UserResponse {
   email: string;
   password: string;
   role: string;
-  active: boolean | number;
+  status: string;
 }

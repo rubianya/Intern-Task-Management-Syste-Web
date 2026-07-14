@@ -26,12 +26,12 @@
         <span class="badge total-badge">{{ userSummary.totalAdmin }}</span>
       </div>
       <div class="status-action-grid">
-        <button class="status-btn active-btn" (click)="goToUserManagement('Admin', 'active'); $event.stopPropagation()">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Admin', 'A'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Active</span>
           <span class="val">{{ userSummary.activeAdmin }}</span>
         </button>
-        <button class="status-btn inactive-btn" (click)="goToUserManagement('Admin', 'inactive'); $event.stopPropagation()">
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Admin', 'I'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Inactive</span>
           <span class="val">{{ userSummary.inactiveAdmin }}</span>

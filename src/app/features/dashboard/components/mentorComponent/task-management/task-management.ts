@@ -75,7 +75,7 @@ export class TaskManagement implements OnInit {
     this.userService.getActiveInterns().subscribe({
       next: (response) => {
         if (response && response.data) {
-          this.interns = response.data.filter((intern: UserResponse) => intern.active === true);
+          this.interns = response.data.filter((intern: UserResponse) => intern.status === 'A');
           this.filterIntern = '';
           this.cdr.detectChanges();
         }

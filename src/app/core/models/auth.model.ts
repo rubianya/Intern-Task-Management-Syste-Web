@@ -3,7 +3,7 @@ export interface LoginResponse {
   message?: string;
   data: {
     token: string;
-    active: boolean | number;
+    status: string;
     email: string;
     role: string;
   };

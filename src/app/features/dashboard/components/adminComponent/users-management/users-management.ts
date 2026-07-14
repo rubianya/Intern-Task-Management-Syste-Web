@@ -51,7 +51,7 @@ export class UsersManagement {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.minLength(8)]),
     role: new FormControl('Intern', [Validators.required]),
-    active: new FormControl(true, Validators.required) 
+    status: new FormControl('A', Validators.required) 
   });
 
   constructor(
@@ -100,9 +100,9 @@ export class UsersManagement {
 
       let matchesStatus = true;
       if (this.selectedStatus === 'Active') {
-        matchesStatus = (response.active === true || response.active === 1);
+        matchesStatus = (response.status === 'A');
       } else if (this.selectedStatus === 'Inactive') {
-        matchesStatus = (response.active === false || response.active === 0);
+        matchesStatus = (response.status === 'I');
       }
 
       return matchesSearch && matchesRole && matchesStatus;
@@ -111,7 +111,7 @@ export class UsersManagement {
 
   openAddUserModal() {
     this.isEditMode = false;
-    this.userFormGroup.reset({ id: 0, role: 'Intern', active: true, password: '' });
+    this.userFormGroup.reset({ id: 0, role: 'Intern', status: 'A', password: '' });
     this.userFormGroup.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.userFormGroup.get('password')?.updateValueAndValidity();
     this.isModalOpen = true;
@@ -125,7 +125,7 @@ export class UsersManagement {
       fullName: response.fullName,
       email: response.email,
       role: response.role,
-      active: response.active === 1 || response.active === true,
+      status: response.status,
       password: ''
     });
 
@@ -205,18 +205,18 @@ export class UsersManagement {
   }
 
   toggleUserStatus(user: UserResponse, newStatus: boolean): void {
-    const previousStatus = user.active;
-    user.active = newStatus;
-    const payload = { active: newStatus };
+    const previousStatus = newStatus ? 'ACTIVE' : 'INACTIVE';
+    user.status = previousStatus;
+    const payload = { status: previousStatus };
 
     this.userService.toggleUserStatus(user.id!, payload).subscribe({
       next: (response) => {
         console.log(`User ID ${user.id} status updated to ${newStatus}`);
       },
       error: (err) => {
-        user.active = previousStatus;
-      alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะผู้ใช้งาน');
-      console.error(err);
+        user.status = previousStatus;
+        alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะผู้ใช้งาน');
+        console.error(err);
       }
     });
   }

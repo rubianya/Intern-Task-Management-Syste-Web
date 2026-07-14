@@ -45,7 +45,7 @@ export class UserService {
     }
 
     // เปิด-ปิด สถานะบัญชีใช้งาน
-    toggleUserStatus(id: number, status: { active: boolean }): Observable<ApiResponse<any>> {
+    toggleUserStatus(id: number, status: { status: string }): Observable<ApiResponse<any>> {
         return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}/active`, status);
     }
     
