@@ -45,7 +45,7 @@ export class TaskService {
     return this.http.patch<ApiResponse<TaskResponse[]>>(`${this.apiUrl}/${id}/status`, { status });
   }
 
-  // ลบงาน
+  // ลบงาน (อันตราย!!! ลบงานจริง )
   deleteTask(id: number): Observable<ApiResponse<TaskResponse[]>> {
     return this.http.delete<ApiResponse<TaskResponse[]>>(`${this.apiUrl}/${id}`);
   }

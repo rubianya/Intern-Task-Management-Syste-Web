@@ -36,6 +36,12 @@
             <option value="I">Inactive</option>
           </select>
         </div>
+
+        <button class="btn-clear-filter" (click)="clearFilters()" title="Clear all filters">
+          <!-- <i class="fi fi-sr-cross-circle"></i> -->Clear
+        </button>
+
+
       </div>
 
       <button mat-flat-button color="primary" class="btn-add-user" (click)="openAddUserModal()">

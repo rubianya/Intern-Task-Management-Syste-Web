@@ -87,15 +87,17 @@ export class TaskManagement implements OnInit {
   loadTasks(): void {
     this.taskService.getAllTasksUser().subscribe({
       next: (response) => {
-        if (response && response.data) {
-          this.tasks = response.data;
+        if (response.success) {
+          this.tasks = response.data.filter((task: any) => task.status !== 'DELETED');
           this.cdr.detectChanges();
         } else if (Array.isArray(response)) {
           this.tasks = response;
           this.cdr.detectChanges();
         }
       },
-      error: (err) => console.error('Failed to load tasks', err)
+      error: (err) => {
+        console.error('โหลดข้อมูลผิดพลาด:', err);
+      }
     });
   }
 
@@ -272,16 +274,20 @@ export class TaskManagement implements OnInit {
 
   deleteTask(taskId: number): void {
     if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
-      this.taskService.deleteTask(taskId).subscribe({
+      const targetStatus = 'DELETED';
+      this.taskService.updateTaskStatus(taskId, targetStatus).subscribe({
         next: (response) => {
-          alert('ลบข้อมูลงานออกจากระบบสำเร็จเรียบร้อยแล้ว');
-          this.loadTasks();
-          this.loadDashboardStats(); 
-          this.cdr.detectChanges();
+          if (response.success) {
+            this.tasks = this.tasks.filter(task => task.id !== taskId);
+            alert('ลบข้อมูลงานออกจากระบบสำเร็จเรียบร้อยแล้ว');
+            this.loadTasks();
+            this.loadDashboardStats(); 
+            this.cdr.detectChanges();
+          }
         },
         error: (err) => {
-          console.error('Delete failed', err);
-          alert('เกิดข้อผิดพลาดในการลบงาน');
+          console.error('เกิดข้อผิดพลาดในการลบงาน:', err);
+          alert('ไม่สามารถลบงานได้เนื่องจากสิทธิ์ระบบหรือข้อผิดพลาดของเครือข่าย');
         }
       });
     }

@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute } from '@angular/router';
 import { ApiResponse } from '../../../../../core/models/api-response.model';
-import { response } from 'express';
 
 @Component({
   selector: 'app-users-management',
@@ -44,7 +43,7 @@ export class UsersManagement {
   userIdToDelete: number | null = null;
 
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
 
   userFormGroup = new FormGroup({
     id: new FormControl(0),
@@ -230,6 +229,14 @@ export class UsersManagement {
 
   onFilterChange() {
     this.currentPage = 1;
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedRole = '';
+    this.selectedStatus = '';
+    
+    this.onFilterChange();
   }
 
   get paginatedUsers(): UserResponse[] {
