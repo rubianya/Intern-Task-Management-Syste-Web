@@ -48,12 +48,12 @@
         <span class="badge total-badge">{{ userSummary.totalMentor }}</span>
       </div>
       <div class="status-action-grid">
-        <button class="status-btn active-btn" (click)="goToUserManagement('Mentor', 'active'); $event.stopPropagation()">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Mentor', 'A'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Active</span>
           <span class="val">{{ userSummary.activeMentor }}</span>
         </button>
-        <button class="status-btn inactive-btn" (click)="goToUserManagement('Mentor', 'inactive'); $event.stopPropagation()">
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Mentor', 'I'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Inactive</span>
           <span class="val">{{ userSummary.inactiveMentor }}</span>
@@ -70,12 +70,12 @@
         <span class="badge total-badge">{{ userSummary.totalIntern }}</span>
       </div>
       <div class="status-action-grid">
-        <button class="status-btn active-btn" (click)="goToUserManagement('Intern', 'active'); $event.stopPropagation()">
+        <button class="status-btn active-btn" (click)="goToUserManagement('Intern', 'A'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Active</span>
           <span class="val">{{ userSummary.activeIntern }}</span>
         </button>
-        <button class="status-btn inactive-btn" (click)="goToUserManagement('Intern', 'inactive'); $event.stopPropagation()">
+        <button class="status-btn inactive-btn" (click)="goToUserManagement('Intern', 'I'); $event.stopPropagation()">
           <span class="dot"></span>
           <span class="lbl">Inactive</span>
           <span class="val">{{ userSummary.inactiveIntern }}</span>

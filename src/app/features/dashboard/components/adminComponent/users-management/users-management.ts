@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute } from '@angular/router';
 import { ApiResponse } from '../../../../../core/models/api-response.model';
+import { response } from 'express';
 
 @Component({
   selector: 'app-users-management',
@@ -99,9 +100,9 @@ export class UsersManagement {
       const matchesRole = this.selectedRole ? response.role?.toUpperCase() === this.selectedRole.toUpperCase() : true;
 
       let matchesStatus = true;
-      if (this.selectedStatus === 'Active') {
+      if (this.selectedStatus === 'A') {
         matchesStatus = (response.status === 'A');
-      } else if (this.selectedStatus === 'Inactive') {
+      } else if (this.selectedStatus === 'I') {
         matchesStatus = (response.status === 'I');
       }
 
@@ -187,14 +188,20 @@ export class UsersManagement {
   }
 
   confirmDelete() {
-    if (this.userIdToDelete) {
-      this.userService.deleteUser(this.userIdToDelete).subscribe({
+    if (this.userIdToDelete !== null) {
+      const payload = { status: 'S' };
+      this.userService.changeUserStatus(this.userIdToDelete, payload).subscribe({
         next: () => {
+          console.log(`User ID ${this.userIdToDelete} has been suspended (Soft Delete).`);
           this.users = this.users.filter(response => response.id !== this.userIdToDelete);
           this.closeDeleteModal();
           this.cdr.detectChanges();
         },
-        error: (err) => console.error('Delete failed:', err)
+        error: (err) => {
+          alert('เกิดข้อผิดพลาดในการระงับบัญชีผู้ใช้งาน');
+          console.error(err);
+          this.closeDeleteModal();
+        }
       });
     }
   }
@@ -204,12 +211,12 @@ export class UsersManagement {
     this.userIdToDelete = null;
   }
 
-  toggleUserStatus(user: UserResponse, newStatus: boolean): void {
-    const previousStatus = newStatus ? 'ACTIVE' : 'INACTIVE';
-    user.status = previousStatus;
-    const payload = { status: previousStatus };
+  toggleUserStatus(user: UserResponse, newStatus: string): void {
+    const previousStatus = user.status;
+    user.status = newStatus;
+    const payload = { status: newStatus };
 
-    this.userService.toggleUserStatus(user.id!, payload).subscribe({
+    this.userService.changeUserStatus(user.id!, payload).subscribe({
       next: (response) => {
         console.log(`User ID ${user.id} status updated to ${newStatus}`);
       },

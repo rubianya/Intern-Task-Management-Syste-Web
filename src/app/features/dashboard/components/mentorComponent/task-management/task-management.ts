@@ -66,7 +66,7 @@ export class TaskManagement implements OnInit {
       priority: ['MEDIUM', Validators.required],
       status: ['TODO'],
       dueDate: ['', Validators.required],
-      assignedToIds: [[] as number[],Validators.required],
+      assignedToIds: [[] as number[], null],
       isGroupTask: [false]
     });
   }

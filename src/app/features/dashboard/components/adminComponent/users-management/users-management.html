@@ -2,7 +2,7 @@
   
   <header class="page-header">
     <h1 class="page-title">User Management</h1>
-    <p class="page-subtitle">Control system access, manage security roles, and monitor user activation status.</p>
+    <p class="page-subtitle">ควบคุมการเข้าถึงระบบ จัดการบทบาทด้านความปลอดภัย และตรวจสอบสถานะการเปิดใช้งานของผู้ใช้</p>
   </header>
 
   <mat-card class="main-data-card">
@@ -32,8 +32,8 @@
         <div class="select-wrapper">
           <select [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()" class="custom-select">
             <option value="">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="A">Active</option>
+            <option value="I">Inactive</option>
           </select>
         </div>
       </div>
@@ -75,8 +75,8 @@
                   [checked]="user.status === 'A'"
                   color="primary"
                   class="custom-toggle"
-                  (change)="toggleUserStatus(user, $event.checked)">
-                  <span [class.text-active]="user.status === 'A'" [class.text-inactive]="user.status !== 'A'">
+                  (change)="toggleUserStatus(user, $event.checked ? 'A' : 'I')">
+                  <span [class.text-active]="user.status === 'A'" [class.text-inactive]="user.status === 'I'">
                     {{ user.status === 'A' ? 'Active' : 'Inactive' }}
                   </span>
                 </mat-slide-toggle>
@@ -204,14 +204,14 @@
         <div class="danger-icon-alert-wrapper">
           <i class="fi fi-sr-exclamation danger-alert-icon"></i>
         </div>
-        <p class="danger-alert-title">Are you absolutely sure?</p>
-        <p class="danger-alert-subtitle">This operation will permanently delete the user from the system. This action cannot be undone.</p>
+        <p class="danger-alert-title">คุณแน่ใจที่จะลบผู้ใช้คนนี้หรือไม่?</p>
+        <p class="danger-alert-subtitle">บัญชีผู้ใช้งานนี้จะถูกระงับการใช้งาน และซ่อนออกจากระบบ โดยข้อมูลประวัติและงานต่างๆ จะยังคงถูกเก็บรักษาไว้</p>
       </div>
 
       <footer class="premium-modal-footer bg-light-danger">
-        <button mat-button class="btn-modal-cancel" (click)="closeDeleteModal()">Cancel</button>
+        <button mat-button class="btn-modal-cancel" (click)="closeDeleteModal()">ยกเลิก</button>
         <button mat-flat-button color="warn" class="btn-modal-delete-confirm" (click)="confirmDelete()">
-          Yes, Delete User
+          ตกลง
         </button>
       </footer>
 

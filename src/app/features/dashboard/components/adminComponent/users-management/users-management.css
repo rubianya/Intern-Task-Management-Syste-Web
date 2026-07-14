@@ -477,6 +477,7 @@
 .bg-light-danger { background-color: #fffafb; }
 
 .btn-modal-delete-confirm {
+  background-color: #ef4444;
   padding: 22px 24px !important;
   font-weight: 600 !important;
   border-radius: 8px !important;

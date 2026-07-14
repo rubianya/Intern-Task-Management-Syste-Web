@@ -44,12 +44,12 @@ export class UserService {
         return this.http.put<ApiResponse<UserResponse>>(`${this.apiUrl}/users/${id}`, userData);
     }
 
-    // เปิด-ปิด สถานะบัญชีใช้งาน
-    toggleUserStatus(id: number, status: { status: string }): Observable<ApiResponse<any>> {
-        return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}/active`, status);
+    // เปลี่ยนสถานะบัญชีใช้งาน (A, I, S)
+    changeUserStatus(id: number, status: { status: string }): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/${id}/status`, status);
     }
     
-    // ลบผู้ใช้
+    // ลบผู้ใช้ (อันตราย!!! ลบข้อมูลออกจริง)
     deleteUser(id: number): Observable<ApiResponse<any>> {
         return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/delete/${id}`);
     }
