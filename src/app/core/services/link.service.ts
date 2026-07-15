@@ -14,7 +14,7 @@ export class LinkService {
     
     constructor(private http: HttpClient) {}
 
-    // ดึงลิงก์ทั้งหมดของ Task
+    // ดึงลิงก์ของงาน
     getLinksByTaskId(taskId: number): Observable<ApiResponse<LinkResponse[]>> {
         return this.http.get<ApiResponse<LinkResponse[]>>(`${this.apiUrl}/${taskId}/links`);
     }
@@ -22,6 +22,11 @@ export class LinkService {
     // เพิ่มลิงก์ใหม่
     addLinkToTask(taskId: number, request: LinkRequest): Observable<ApiResponse<LinkResponse>> {
         return this.http.post<ApiResponse<LinkResponse>>(`${this.apiUrl}/${taskId}/links`, request);
+    }
+
+    // ลบลิ้งค์เฉพาะของเรา
+    deleteLink(taskId: number, linkId: number): Observable<ApiResponse<void>> {
+        return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${taskId}/links/${linkId}`);
     }
         
 }

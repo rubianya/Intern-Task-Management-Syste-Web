@@ -69,6 +69,9 @@
             <a [href]="link.url" target="_blank" class="task-link">
               🔗 {{ link.label || link.url }}
             </a>
+            <button class="btn-delete-link" (click)="deleteLink(link.id)" title="ลบลิงก์นี้">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </li>
         </ul>
         <div *ngIf="!taskLinks || taskLinks.length === 0" class="no-data-text" style="margin-bottom: 12px; font-size: 0.9rem; color: #6b7280;">

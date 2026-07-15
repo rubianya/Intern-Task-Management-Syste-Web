@@ -111,7 +111,7 @@ export class TaskDetail implements OnInit {
       }
     });
   }
-
+  
   submitComment(): void {
     if (!this.newComment.trim() || !this.selectedTask) return;
 

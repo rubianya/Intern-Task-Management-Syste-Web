@@ -139,6 +139,34 @@ export class TaskDetail implements OnInit {
     });
   }
 
+  deleteLink(linkId: number): void {
+    if (!this.selectedTask || !this.selectedTask.id) {
+      alert('ไม่พบข้อมูล Task ปัจจุบัน');
+      return;
+    }
+
+    if (confirm('คุณต้องการลบลิงก์นี้ใช่หรือไม่?')) {
+      this.linkService.deleteLink(this.selectedTask.id, linkId).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            if (this.taskLinks) {
+              this.taskLinks = this.taskLinks.filter((link: any) => link.id !== linkId);
+            }
+            alert(response.message || 'ลบลิงก์สำเร็จ');
+            this.cdr.detectChanges();
+          } else {
+            alert(response.message || 'ไม่สามารถลบลิงก์ได้');
+          }
+        },
+        error: (err) => {
+          console.error('Delete link failed', err);
+          const errorMessage = err.error?.message || 'เกิดข้อผิดพลาดจากระบบ ไม่สามารถลบลิงก์ได้ในขณะนี้';
+          alert(errorMessage);
+        }
+      });
+    }
+  }
+
   getDueDateClass(dueDate: string | Date | null, status: string): string {
     if (!dueDate || status === 'DONE') return 'due-normal';
     const today = new Date(); today.setHours(0, 0, 0, 0);

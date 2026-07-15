@@ -88,7 +88,7 @@ export class TaskManagement implements OnInit {
     this.taskService.getAllTasksUser().subscribe({
       next: (response) => {
         if (response.success) {
-          this.tasks = response.data.filter((task: any) => task.status !== 'DELETED');
+          this.tasks = response.data;
           this.cdr.detectChanges();
         } else if (Array.isArray(response)) {
           this.tasks = response;
@@ -274,7 +274,7 @@ export class TaskManagement implements OnInit {
 
   deleteTask(taskId: number): void {
     if (confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) {
-      const targetStatus = 'DELETED';
+      const targetStatus = 'SUSPEND';
       this.taskService.updateTaskStatus(taskId, targetStatus).subscribe({
         next: (response) => {
           if (response.success) {

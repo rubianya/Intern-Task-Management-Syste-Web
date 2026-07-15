@@ -171,8 +171,8 @@
   letter-spacing: 0.5px;
 }
 .status-todo { background-color: #f3f4f6; color: #4b5563; }
-.status-in_progress { background-color: #fef3c7; color: #d97706; }
-.status-pending { background-color: #e0e7ff; color: #4338ca; } 
+.status-in_progress { background-color: #e0e7ff; color: #4f46e5; }
+.status-pending { background-color: #ffedd5; color: #ea580c; }
 .status-done { background-color: #d1fae5; color: #059669; }
 .priority-low { background-color: #e0f2fe; color: #0284c7; }
 .priority-medium { background-color: #fef3c7; color: #d97706; }
@@ -247,6 +247,36 @@
 
 .btn-add-link:hover {
   background-color: #059669;
+}
+
+/* จัดการ Layout ของแต่ละแถวลิงก์ให้ชื่ออยู่ซ้าย ปุ่มลบอยู่ขวา */
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px dashed #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.link-item:hover {
+  background-color: #f9fafb;
+}
+
+/* สไตล์ปุ่มลบลิงก์ฝั่ง Intern */
+.btn-delete-link {
+  background: none;
+  border: none;
+  color: #9ca3af; /* สีเทาเริ่มต้น */
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* Effect สีแดงเตือนเมื่อเมาส์ชี้ไปที่ปุ่มลบ */
+.btn-delete-link:hover {
+  color: #ef4444;    
 }
 
 /* ==========================================================================
