@@ -29,9 +29,28 @@
       <div class="info-grid">
         <div class="info-item">
           <label>Assigned To:</label>
-          <div>
-            {{ selectedTask.assignedToUserFullNames.length ? selectedTask.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
+          
+          <div *ngIf="selectedTask.assignedToUserFullNames && selectedTask.assignedToUserFullNames.length > 0; else noAssignee">
+            <select class="detail-read-only-select">
+              
+              <option value="default" selected disabled hidden>
+                {{ 
+                  selectedTask.assignedToUserFullNames.length === 1 
+                    ? selectedTask.assignedToUserFullNames[0] 
+                    : selectedTask.assignedToUserFullNames[0] + ' (+อีก ' + (selectedTask.assignedToUserFullNames.length - 1) + ' คน)' 
+                }}
+              </option>
+
+              <option *ngFor="let name of selectedTask.assignedToUserFullNames" disabled>
+                {{ name }}
+              </option>
+              
+            </select>
           </div>
+
+          <ng-template #noAssignee>
+            <span style="color: #9ca3af;">- ไม่ระบุ -</span>
+          </ng-template>
         </div>
         <div class="info-item">
           <label>Priority:</label>

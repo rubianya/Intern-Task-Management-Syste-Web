@@ -117,16 +117,29 @@ export class TaskManagement implements OnInit {
     this.currentPage = 1;
   }
 
-  get filteredInterns() {
-    if (!this.filterIntern) {
-      return this.interns;
+  get filteredInterns(): UserResponse[] {
+    let result = [...this.interns];
+
+    if (this.filterIntern) {
+      result = result.filter(intern =>
+        intern.fullName.toLowerCase().includes(this.filterIntern.toLowerCase())
+      );
     }
     
-    const searchTerm = this.filterIntern.toLowerCase();
+    const selectedIds = this.taskForm?.get('assignedToIds')?.value || [];
 
-    return this.interns.filter(intern => 
-      intern.fullName.toLowerCase().includes(searchTerm)
-    );
+    return result.sort((a, b) => {
+      const aSelected = selectedIds.includes(a.id);
+      const bSelected = selectedIds.includes(b.id);
+
+      if (aSelected && !bSelected) {
+        return -1;
+      }
+      if (!aSelected && bSelected) {
+        return 1; 
+      }
+      return a.fullName.localeCompare(b.fullName);
+    });
   }
 
   get filteredTasks() {

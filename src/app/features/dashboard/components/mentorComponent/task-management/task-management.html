@@ -43,7 +43,25 @@
         <tr *ngFor="let task of paginatedTasks">
           <td class="task-title-cell">{{ task.title }}</td>
           <td>
-            {{ task.assignedToUserFullNames.length ? task.assignedToUserFullNames.join(', ') : 'ยังไม่ได้มอบหมาย' }}
+            <div *ngIf="task.assignedToUserFullNames && task.assignedToUserFullNames.length > 0; else noAssignee">
+              <select class="filter-select read-only-select">
+                
+                <option value="default" selected disabled hidden>
+                  {{ 
+                    task.assignedToUserFullNames.length === 1 
+                      ? task.assignedToUserFullNames[0] 
+                      : task.assignedToUserFullNames[0] + ' (+อีก ' + (task.assignedToUserFullNames.length - 1) + ' คน)' 
+                  }}
+                </option>
+                <option *ngFor="let name of task.assignedToUserFullNames" disabled>
+                  {{ name }}
+                </option>
+                
+              </select>
+            </div>
+            <ng-template #noAssignee>
+              <span style="color: #9ca3af;">- ไม่ระบุ -</span>
+            </ng-template>
           </td>
           <td>
             <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">
@@ -59,7 +77,7 @@
           <td>
             <div class="action-buttons">
               <button class="btn-icon view-btn" (click)="viewTaskDetail(task.id)" title="ดูรายละเอียด">
-                <i class="fas fa-eye"></i> ตรวจงาน
+                <i class="fas fa-eye"></i> View
               </button>
               <button class="btn-icon edit-btn" (click)="openEditTaskModal(task)" title="แก้ไขงาน">
                 <i class="fas fa-edit"></i>

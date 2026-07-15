@@ -162,6 +162,20 @@
   max-width: 180px;
 }
 
+/* --- สไตล์สำหรับกล่อง Dropdown แบบ Read-only ในตาราง --- */
+.read-only-select {
+  width: 100%;
+  max-width: 180px; 
+  background-color: #f9fafb; /* สีพื้นหลังให้ออกเทาอ่อน เพื่อสื่อว่าเป็นข้อมูล Read-only */
+  cursor: pointer;
+}
+
+/* ปรับสีตัวหนังสือในลิสต์ให้เข้มและอ่านง่าย แม้ว่าจะใส่ disabled ไว้ */
+.read-only-select option:disabled {
+  color: #1f2937;
+  background-color: white;
+}
+
 /* --- ส่วนป้ายกำกับสถานะและความสำคัญ (Badges) --- */
 .priority-badge, .status-badge {
   padding: 4px 10px;
